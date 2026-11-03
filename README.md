@@ -55,7 +55,7 @@ This repository is public so browsers can load it without credentials. It contai
 
 ## Current coverage
 
-Each of Kubernetes, Linux, Git, Ansible, and Terraform contains 50 questions (250 total). The banks mix fundamentals, troubleshooting, and code-reading exercises. Answer positions are balanced across A–D. Explanations describe why the selected answer is correct and call out relevant limitations.
+Each of Kubernetes, Linux, Git, Ansible, Terraform, NetApp ONTAP, and VMware vSphere contains 50 questions (350 total). The banks mix fundamentals, troubleshooting, and code-reading exercises. Answer positions are balanced across A–D. Explanations describe why the selected answer is correct and call out relevant limitations.
 
 For a snippet question, add optional `code` and `language` fields alongside `question`:
 
@@ -69,3 +69,6 @@ For a snippet question, add optional `code` and `language` fields alongside `que
 These are additional question fields, not a complete question object. Code strings use escaped newlines and preserve indentation in the app. Snippets are exercises or configuration fragments; do not assume every fragment is a complete deployable configuration.
 
 The library check enforces at least 50 questions and 10 snippets per bank, unique prompts, balanced answer positions, and the JSON schema contract. See [SOURCES.md](SOURCES.md) for official references used during editorial review and further reading.
+
+
+NetApp and VMware are organized as fundamentals-to-troubleshooting refreshes. See [the storage and virtualization study path](STORAGE-VIRTUALIZATION-STUDY.md) for the learning sequence and key distinctions to rehearse aloud.

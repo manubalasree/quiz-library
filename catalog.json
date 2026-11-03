@@ -31,6 +31,18 @@
       "title": "Terraform",
       "description": "50 questions on HCL, state, modules, and infrastructure workflows.",
       "url": "quizzes/terraform.json"
+    },
+    {
+      "id": "netapp",
+      "title": "NetApp ONTAP",
+      "description": "50 fundamentals on NAS/SAN, storage layout, snapshots, availability, and recovery.",
+      "url": "quizzes/netapp.json"
+    },
+    {
+      "id": "vmware",
+      "title": "VMware vSphere",
+      "description": "50 fundamentals on VMs, HA/DRS, storage, networking, performance, and recovery.",
+      "url": "quizzes/vmware.json"
     }
   ]
 }

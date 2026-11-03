@@ -1,0 +1,680 @@
+{
+  "version": 1,
+  "title": "VMware vSphere: Virtualization Fundamentals and Recovery",
+  "questions": [
+    {
+      "topic": "Architecture",
+      "question": "What is the primary role of an ESXi host?",
+      "options": [
+        "Replace every guest operating system’s filesystem",
+        "Provide ONTAP storage-controller failover",
+        "Run virtual machines and manage their access to physical compute, memory, networking, and storage",
+        "Act only as the centralized inventory database"
+      ],
+      "answerIndex": 2,
+      "explanation": "ESXi is the hypervisor layer. Distinguish it from vCenter management, the guest OS, external storage, and application services when tracing a problem.",
+      "id": "vmware-001"
+    },
+    {
+      "topic": "Architecture",
+      "question": "How do vCenter Server and vSphere differ conceptually?",
+      "options": [
+        "vCenter is the same thing as a VMFS datastore",
+        "vCenter is the guest OS installed in every VM",
+        "vCenter is a centralized management component within the broader vSphere platform",
+        "vSphere is only a physical network switch"
+      ],
+      "answerIndex": 2,
+      "explanation": "vCenter manages inventory and cluster operations across hosts. vSphere refers to the broader virtualization platform rather than one running guest VM.",
+      "id": "vmware-002"
+    },
+    {
+      "topic": "Guest integration",
+      "question": "What is a useful purpose of VMware Tools or an appropriate supported open-vm-tools installation?",
+      "options": [
+        "Replace the guest’s application backups",
+        "Provide guest integration, drivers/services, and management capabilities",
+        "Provide a license for every application inside the VM",
+        "Make every storage path redundant"
+      ],
+      "answerIndex": 1,
+      "explanation": "Guest integration supports operations such as guest status, graceful shutdown, and relevant drivers or services. It does not establish application availability or replace backups.",
+      "id": "vmware-003"
+    },
+    {
+      "topic": "CPU fundamentals",
+      "question": "Does assigning four vCPUs normally dedicate four physical CPU cores to a VM?",
+      "options": [
+        "No; virtual CPUs are scheduled on available physical execution resources",
+        "Yes, and other VMs cannot use any idle capacity",
+        "Yes, each vCPU always owns one physical core exclusively",
+        "Only if the VM uses thin-provisioned disks"
+      ],
+      "answerIndex": 0,
+      "explanation": "vCPU allocation describes the virtual machine’s CPU configuration. Scheduling, reservations, limits, contention, and host hardware determine its actual resource experience.",
+      "id": "vmware-004"
+    },
+    {
+      "topic": "Storage fundamentals",
+      "question": "What is a datastore in vSphere?",
+      "options": [
+        "A Fibre Channel initiator WWPN",
+        "A logical storage container used for VM files and related objects",
+        "A CPU scheduling reservation",
+        "A guest operating system’s drive letter"
+      ],
+      "answerIndex": 1,
+      "explanation": "Datastores can use different backing technologies, such as VMFS on block devices or NFS file storage. A datastore and an individual guest virtual disk are different layers.",
+      "id": "vmware-005"
+    },
+    {
+      "topic": "VM files",
+      "question": "Which interpretation of these illustrative VM files is correct?",
+      "options": [
+        "Deleting any .vmdk is a safe way to remove unused RAM",
+        "The .vmx is configuration; the .vmdk files describe or contain virtual-disk data",
+        "The .vmx is always the independent backup of the guest disk",
+        "The .vmdk is a physical FC switch configuration"
+      ],
+      "answerIndex": 1,
+      "explanation": "Understand VM configuration and virtual-disk files before investigating storage. Disk descriptors, backing extents, and snapshot chains are related; do not manually delete unfamiliar files.",
+      "code": "Illustrative VM directory:\napp01.vmx\napp01.vmdk\napp01-flat.vmdk",
+      "language": "text",
+      "id": "vmware-006"
+    },
+    {
+      "topic": "Datastores",
+      "question": "Which pairing correctly distinguishes typical VMFS and NFS datastores?",
+      "options": [
+        "VMFS is a backup format; NFS is a CPU scheduler",
+        "Both require ESXi to format an NFS export as VMFS",
+        "NFS is always a guest-local disk; VMFS is always a remote file share",
+        "VMFS uses block storage; NFS mounts a file service from a server"
+      ],
+      "answerIndex": 3,
+      "explanation": "VMFS means Virtual Machine File System and typically uses block devices supplied through FC or iSCSI. An NFS datastore instead consumes an exported filesystem. Protocol and filesystem layers matter when tracing storage connectivity.",
+      "id": "vmware-007"
+    },
+    {
+      "topic": "Storage paths",
+      "question": "A NetApp-backed VMFS datastore uses iSCSI. Which sequence represents its storage dependency chain?",
+      "options": [
+        "VM files → VMFS → presented LUN → iSCSI paths → storage system",
+        "VMFS → NFS export policy → FC zoning only",
+        "Guest hostname → snapshot name → ESXi CPU reservation",
+        "VM files → SMB user account → vCenter database → guest pagefile"
+      ],
+      "answerIndex": 0,
+      "explanation": "Map the actual protocol path before troubleshooting. Access controls, sessions, LUN presentation, host discovery, and multipathing are separate links in the chain.",
+      "id": "vmware-008"
+    },
+    {
+      "topic": "Virtual disks",
+      "question": "What is an important risk of thin-provisioned virtual disks?",
+      "options": [
+        "Their future growth can exceed available datastore capacity if physical headroom is not managed",
+        "They cannot store database files",
+        "They make guest free space identical to datastore free space",
+        "They allocate their entire configured capacity immediately in every case"
+      ],
+      "answerIndex": 0,
+      "explanation": "Logical provisioning is not the same as consumed or available physical space. Monitor both the guest and backing datastore, including snapshots and competing workloads.",
+      "id": "vmware-009"
+    },
+    {
+      "topic": "Snapshots and backup",
+      "question": "Why is a VMware VM snapshot not a sufficient independent backup?",
+      "options": [
+        "A snapshot never records any changed blocks",
+        "VM snapshots are always stored at a different site",
+        "Its delta chain depends on the VM’s underlying virtual disks and storage",
+        "A snapshot guarantees database transaction consistency"
+      ],
+      "answerIndex": 2,
+      "explanation": "A snapshot provides a dependent point-in-time rollback mechanism. Use an appropriate backup workflow with recoverable copies and restore validation rather than retaining snapshots as the backup strategy.",
+      "id": "vmware-010"
+    },
+    {
+      "topic": "Snapshot lifecycle",
+      "question": "What is the safe approach to removing an unwanted VM snapshot?",
+      "options": [
+        "Delete delta files directly from the datastore browser",
+        "Use supported snapshot deletion/consolidation operations and monitor space and I/O",
+        "Rename the base VMDK until the snapshot disappears",
+        "Disconnect the datastore while the VM is writing"
+      ],
+      "answerIndex": 1,
+      "explanation": "Deletion/consolidation merges required disk changes through supported workflows. Manual file removal can break the disk chain and destroy access to VM data.",
+      "id": "vmware-011"
+    },
+    {
+      "topic": "Snapshot rollback",
+      "question": "What is a key consequence of reverting a VM to an earlier snapshot?",
+      "options": [
+        "The guest always retains every later database transaction",
+        "Changes made after the snapshot can be lost from the restored state",
+        "The snapshot is converted into an offsite backup automatically",
+        "All other VMs in the cluster revert at the same time"
+      ],
+      "answerIndex": 1,
+      "explanation": "Rollback has data-consistency and service consequences. Confirm the intended recovery point, dependencies, approvals, and application-specific recovery requirements first.",
+      "id": "vmware-012"
+    },
+    {
+      "topic": "Provisioning",
+      "question": "What is the usual distinction between a template and a clone?",
+      "options": [
+        "A template is a SAN path; a clone is an Ethernet port",
+        "A template is a provisioning source; a clone is a new VM copy created from a source",
+        "Templates automatically remain patched without maintenance",
+        "A clone always shares the same hostname and IP safely"
+      ],
+      "answerIndex": 1,
+      "explanation": "Provisioning also requires identity customization, network settings, access controls, patching, and backup enrollment. A copied VM is not automatically production-ready.",
+      "id": "vmware-013"
+    },
+    {
+      "topic": "Availability",
+      "question": "After an ESXi host fails, what does correctly configured vSphere HA normally attempt for protected VMs?",
+      "options": [
+        "Restart them on eligible surviving hosts with access to required resources",
+        "Restore all guest files from the latest backup automatically",
+        "Live-migrate their running memory out of the already-failed host",
+        "Guarantee that applications experience no interruption"
+      ],
+      "answerIndex": 0,
+      "explanation": "High Availability (HA) recovery includes failure detection, placement, VM restart, and application startup. Eligibility, capacity, storage access, and policy affect the outcome; HA is not a zero-downtime guarantee.",
+      "id": "vmware-014"
+    },
+    {
+      "topic": "Migration",
+      "question": "What is the primary purpose of compute vMotion?",
+      "options": [
+        "Recover memory from a host that has already lost power",
+        "Copy all datastores to an independent backup repository",
+        "Move a running VM’s execution to another compatible host with minimal interruption",
+        "Replace every application’s failover mechanism"
+      ],
+      "answerIndex": 2,
+      "explanation": "vMotion is primarily a planned live-migration capability. It relies on a functioning source and suitable destination connectivity, compatibility, and resources.",
+      "id": "vmware-015"
+    },
+    {
+      "topic": "Migration",
+      "question": "What does Storage vMotion primarily change?",
+      "options": [
+        "The backing storage location of a VM’s files or virtual disks",
+        "The physical location of the entire storage array",
+        "The database schema inside the guest",
+        "The VM’s application-level replication topology"
+      ],
+      "answerIndex": 0,
+      "explanation": "Storage migration and compute migration address different layers. Review compatibility, free capacity, workload impact, and the chosen migration operation’s requirements.",
+      "id": "vmware-016"
+    },
+    {
+      "topic": "Cluster scheduling",
+      "question": "What is DRS primarily responsible for?",
+      "options": [
+        "Recovering deleted guest files",
+        "VM placement and resource balancing within a cluster, using migration when appropriate",
+        "Implementing RAID parity for every datastore",
+        "Making all physical network links use the same VLAN"
+      ],
+      "answerIndex": 1,
+      "explanation": "DRS stands for Distributed Resource Scheduler. Distinguish its placement and balancing role from HA recovery and from vMotion as the migration mechanism.",
+      "id": "vmware-017"
+    },
+    {
+      "topic": "Failover capacity",
+      "question": "Why can HA admission control block powering on another VM even when some host capacity appears free?",
+      "options": [
+        "It always reserves an entire datastore for every VM",
+        "It only checks whether the VM name is unique",
+        "It rejects all VMs without snapshots",
+        "It preserves capacity needed to meet the configured failover policy"
+      ],
+      "answerIndex": 3,
+      "explanation": "Failover readiness requires usable spare resources, not only current utilization. Review the policy and reservations rather than disable protection merely to clear a warning.",
+      "id": "vmware-018"
+    },
+    {
+      "topic": "Management availability",
+      "question": "If vCenter becomes unavailable while ESXi hosts remain healthy, what normally happens to already-running VMs?",
+      "options": [
+        "They all power off immediately",
+        "Every VM moves to a public cloud",
+        "They continue running, although centralized management and some operations are affected",
+        "Their guest disks become read-only automatically"
+      ],
+      "answerIndex": 2,
+      "explanation": "The data plane is not identical to the centralized management plane. An existing HA configuration can still provide host-level protection, but management-dependent operations and recovery details need separate assessment.",
+      "id": "vmware-019"
+    },
+    {
+      "topic": "vMotion readiness",
+      "question": "What is a strong readiness check before migrating a production VM?",
+      "options": [
+        "Confirm only that both hosts answer a management ping",
+        "Make the VM’s IP address match vCenter’s address",
+        "Remove all reservations and security settings without review",
+        "Verify compatible compute, required networks and storage access, resources, and supported migration prerequisites"
+      ],
+      "answerIndex": 3,
+      "explanation": "Exact requirements depend on the migration type and versions. Use the compatibility check and current supported procedure rather than relying on one remembered prerequisite.",
+      "id": "vmware-020"
+    },
+    {
+      "topic": "CPU compatibility",
+      "question": "What is EVC intended to provide within its supported scope?",
+      "options": [
+        "A common exposed CPU feature baseline to support migration compatibility",
+        "Extra physical CPU cores for every VM",
+        "A replacement for checking virtual-device compatibility",
+        "Automatic migration between any Intel and AMD processors"
+      ],
+      "answerIndex": 0,
+      "explanation": "Enhanced vMotion Compatibility addresses CPU feature exposure. It does not make arbitrary hardware combinations or every migration scenario compatible.",
+      "id": "vmware-021"
+    },
+    {
+      "topic": "Host maintenance",
+      "question": "What should normally happen before planned work requiring an ESXi host outage?",
+      "options": [
+        "Evacuate or safely stop affected workloads and verify the maintenance plan and remaining capacity",
+        "Assume entering maintenance mode creates backups",
+        "Disable HA permanently on every cluster",
+        "Unplug storage links to force evacuation"
+      ],
+      "answerIndex": 0,
+      "explanation": "Maintenance mode is part of a controlled workflow, not proof of readiness. Consider placement constraints, local storage, dependent services, and whether surviving hosts can support the workload.",
+      "id": "vmware-022"
+    },
+    {
+      "topic": "Resource controls",
+      "question": "Which description correctly distinguishes reservation, limit, and shares?",
+      "options": [
+        "Reservation is a guaranteed minimum when admitted; limit is a cap; shares express relative priority under contention",
+        "All three always dedicate exclusive hardware",
+        "Reservation is only a label; limit is a minimum; shares add physical memory",
+        "Shares guarantee a fixed CPU percentage at all times"
+      ],
+      "answerIndex": 0,
+      "explanation": "Resource controls affect scheduling and entitlement in different ways. Poorly chosen reservations or limits can affect admission, utilization, and performance.",
+      "id": "vmware-023"
+    },
+    {
+      "topic": "Memory troubleshooting",
+      "question": "A VM is ballooning or host-swapping even though its host appears to have free memory. Which setting should you inspect?",
+      "options": [
+        "The alphabetical order of its datastore name",
+        "Only the VM’s DNS search suffix",
+        "An artificially low memory limit on the VM",
+        "Whether its template was stored on NFS"
+      ],
+      "answerIndex": 2,
+      "explanation": "A configured limit can constrain the VM independently of overall host free memory. Correlate VM settings, guest demand, and reclamation metrics before adding resources or migrating.",
+      "id": "vmware-024"
+    },
+    {
+      "topic": "CPU troubleshooting",
+      "question": "What does CPU ready time measure conceptually?",
+      "options": [
+        "The percentage of physical memory reserved for vCenter",
+        "Time the guest application is actively using a disk",
+        "Time a virtual CPU is ready to execute but is waiting to be scheduled",
+        "Time before a VM snapshot finishes deleting"
+      ],
+      "answerIndex": 2,
+      "explanation": "Low average CPU utilization does not rule out scheduling contention. Interpret the metric’s scope and interval rather than apply an unexplained universal threshold.",
+      "code": "Illustrative observation:\nGuest CPU utilization is moderate.\nCPU ready time rises during the slowdown.",
+      "language": "text",
+      "id": "vmware-025"
+    },
+    {
+      "topic": "Memory troubleshooting",
+      "question": "How does guest ballooning differ from hypervisor swapping?",
+      "options": [
+        "Ballooning adds physical RAM; swapping adds vCPUs",
+        "Ballooning uses a guest driver to reclaim memory; hypervisor swapping moves guest memory pages to host-managed storage",
+        "Both are the same as an application backup",
+        "Hypervisor swapping always proves the guest has no free cache"
+      ],
+      "answerIndex": 1,
+      "explanation": "They are different reclamation mechanisms with different implications. Inspect host pressure, VM limits, guest behavior, and actual swap activity before choosing a remedy.",
+      "id": "vmware-026"
+    },
+    {
+      "topic": "Sizing",
+      "question": "Why can adding many vCPUs to a slow VM fail to improve performance?",
+      "options": [
+        "Every application scales linearly with CPU count",
+        "vCPUs always provide unlimited dedicated physical cores",
+        "The workload may not use them effectively and scheduling or NUMA effects can worsen",
+        "Adding vCPUs removes storage latency automatically"
+      ],
+      "answerIndex": 2,
+      "explanation": "Right-size from measured demand and workload behavior. More virtual hardware is not a substitute for identifying CPU scheduling, memory, storage, network, or application bottlenecks.",
+      "id": "vmware-027"
+    },
+    {
+      "topic": "HA failure detection",
+      "question": "Why does vSphere HA use more than a single management-network symptom to assess host availability?",
+      "options": [
+        "The guest DNS resolver alone determines the HA primary",
+        "Any lost ping proves every VM has powered off",
+        "Datastore heartbeats are application transaction logs",
+        "Network isolation and actual host failure need to be distinguished using available evidence"
+      ],
+      "answerIndex": 3,
+      "explanation": "Management heartbeats and datastore heartbeating can help interpret failures. Recovery behavior also depends on isolation response, storage conditions, and configuration.",
+      "id": "vmware-028"
+    },
+    {
+      "topic": "Networking fundamentals",
+      "question": "What is a VMkernel network adapter typically used for?",
+      "options": [
+        "A guest’s virtual Ethernet adapter in every case",
+        "The configuration file of a virtual disk",
+        "Only the physical switch’s out-of-band management",
+        "Host services such as management, vMotion, or IP storage"
+      ],
+      "answerIndex": 3,
+      "explanation": "Distinguish vmk interfaces used by host services from guest vNICs and physical uplinks such as vmnic adapters. Each belongs to a different part of the network path.",
+      "id": "vmware-029"
+    },
+    {
+      "topic": "Virtual switching",
+      "question": "What is a key management distinction between a standard switch and a distributed switch?",
+      "options": [
+        "A distributed switch automatically makes all VLANs reachable",
+        "A standard switch is configured per host; a distributed switch provides centralized switch configuration across participating hosts",
+        "A distributed switch replaces the physical upstream network",
+        "A standard switch carries only storage traffic"
+      ],
+      "answerIndex": 1,
+      "explanation": "Centralized configuration simplifies consistency, but physical connectivity and correct host participation still matter. The virtual switch does not replace the physical network fabric.",
+      "id": "vmware-030"
+    },
+    {
+      "topic": "VLAN troubleshooting",
+      "question": "A VM is connected to the intended VLAN-tagged port group but cannot reach its gateway. What should you verify next?",
+      "options": [
+        "That the VM has a recent snapshot",
+        "The VLAN’s end-to-end physical uplink/trunk path and the guest’s IP configuration",
+        "That vCenter and the guest have the same hostname",
+        "Only that the datastore has free space"
+      ],
+      "answerIndex": 1,
+      "explanation": "A port-group setting is only one part of connectivity. Check guest settings, virtual port placement, uplinks, physical switch VLAN allowance, and the gateway path.",
+      "id": "vmware-031"
+    },
+    {
+      "topic": "Network and storage redundancy",
+      "question": "Why is NIC teaming not a complete replacement for iSCSI multipathing?",
+      "options": [
+        "Link redundancy and storage-session/path management operate at different layers",
+        "Multipathing configures physical switch VLANs automatically",
+        "NIC teaming grants LUN access through igroups automatically",
+        "Either feature guarantees storage availability without other configuration"
+      ],
+      "answerIndex": 0,
+      "explanation": "A supported design must align VMkernel interfaces, network topology, initiator sessions, and storage path policies. Do not assume one redundancy feature covers every failure mode.",
+      "id": "vmware-032"
+    },
+    {
+      "topic": "Distributed switching",
+      "question": "What is generally true if vCenter is unavailable but hosts and existing distributed-switch connections remain healthy?",
+      "options": [
+        "Existing host-side forwarding can continue, while changes and some port-allocation operations are affected",
+        "The distributed switch becomes a physical switch",
+        "All future reconnections and moves are guaranteed to work without vCenter",
+        "Every VM immediately loses all network traffic"
+      ],
+      "answerIndex": 0,
+      "explanation": "Existing forwarding and management/configuration operations are different. VM reconnection or recovery can depend on port binding and configuration, so avoid treating vCenter independence as universal.",
+      "id": "vmware-033"
+    },
+    {
+      "topic": "VMkernel troubleshooting",
+      "question": "What does this command specifically help test?",
+      "options": [
+        "Successful guest database authentication",
+        "Whether the NFS export grants write permission",
+        "The validity of every vMotion compatibility requirement",
+        "IP reachability from the chosen VMkernel interface to the peer address"
+      ],
+      "answerIndex": 3,
+      "explanation": "Testing the relevant host interface is more useful than only pinging from a workstation. A successful ping still does not prove MTU, storage authorization, or every service requirement.",
+      "code": "vmkping -I vmk1 192.0.2.20",
+      "language": "ESXi shell",
+      "id": "vmware-034"
+    },
+    {
+      "topic": "IP storage networking",
+      "question": "Why must a jumbo-frame design be checked end to end rather than only at the VMkernel interface?",
+      "options": [
+        "An MTU setting automatically changes every physical switch",
+        "Inconsistent MTU along the path can break or fragment traffic despite matching endpoints",
+        "Every storage protocol requires jumbo frames to function",
+        "Jumbo frames replace the need for routing"
+      ],
+      "answerIndex": 1,
+      "explanation": "Check the relevant interfaces and physical path using supported tests. Jumbo frames are a design choice, not a universal prerequisite for all storage connectivity.",
+      "id": "vmware-035"
+    },
+    {
+      "topic": "Storage inspection",
+      "question": "What does this read-only command help investigate?",
+      "options": [
+        "The number of snapshots in every VM",
+        "The guest’s current Windows drive letters",
+        "Available storage-device paths and their reported states",
+        "Only NFS user permissions"
+      ],
+      "answerIndex": 2,
+      "explanation": "Use path information to correlate a failed datastore with host, adapter, fabric, and array evidence. A path listing is not a command to format or repair storage.",
+      "code": "esxcli storage core path list",
+      "language": "ESXi shell",
+      "id": "vmware-036"
+    },
+    {
+      "topic": "Datastore inspection",
+      "question": "Which question can this read-only command help answer?",
+      "options": [
+        "Which FC zones are configured on the physical switch",
+        "Whether every guest has a valid domain login",
+        "Which database transactions are committed",
+        "Which filesystems/datastores the host reports and whether they are mounted"
+      ],
+      "answerIndex": 3,
+      "explanation": "Host-visible filesystem information helps scope datastore accessibility and capacity. Compare it with other hosts and storage evidence before attempting recovery actions.",
+      "code": "esxcli storage filesystem list",
+      "language": "ESXi shell",
+      "id": "vmware-037"
+    },
+    {
+      "topic": "Physical networking",
+      "question": "What does this command inspect?",
+      "options": [
+        "The list of every application TCP connection inside each guest",
+        "The contents of the vCenter database",
+        "Physical NIC inventory and reported link-related information",
+        "NFS export-policy identities"
+      ],
+      "answerIndex": 2,
+      "explanation": "Physical link and adapter health are part of the host’s network path. A link-up indication alone does not establish correct VLANs, MTU, routing, or application reachability.",
+      "code": "esxcli network nic list",
+      "language": "ESXi shell",
+      "id": "vmware-038"
+    },
+    {
+      "topic": "VMkernel inspection",
+      "question": "What is the focus of this command?",
+      "options": [
+        "Active storage snapshots on ONTAP",
+        "Virtual disks attached to every guest",
+        "Only physical Fibre Channel ports",
+        "The host’s VMkernel network interfaces"
+      ],
+      "answerIndex": 3,
+      "explanation": "VMkernel interfaces are host networking constructs. Inspect their service association and network path when investigating management, vMotion, or IP-storage connectivity.",
+      "code": "esxcli network ip interface list",
+      "language": "ESXi shell",
+      "id": "vmware-039"
+    },
+    {
+      "topic": "Version awareness",
+      "question": "Why start with a version/build check before using a procedure remembered from five years ago?",
+      "options": [
+        "Because checking a version automatically patches the host",
+        "Because the host build number proves backups are valid",
+        "Because all releases use identical prerequisites",
+        "To select the applicable support, compatibility, and command guidance"
+      ],
+      "answerIndex": 3,
+      "explanation": "Core concepts endure, but support status, known issues, hardware compatibility, and procedures change. Match guidance to the actual platform and build.",
+      "code": "esxcli system version get",
+      "language": "ESXi shell",
+      "id": "vmware-040"
+    },
+    {
+      "topic": "Performance inspection",
+      "question": "Why is esxtop useful during a shared VM performance incident?",
+      "options": [
+        "It replaces application and storage-array evidence completely",
+        "It only displays the current VMware license key",
+        "It exposes host-level compute, memory, storage, and network observations",
+        "It automatically repairs every resource bottleneck"
+      ],
+      "answerIndex": 2,
+      "explanation": "Use host metrics to correlate symptoms and isolate layers, not as an automatic diagnosis. Time alignment and comparisons with healthy workloads make the observations more useful.",
+      "code": "esxtop",
+      "language": "ESXi shell",
+      "id": "vmware-041"
+    },
+    {
+      "topic": "Datastore capacity",
+      "question": "A nearly full datastore has VMs with growing snapshot deltas. What is the strongest response?",
+      "options": [
+        "Assess impact, growth, free headroom, and supported consolidation or capacity recovery before changing files",
+        "Delete the largest delta VMDK manually",
+        "Assume guest free disk space proves the datastore is safe",
+        "Power-cycle every VM before collecting evidence"
+      ],
+      "answerIndex": 0,
+      "explanation": "Snapshot growth can exhaust shared storage and affect several workloads. Coordinate backup and storage teams, preserve disk-chain integrity, and validate applications after mitigation.",
+      "id": "vmware-042"
+    },
+    {
+      "topic": "Storage latency",
+      "question": "For the same measurement scope, what does the relationship shown here help distinguish?",
+      "options": [
+        "Storage-device/path latency from host-kernel latency in the observed I/O time",
+        "Network packet loss from DNS lookup time",
+        "Snapshot size from physical free space",
+        "Guest CPU ready time from application response time"
+      ],
+      "answerIndex": 0,
+      "explanation": "DAVG includes the device-driver-to-storage round trip; KAVG reflects host-kernel latency. Correlate these with array and fabric evidence instead of equating every slow I/O with a disk failure.",
+      "code": "Illustrative esxtop latency relationship:\nGAVG ≈ DAVG + KAVG\nDAVG = 4 ms\nKAVG = 2 ms\nGAVG ≈ 6 ms",
+      "language": "text",
+      "id": "vmware-043"
+    },
+    {
+      "topic": "Storage loss",
+      "question": "What is the basic distinction between APD and PDL?",
+      "options": [
+        "APD is always a guest CPU problem; PDL is always low RAM",
+        "Both conditions prove the device was intentionally deleted by an administrator",
+        "APD means all paths are unavailable without definitive permanent-loss signaling; PDL indicates permanent device loss",
+        "They both mean the datastore is full"
+      ],
+      "answerIndex": 2,
+      "explanation": "All Paths Down and Permanent Device Loss have different detection and recovery implications. Assess the cause and supported HA/storage behavior rather than blindly rebooting or removing devices.",
+      "id": "vmware-044"
+    },
+    {
+      "topic": "Multipathing policy",
+      "question": "What is the right basis for choosing a storage path-selection policy?",
+      "options": [
+        "Assume every active path has identical access characteristics",
+        "Always force the same policy on every storage device",
+        "Choose the policy with the shortest name",
+        "The supported array, protocol, host version, and vendor interoperability guidance"
+      ],
+      "answerIndex": 3,
+      "explanation": "Supported multipathing behavior depends on the storage implementation. Verify the exact design instead of applying a remembered Round Robin or preferred-path rule universally.",
+      "id": "vmware-045"
+    },
+    {
+      "topic": "Patching and compatibility",
+      "question": "What should a production ESXi patch plan include beyond downloading the patch?",
+      "options": [
+        "Only checking that the patch filename contains the current year",
+        "Hardware/driver/firmware compatibility, cluster capacity, backups, evacuation, rollback considerations, and validation",
+        "Assuming a VM snapshot can roll back every host change",
+        "Disabling all monitoring so no alerts are created"
+      ],
+      "answerIndex": 1,
+      "explanation": "Use the supported lifecycle procedure and change plan. A successful installation task is not the same as validated service recovery or a tested rollback path.",
+      "id": "vmware-046"
+    },
+    {
+      "topic": "Infrastructure dependencies",
+      "question": "Why inspect DNS and time synchronization in a vSphere management or authentication problem?",
+      "options": [
+        "They determine the parity layout of every datastore",
+        "A correct DNS record proves the storage fabric is healthy",
+        "They directly allocate more vCPUs",
+        "Name resolution and time-sensitive identity/services can depend on them"
+      ],
+      "answerIndex": 3,
+      "explanation": "Management availability depends on several infrastructure services. Check the exact failing operation and its dependencies rather than conclude that credentials alone explain every login issue.",
+      "id": "vmware-047"
+    },
+    {
+      "topic": "PowerCLI inspection",
+      "question": "What does this PowerCLI pipeline do?",
+      "options": [
+        "Create a new snapshot named PowerState",
+        "Change app01’s CPU count",
+        "Power on app01 automatically",
+        "Read the named VM and display selected identity/state properties"
+      ],
+      "answerIndex": 3,
+      "explanation": "Get-VM and Select-Object here are inspection operations. Distinguish a read-only query from commands that change power state, configuration, or storage.",
+      "code": "Get-VM -Name app01 | Select-Object Name, PowerState",
+      "language": "PowerShell",
+      "id": "vmware-048"
+    },
+    {
+      "topic": "PowerCLI inspection",
+      "question": "What does this pipeline inventory, and what does its result not establish?",
+      "options": [
+        "Every file inside each guest",
+        "VM snapshots; not the existence of independent recoverable backups",
+        "All offsite backup copies and their tested restore times",
+        "Only encrypted VMs that cannot be backed up"
+      ],
+      "answerIndex": 1,
+      "explanation": "Snapshot inventory is useful for lifecycle and capacity review. It is not evidence that backup jobs produced independent, application-consistent, tested recovery copies.",
+      "code": "Get-VM -Name app01 | Get-Snapshot",
+      "language": "PowerShell",
+      "id": "vmware-049"
+    },
+    {
+      "topic": "Interview scenario",
+      "question": "An HA restart brings a critical university application VM online after host failure. What should you do before declaring full recovery?",
+      "options": [
+        "Validate application/database dependencies and user workflows, then monitor and investigate the host failure",
+        "Assume the application met its RTO because HA was enabled",
+        "Skip communication because the recovery was automatic",
+        "Close the incident as soon as PowerState is PoweredOn"
+      ],
+      "answerIndex": 0,
+      "explanation": "Infrastructure recovery and service recovery are different. Confirm representative transactions and dependencies, communicate with the service owner, and preserve evidence for the root-cause investigation.",
+      "id": "vmware-050"
+    }
+  ]
+}

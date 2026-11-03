@@ -1,0 +1,678 @@
+{
+  "version": 1,
+  "title": "NetApp ONTAP: Storage Fundamentals and Recovery",
+  "questions": [
+    {
+      "topic": "Architecture",
+      "question": "What is ONTAP’s primary role in a NetApp storage environment?",
+      "options": [
+        "Replace the Ethernet or Fibre Channel switching fabric",
+        "Run each guest operating system as a hypervisor",
+        "Manage storage and provide data services to hosts and clients",
+        "Provide only a filesystem inside one Windows VM"
+      ],
+      "answerIndex": 2,
+      "explanation": "ONTAP is the storage operating system. Separate its responsibilities from the hypervisor, host operating system, network fabric, and application when explaining an end-to-end storage path.",
+      "id": "netapp-001"
+    },
+    {
+      "topic": "Architecture",
+      "question": "In a conventional ONTAP AFF/FAS cluster, how do a node and a cluster differ?",
+      "options": [
+        "A node is a volume; a cluster is a single RAID group",
+        "A node is a controller; a cluster groups nodes into a managed storage system",
+        "A cluster is always exactly one physical controller",
+        "A node is an SVM; a cluster is an NFS export"
+      ],
+      "answerIndex": 1,
+      "explanation": "A controller contributes compute, connectivity, and storage ownership to the cluster. A cluster can contain multiple HA pairs; a cluster and an HA pair are not interchangeable terms.",
+      "id": "netapp-002"
+    },
+    {
+      "topic": "Availability",
+      "question": "What failure is an ONTAP HA pair primarily designed to tolerate?",
+      "options": [
+        "A controller becoming unavailable while its partner can access the required storage",
+        "Every application failure inside a guest operating system",
+        "An incorrect file deletion that has already replicated",
+        "Loss of every copy of the data at all sites"
+      ],
+      "answerIndex": 0,
+      "explanation": "HA supports storage-controller continuity and planned maintenance. It is not a substitute for backups, independent copies, or application-level recovery.",
+      "id": "netapp-003"
+    },
+    {
+      "topic": "Availability",
+      "question": "How do takeover and giveback differ?",
+      "options": [
+        "Takeover assumes a partner’s storage service; giveback returns storage ownership after recovery",
+        "Takeover copies a volume to another site; giveback deletes that copy",
+        "Takeover adds a disk; giveback removes parity",
+        "Takeover creates a snapshot; giveback restores it"
+      ],
+      "answerIndex": 0,
+      "explanation": "The partner can serve storage during a controller outage or maintenance. Before giveback, verify controller health and follow the supported procedure rather than assuming recovery is complete because a node rebooted.",
+      "id": "netapp-004"
+    },
+    {
+      "topic": "Storage layout",
+      "question": "What is an aggregate, also called a local tier, in conventional ONTAP?",
+      "options": [
+        "A logical IP interface carrying NFS traffic",
+        "An SMB share name visible to clients",
+        "A node-managed pool of physical storage from which volumes receive capacity",
+        "A group of initiator WWPNs"
+      ],
+      "answerIndex": 2,
+      "explanation": "Local tiers organize physical storage into usable capacity. Volumes, SVMs, and LIFs are separate logical layers. Newer platform personalities can use different administration models.",
+      "id": "netapp-005"
+    },
+    {
+      "topic": "Storage layout",
+      "question": "Where does a FlexVol volume fit in a conventional ONTAP design?",
+      "options": [
+        "It is a logical data container drawing capacity from an aggregate",
+        "It is the physical controller running ONTAP",
+        "It is the Ethernet VLAN carrying storage traffic",
+        "It is the initiator group that authorizes SAN access"
+      ],
+      "answerIndex": 0,
+      "explanation": "FlexVol volumes hold data and are important units for capacity and protection management. A host-facing LUN or NAS namespace uses this underlying storage organization.",
+      "id": "netapp-006"
+    },
+    {
+      "topic": "Storage virtualization",
+      "question": "What does an SVM provide?",
+      "options": [
+        "A physical disk replacement for a RAID group",
+        "A guest VM that must run on ESXi",
+        "A logical storage-server context with its own data access configuration",
+        "A single mandatory protocol shared by every cluster tenant"
+      ],
+      "answerIndex": 2,
+      "explanation": "SVM means Storage Virtual Machine. It provides a logical boundary for data-serving configuration, including volumes and protocol access. The CLI commonly uses the historical term vserver for SVM-related commands.",
+      "id": "netapp-007"
+    },
+    {
+      "topic": "Networking",
+      "question": "What is a logical interface, or LIF, in ONTAP?",
+      "options": [
+        "A logical network endpoint associated with a network identity and service configuration",
+        "A RAID parity disk",
+        "A physical Ethernet cable",
+        "A snapshot policy attached to a LUN"
+      ],
+      "answerIndex": 0,
+      "explanation": "Clients connect through data LIFs rather than directly addressing a volume’s physical disk. LIF behavior, placement, and failover depend on protocol, platform, and configuration.",
+      "id": "netapp-008"
+    },
+    {
+      "topic": "Networking",
+      "question": "Why distinguish management LIFs from data LIFs?",
+      "options": [
+        "Administrative access and client data access are different services and network paths",
+        "Every management LIF automatically exports every volume",
+        "Data LIFs are always reachable through the cluster interconnect",
+        "A management login proves that NFS and SAN paths are healthy"
+      ],
+      "answerIndex": 0,
+      "explanation": "Being able to administer a cluster does not prove that a client’s data path is working. Troubleshoot the relevant LIF, protocol, and network rather than treating all connectivity as equivalent.",
+      "id": "netapp-009"
+    },
+    {
+      "topic": "Protocols",
+      "question": "What is the fundamental difference between NAS and SAN access?",
+      "options": [
+        "NAS always uses Fibre Channel; SAN always uses SMB",
+        "NAS requires no authorization; SAN always encrypts every block",
+        "NAS presents files; SAN presents block storage that hosts interpret",
+        "SAN is a backup type; NAS is a RAID type"
+      ],
+      "answerIndex": 2,
+      "explanation": "NAS (Network Attached Storage) exposes files through protocols such as NFS and SMB. SAN (Storage Area Network) supplies block access through protocols such as FC and iSCSI; the host supplies a filesystem or another block consumer.",
+      "id": "netapp-010"
+    },
+    {
+      "topic": "NFS",
+      "question": "An ESXi host uses an NFS datastore from ONTAP. Which description is correct?",
+      "options": [
+        "The NFS share is authorized through a Fibre Channel igroup",
+        "ESXi mounts an exported filesystem path served by the SVM",
+        "Every guest VM must mount the same NFS path itself",
+        "ESXi must format an exported NFS directory as VMFS"
+      ],
+      "answerIndex": 1,
+      "explanation": "For an NFS datastore, the hypervisor consumes a file service. Guest virtual disks can reside as files on that datastore without each guest mounting the export.",
+      "id": "netapp-011"
+    },
+    {
+      "topic": "SMB",
+      "question": "An SMB user can reach a share but receives Access denied on a folder. Which checks are most relevant?",
+      "options": [
+        "Only the aggregate RAID policy",
+        "Only whether the volume is thin provisioned",
+        "Both share-level access and the file/folder security permissions",
+        "Only the IP address of the cluster-management LIF"
+      ],
+      "answerIndex": 2,
+      "explanation": "Effective access depends on the applicable share and filesystem permission model, identity, and group memberships. Network reachability alone does not establish authorization.",
+      "id": "netapp-012"
+    },
+    {
+      "topic": "SAN",
+      "question": "What is a LUN in an ONTAP SAN environment?",
+      "options": [
+        "An Ethernet aggregation group",
+        "A storage-controller login account",
+        "An NFS junction path",
+        "A logical block device presented to an authorized initiator"
+      ],
+      "answerIndex": 3,
+      "explanation": "The host sees a logical disk-like device and can place a filesystem such as VMFS on it. In conventional ONTAP, LUNs are contained in volumes.",
+      "id": "netapp-013"
+    },
+    {
+      "topic": "iSCSI",
+      "question": "Which statement best describes iSCSI?",
+      "options": [
+        "It exposes SMB shares over a Fibre Channel fabric",
+        "It carries SCSI block-storage commands over TCP/IP",
+        "It is ONTAP’s disk-parity algorithm",
+        "It provides a filesystem without a host initiator"
+      ],
+      "answerIndex": 1,
+      "explanation": "Think through the initiator, IP network, target LIF, session, LUN mapping, and host multipathing. A successful IP ping is only one small part of that path.",
+      "id": "netapp-014"
+    },
+    {
+      "topic": "Fibre Channel",
+      "question": "What do WWPNs identify in a Fibre Channel storage design?",
+      "options": [
+        "TCP port numbers assigned by DHCP",
+        "NFS directory permissions",
+        "Volume snapshot schedules",
+        "Port identities used for initiators and targets"
+      ],
+      "answerIndex": 3,
+      "explanation": "WWPNs are central to FC zoning and initiator configuration. They are not IP addresses, and verifying one layer does not prove end-to-end LUN access.",
+      "id": "netapp-015"
+    },
+    {
+      "topic": "SAN access",
+      "question": "What is the purpose of an ONTAP igroup?",
+      "options": [
+        "Combine physical disks into a RAID group",
+        "Collect all SMB users in Active Directory",
+        "Group initiator identities to control which hosts can access mapped LUNs",
+        "Configure intercluster replication bandwidth"
+      ],
+      "answerIndex": 2,
+      "explanation": "An igroup identifies SAN initiators such as FC WWPNs or iSCSI initiator names. LUN mapping associates storage with authorized initiators.",
+      "id": "netapp-016"
+    },
+    {
+      "topic": "SAN access",
+      "question": "Why can correct FC zoning still leave a host unable to see a LUN?",
+      "options": [
+        "Array-side initiator configuration and LUN mapping must also be correct",
+        "Zoning only applies to NFS clients",
+        "FC zoning replaces every host multipath driver",
+        "Zoning automatically creates a filesystem inside the guest"
+      ],
+      "answerIndex": 0,
+      "explanation": "Fabric zoning controls permitted communication through the FC fabric. ONTAP LUN masking/mapping and host configuration are separate parts of the end-to-end access chain.",
+      "id": "netapp-017"
+    },
+    {
+      "topic": "Multipathing",
+      "question": "In an asymmetric SAN path design, what does ALUA help the host understand?",
+      "options": [
+        "Which target paths have particular access states, such as optimized or non-optimized",
+        "Which snapshot is application-consistent",
+        "Which VLAN should carry vCenter management",
+        "Which files the user is permitted to delete"
+      ],
+      "answerIndex": 0,
+      "explanation": "ALUA means Asymmetric Logical Unit Access. It communicates path characteristics so supported host multipathing can select paths appropriately. Do not assume every NetApp platform has the same symmetric or asymmetric path behavior.",
+      "id": "netapp-018"
+    },
+    {
+      "topic": "Multipathing",
+      "question": "One SAN path fails, but a correctly configured redundant path remains. What should host multipathing normally provide?",
+      "options": [
+        "Guaranteed increased throughput for every workload",
+        "Continued I/O through an available supported path",
+        "A new VMFS datastore on every surviving path",
+        "Automatic restoration of an accidentally deleted file"
+      ],
+      "answerIndex": 1,
+      "explanation": "Multipathing supports path availability and, with suitable policies, path use. It does not replace storage redundancy, and surviving-path capacity still matters.",
+      "id": "netapp-019"
+    },
+    {
+      "topic": "RAID",
+      "question": "Within a RAID-DP group, what is the intended parity protection?",
+      "options": [
+        "Tolerance of up to two simultaneous disk failures within that group",
+        "Protection from any number of controller failures",
+        "A replacement for file-level backups",
+        "Automatic replication to another data centre"
+      ],
+      "answerIndex": 0,
+      "explanation": "RAID-DP uses double parity. The protection is about disk failures in the RAID group, not arbitrary site loss or logical data corruption.",
+      "id": "netapp-020"
+    },
+    {
+      "topic": "RAID and recovery",
+      "question": "Why does a healthy RAID group not eliminate the need for backups?",
+      "options": [
+        "RAID only protects NFS and never SAN",
+        "RAID does not by itself recover overwritten, deleted, or site-lost data",
+        "A RAID group cannot survive a disk failure",
+        "Backup software is what supplies RAID parity"
+      ],
+      "answerIndex": 1,
+      "explanation": "Availability against disk failures and recoverability from data loss are different objectives. Independent recovery copies and tested restores address risks RAID does not.",
+      "id": "netapp-021"
+    },
+    {
+      "topic": "Snapshots",
+      "question": "What is a core property of an ONTAP volume Snapshot copy?",
+      "options": [
+        "A guarantee that every application transaction is quiesced",
+        "A space-efficient point-in-time view that retains references to existing data blocks",
+        "A mandatory full physical copy made before every read",
+        "A separate offsite copy independent of the original storage by default"
+      ],
+      "answerIndex": 1,
+      "explanation": "Snapshot copies preserve a point-in-time view without copying the whole volume at creation. Local snapshots still depend on their underlying storage and protection design.",
+      "id": "netapp-022"
+    },
+    {
+      "topic": "Snapshot capacity",
+      "question": "A user deletes a large live file, but physical free space barely increases. Which explanation is plausible?",
+      "options": [
+        "Deleting a file always increases physical free space immediately",
+        "The SVM has changed into a RAID group",
+        "The host’s DNS cache is consuming the aggregate",
+        "Retained snapshots still reference the file’s blocks"
+      ],
+      "answerIndex": 3,
+      "explanation": "Blocks needed by snapshots cannot be reclaimed solely because live data no longer references them. Review snapshot retention and actual space accounting before deleting protection data.",
+      "id": "netapp-023"
+    },
+    {
+      "topic": "Application consistency",
+      "question": "Why coordinate a database backup with application quiescing or an application-aware workflow?",
+      "options": [
+        "To avoid keeping transaction logs for any database",
+        "To convert all NAS storage into SAN",
+        "To make the host’s time zone identical to the array name",
+        "To capture a recoverable application-consistent state rather than assume a storage snapshot guarantees it"
+      ],
+      "answerIndex": 3,
+      "explanation": "Storage-level point-in-time capture and application transaction consistency are different layers. Use the application’s supported backup/recovery integration and validate recovery.",
+      "id": "netapp-024"
+    },
+    {
+      "topic": "Replication",
+      "question": "How does asynchronous SnapMirror differ from a controller HA pair?",
+      "options": [
+        "It is only a local controller heartbeat",
+        "It is the same as adding a spare disk",
+        "It transfers protected data to another location on a schedule or update cycle",
+        "It keeps every application continuously running on two controllers"
+      ],
+      "answerIndex": 2,
+      "explanation": "Asynchronous replication supports recovery from another copy but may lag the source. Controller HA supports local service continuity; neither alone proves the full application DR plan.",
+      "id": "netapp-025"
+    },
+    {
+      "topic": "Recovery objectives",
+      "question": "What do RPO and RTO describe respectively?",
+      "options": [
+        "RAID rebuild speed and snapshot reserve size",
+        "Acceptable data-loss interval and target service-restoration time",
+        "Disk response time and network round-trip time",
+        "Maximum IOPS and guaranteed throughput"
+      ],
+      "answerIndex": 1,
+      "explanation": "Recovery Point Objective (RPO) asks how much recent data can be lost; Recovery Time Objective (RTO) asks how long restoration can take. Backup frequency, replication lag, dependencies, and restore testing influence whether targets are achievable.",
+      "id": "netapp-026"
+    },
+    {
+      "topic": "Recovery design",
+      "question": "Why should local snapshots not be the only ransomware or disaster recovery control?",
+      "options": [
+        "Only synchronous replication can restore a directory",
+        "Changing the volume name makes snapshots immutable",
+        "They may share the affected system and administrative failure domain",
+        "Snapshots cannot ever restore files"
+      ],
+      "answerIndex": 2,
+      "explanation": "Use a deliberate independent-copy and access-protection design, including appropriate immutability where required and supported. A successful snapshot schedule alone does not demonstrate resilience.",
+      "id": "netapp-027"
+    },
+    {
+      "topic": "Storage efficiency",
+      "question": "What is the basic distinction between deduplication and compression?",
+      "options": [
+        "Deduplication shares repeated data; compression encodes data more compactly",
+        "Deduplication adds disk parity; compression adds controllers",
+        "Compression guarantees the same savings for every workload",
+        "Both are the same as replication to a remote site"
+      ],
+      "answerIndex": 0,
+      "explanation": "Efficiency savings depend on the data and platform features. Capacity planning should use measured results rather than assume a universal reduction ratio.",
+      "id": "netapp-028"
+    },
+    {
+      "topic": "Thin provisioning",
+      "question": "What is the key operational risk when logical allocations exceed available physical capacity?",
+      "options": [
+        "Thin volumes can never grow beyond their first write",
+        "Thin provisioning removes the need to monitor snapshots",
+        "Several workloads may demand more backing space than is available",
+        "Every thin allocation immediately reserves its full logical size"
+      ],
+      "answerIndex": 2,
+      "explanation": "Thin provisioning allocates backing space as needed rather than treating logical allocation as already consumed capacity. Monitor actual usage, growth, retained snapshots, and available physical headroom.",
+      "id": "netapp-029"
+    },
+    {
+      "topic": "Capacity management",
+      "question": "Why can volume autogrow fail to solve a full-volume incident?",
+      "options": [
+        "Autogrow works only for volumes with no data",
+        "It still needs usable capacity in its backing storage and valid growth limits",
+        "Autogrow supplies new physical disks automatically",
+        "It removes all snapshots without regard to policy"
+      ],
+      "answerIndex": 1,
+      "explanation": "A volume-level growth setting is not an unlimited storage source. Investigate parent capacity, configured maximums, protection requirements, and supported recovery actions.",
+      "id": "netapp-030"
+    },
+    {
+      "topic": "Capacity reporting",
+      "question": "Why can logical used capacity differ from physical used capacity?",
+      "options": [
+        "SVM names determine the reported usage",
+        "Physical capacity is measured in milliseconds",
+        "Efficiency, block sharing, and accounting choices can make them measure different things",
+        "Logical capacity is always equal to raw disk capacity"
+      ],
+      "answerIndex": 2,
+      "explanation": "Be explicit about the layer and metric: raw, usable, allocated, logical, and physical are different concepts. Compare like-for-like measurements before diagnosing a capacity discrepancy.",
+      "id": "netapp-031"
+    },
+    {
+      "topic": "Performance basics",
+      "question": "Which interpretation is correct for these illustrative measurements?",
+      "options": [
+        "One latency sample proves the array is healthy under every workload",
+        "IOPS and MB/s are identical units",
+        "Low latency proves that enough free capacity exists",
+        "IOPS counts operations, throughput counts data rate, and latency measures response time"
+      ],
+      "answerIndex": 3,
+      "explanation": "Performance analysis needs the workload’s operation size, read/write mix, concurrency, and time interval. No single metric alone establishes the bottleneck.",
+      "code": "Illustrative workload metrics:\nIOPS:       4000 operations/second\nThroughput: 250 MB/second\nLatency:    3 ms",
+      "language": "text",
+      "id": "netapp-032"
+    },
+    {
+      "topic": "Shared incidents",
+      "question": "Several VM datastores become slow together. What is the strongest first approach?",
+      "options": [
+        "Map shared storage/network dependencies and correlate the timing with evidence",
+        "Restart each guest independently before checking shared systems",
+        "Assume all affected applications have unrelated bugs",
+        "Increase every LUN’s logical size without checking latency"
+      ],
+      "answerIndex": 0,
+      "explanation": "Scope the incident, identify common paths or storage objects, compare healthy workloads, and inspect latency, errors, capacity, and recent changes. Coordinate investigation rather than introduce many unrelated changes.",
+      "id": "netapp-033"
+    },
+    {
+      "topic": "Performance controls",
+      "question": "What is a useful role of storage QoS?",
+      "options": [
+        "Replace SAN zoning and export policies",
+        "Control workload resource consumption to help manage contention",
+        "Guarantee every application meets its business RTO",
+        "Add physical storage capacity without hardware"
+      ],
+      "answerIndex": 1,
+      "explanation": "QoS can help contain noisy workloads or manage performance expectations. It does not manufacture capacity or eliminate an underlying bottleneck.",
+      "id": "netapp-034"
+    },
+    {
+      "topic": "NFS troubleshooting",
+      "question": "What would this read-only command help inspect during an NFS access-denied investigation?",
+      "options": [
+        "Every user’s Active Directory password",
+        "The ESXi host’s local firewall only",
+        "The FC switch’s zoning database",
+        "The export policy’s client matching and access rules"
+      ],
+      "answerIndex": 3,
+      "explanation": "Export policy rules are one authorization layer. Also check the volume’s assigned policy, client identity/address, protocol, junction path, and applicable filesystem permissions.",
+      "code": "vserver export-policy rule show -vserver svm1 -policyname nfs_clients",
+      "language": "ONTAP CLI",
+      "id": "netapp-035"
+    },
+    {
+      "topic": "NAS namespace",
+      "question": "What is the purpose of inspecting junction-path here?",
+      "options": [
+        "Display the array’s RAID parity count",
+        "Find where a volume is mounted within the SVM’s NAS namespace",
+        "Identify the host’s FC initiator WWPN",
+        "Calculate database transaction consistency"
+      ],
+      "answerIndex": 1,
+      "explanation": "A NAS client needs the correct exported namespace path. A volume’s junction path is not the same thing as an initiator mapping for a SAN LUN.",
+      "code": "volume show -vserver svm1 -fields junction-path",
+      "language": "ONTAP CLI",
+      "id": "netapp-036"
+    },
+    {
+      "topic": "NFS identity",
+      "question": "An NFS client can mount a path but cannot write as expected. What should you examine beyond IP connectivity?",
+      "options": [
+        "Only the cluster’s serial number",
+        "Whether the volume name matches the host name",
+        "Export permissions, user/group identity mapping, and filesystem security semantics",
+        "Only whether the client has more CPUs"
+      ],
+      "answerIndex": 2,
+      "explanation": "Mount success does not grant every operation. Separate export authorization from the permissions and identity used to access files, including how privileged client users are handled.",
+      "id": "netapp-037"
+    },
+    {
+      "topic": "SMB identity",
+      "question": "Why are DNS and time synchronization relevant when troubleshooting SMB domain authentication?",
+      "options": [
+        "They replace share permissions",
+        "Directory discovery and Kerberos authentication depend on them",
+        "They guarantee that deleted files can be recovered",
+        "They determine the aggregate’s RAID level"
+      ],
+      "answerIndex": 1,
+      "explanation": "Check identity-service dependencies as well as the storage and network path. Valid credentials may still fail if domain discovery or time-sensitive authentication is broken.",
+      "id": "netapp-038"
+    },
+    {
+      "topic": "SAN troubleshooting",
+      "question": "A host sees no expected LUNs after a change. Which sequence is most defensible?",
+      "options": [
+        "Disable all access controls to see whether data appears",
+        "Create a new filesystem on every visible device immediately",
+        "Treat a successful management login as proof of host connectivity",
+        "Verify protocol connectivity, initiator identities, zoning or sessions, LUN mappings, and host discovery"
+      ],
+      "answerIndex": 3,
+      "explanation": "Trace the actual data path and compare working hosts before changing presentation. Avoid formatting unfamiliar devices or widening access as a diagnostic shortcut.",
+      "id": "netapp-039"
+    },
+    {
+      "topic": "Read-only inspection",
+      "question": "What does this ONTAP command primarily help establish?",
+      "options": [
+        "Which NFS files are open by every user",
+        "Which nodes are present and their reported cluster status",
+        "Which snapshots are immutable backups",
+        "Which guest VMs are powered off"
+      ],
+      "answerIndex": 1,
+      "explanation": "Start with topology and health when rebuilding context. A cluster status view is one piece of evidence, not proof that every client service is healthy.",
+      "code": "cluster show",
+      "language": "ONTAP CLI",
+      "id": "netapp-040"
+    },
+    {
+      "topic": "Read-only inspection",
+      "question": "Why inspect this output before planned controller maintenance?",
+      "options": [
+        "To delete stale application snapshots",
+        "To perform a takeover automatically",
+        "To verify the HA relationship and reported takeover readiness/status",
+        "To change every host’s path selection policy"
+      ],
+      "answerIndex": 2,
+      "explanation": "Read the failover state and any reasons protection or takeover is unavailable before proceeding. Use a supported maintenance runbook and application-aware validation.",
+      "code": "storage failover show",
+      "language": "ONTAP CLI",
+      "id": "netapp-041"
+    },
+    {
+      "topic": "Read-only inspection",
+      "question": "Which object does this command inspect?",
+      "options": [
+        "A VMware VM named data1",
+        "A physical disk named data1",
+        "A Fibre Channel zone named svm1",
+        "The named volume in the specified SVM"
+      ],
+      "answerIndex": 3,
+      "explanation": "Volume inspection helps verify the correct logical object before investigating capacity, state, or access. It does not itself modify the volume.",
+      "code": "volume show -vserver svm1 -volume data1",
+      "language": "ONTAP CLI",
+      "id": "netapp-042"
+    },
+    {
+      "topic": "Read-only inspection",
+      "question": "What should you use this detailed LIF view to investigate?",
+      "options": [
+        "The logical interface’s placement, identity, configuration, and reported status",
+        "The contents of every file in the SVM",
+        "The guest operating system’s CPU scheduler",
+        "The retention of database transaction logs"
+      ],
+      "answerIndex": 0,
+      "explanation": "A data-path investigation includes the actual data LIF, not just management reachability. Interpret failover and migration behavior using the relevant protocol and platform documentation.",
+      "code": "network interface show -vserver svm1 -lif nfs1 -instance",
+      "language": "ONTAP CLI",
+      "id": "netapp-043"
+    },
+    {
+      "topic": "Read-only inspection",
+      "question": "What relationship is inspected by this command?",
+      "options": [
+        "Ethernet ports mapped to DNS zones",
+        "Snapshots mapped to backup schedules",
+        "SMB users mapped to VM templates",
+        "LUN presentation mappings to initiator groups"
+      ],
+      "answerIndex": 3,
+      "explanation": "The existence of a LUN is not enough for SAN visibility; appropriate mapping to the host’s initiator group is also required.",
+      "code": "lun mapping show -vserver svm1",
+      "language": "ONTAP CLI",
+      "id": "netapp-044"
+    },
+    {
+      "topic": "Replication monitoring",
+      "question": "Why inspect replication state and lag rather than rely only on a configured SnapMirror schedule?",
+      "options": [
+        "A configured relationship can still have failed or delayed updates",
+        "A schedule guarantees every transfer has succeeded",
+        "Only the source volume’s name determines RPO",
+        "Replication lag measures guest CPU contention"
+      ],
+      "answerIndex": 0,
+      "explanation": "Compare observed transfer status and lag with recovery objectives. Scheduling, transport availability, and a usable destination recovery procedure all matter.",
+      "code": "snapmirror show",
+      "language": "ONTAP CLI",
+      "id": "netapp-045"
+    },
+    {
+      "topic": "Snapshot inspection",
+      "question": "What does this command show, and what does it not prove?",
+      "options": [
+        "Snapshot inventory for the volume; not successful application recovery",
+        "All offsite copies and a completed DR test",
+        "Only snapshots taken by VMware inside each guest",
+        "The filesystem permissions of every live file"
+      ],
+      "answerIndex": 0,
+      "explanation": "An inventory shows available point-in-time copies, not their application consistency or a tested restore outcome. Recovery evidence requires an appropriate restore and validation workflow.",
+      "code": "volume snapshot show -vserver svm1 -volume data1",
+      "language": "ONTAP CLI",
+      "id": "netapp-046"
+    },
+    {
+      "topic": "Health monitoring",
+      "question": "What is the appropriate use of this command during an incident?",
+      "options": [
+        "Automatically clear the incident and restore all clients",
+        "Replace examination of network and host evidence",
+        "Perform a disruptive controller restart",
+        "Inspect active health alerts and correlate them with the affected service"
+      ],
+      "answerIndex": 3,
+      "explanation": "Health alerts help identify degraded components and dependencies. Correlate alerts, event timing, and client symptoms before selecting a supported recovery action.",
+      "code": "system health alert show",
+      "language": "ONTAP CLI",
+      "id": "netapp-047"
+    },
+    {
+      "topic": "Safe maintenance",
+      "question": "What is a strong preparation step before an ONTAP upgrade after several years away?",
+      "options": [
+        "Assume every platform exposes the same CLI commands",
+        "Verify the exact platform/version, compatibility, health, backups, and supported upgrade path",
+        "Reuse an old procedure without checking its version",
+        "Disable host multipathing to simplify maintenance"
+      ],
+      "answerIndex": 1,
+      "explanation": "Lasting concepts transfer, but exact procedures and compatibility do not. Review current vendor guidance and the organization’s change and recovery procedures before touching production.",
+      "id": "netapp-048"
+    },
+    {
+      "topic": "Recency refresh",
+      "question": "Why should an administrator not apply every remembered AFF/FAS volume-management procedure directly to ASA r2?",
+      "options": [
+        "All ONTAP systems require identical provisioning commands",
+        "ASA r2 is just a new name for an ESXi host",
+        "An ASA r2 system provides only SMB shares",
+        "ASA r2 uses a different simplified storage administration model and some commands differ"
+      ],
+      "answerIndex": 3,
+      "explanation": "Identify the actual platform personality and ONTAP version first. Familiar concepts remain valuable, but ASA r2 storage availability zones and storage units change parts of the administration workflow.",
+      "id": "netapp-049"
+    },
+    {
+      "topic": "Interview scenario",
+      "question": "A campus application is restored after a storage-path repair. What best demonstrates recovery?",
+      "options": [
+        "Close the incident because an array management page loads",
+        "Count the number of snapshots without testing the application",
+        "Assume every dependent database is healthy because a VM powers on",
+        "Validate host paths, datastore access, and representative application transactions while monitoring for recurrence"
+      ],
+      "answerIndex": 3,
+      "explanation": "Restoration is an end-to-end service outcome. Confirm the repaired infrastructure path and application behavior, communicate status, and document the fault and follow-up actions.",
+      "id": "netapp-050"
+    }
+  ]
+}

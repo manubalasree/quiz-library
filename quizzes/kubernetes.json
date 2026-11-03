@@ -1,0 +1,136 @@
+{
+  "version": 1,
+  "title": "Kubernetes Practice Lab",
+  "questions": [
+    {
+      "id": "k8s-001",
+      "topic": "Workloads",
+      "question": "A Deployment specifies three replicas. One Pod is deleted manually. What normally happens?",
+      "options": [
+        "The Deployment scales down to two replicas",
+        "The ReplicaSet creates a replacement Pod",
+        "The deleted Pod restarts with the same UID",
+        "An administrator must recreate the Pod"
+      ],
+      "answerIndex": 1,
+      "explanation": "The ReplicaSet reconciles the actual Pod count with the desired count. The replacement Pod has a new UID."
+    },
+    {
+      "id": "k8s-002",
+      "topic": "Networking",
+      "question": "Which Service type provides an internal cluster IP by default?",
+      "options": [
+        "NodePort",
+        "LoadBalancer",
+        "ClusterIP",
+        "ExternalName"
+      ],
+      "answerIndex": 2,
+      "explanation": "ClusterIP is the default Service type. It provides a virtual IP for reaching a Service from within the cluster."
+    },
+    {
+      "id": "k8s-003",
+      "topic": "Troubleshooting",
+      "question": "A container repeatedly exits, and the Pod shows CrashLoopBackOff. What does this indicate?",
+      "options": [
+        "The image cannot be downloaded",
+        "Kubernetes is delaying repeated container restart attempts",
+        "The Pod cannot find a suitable node",
+        "A readiness probe removed the Pod from service traffic"
+      ],
+      "answerIndex": 1,
+      "explanation": "CrashLoopBackOff means the container keeps failing and Kubernetes backs off between restart attempts. Check its logs and termination details to find the underlying cause."
+    },
+    {
+      "id": "k8s-004",
+      "topic": "kubectl",
+      "question": "Which command shows logs from the previous instance of a restarted container?",
+      "options": [
+        "kubectl logs <pod> --previous",
+        "kubectl describe <pod> --logs",
+        "kubectl logs <pod> --history",
+        "kubectl get events <pod> --previous"
+      ],
+      "answerIndex": 0,
+      "explanation": "Use kubectl logs <pod> --previous to inspect the previous terminated container instance, if available. Add -c <container> for the relevant container in a multi-container Pod."
+    },
+    {
+      "id": "k8s-005",
+      "topic": "Health checks",
+      "question": "What happens when a container’s readiness probe fails?",
+      "options": [
+        "Kubernetes immediately restarts the container",
+        "Kubernetes deletes the Pod",
+        "The Pod is marked unready and normally stops receiving matching Service traffic",
+        "Kubernetes moves the Pod to another node"
+      ],
+      "answerIndex": 2,
+      "explanation": "Readiness controls whether the Pod is ready to receive traffic. A failed readiness probe does not itself restart a container; liveness probes can trigger restarts."
+    },
+    {
+      "id": "k8s-006",
+      "topic": "Scheduling",
+      "question": "A Pod requests 2 CPUs, but no eligible node has enough CPU available for scheduling. What normally happens?",
+      "options": [
+        "Kubernetes automatically lowers the request",
+        "The Pod remains Pending",
+        "The Pod starts with a CPU limit of 1",
+        "An arbitrary running Pod is immediately evicted"
+      ],
+      "answerIndex": 1,
+      "explanation": "The scheduler uses resource requests when placing Pods. Without a suitable node, the Pod remains Pending. Check kubectl describe pod for scheduling events."
+    },
+    {
+      "id": "k8s-007",
+      "topic": "Workloads",
+      "question": "What is the main purpose of a StatefulSet?",
+      "options": [
+        "Run one Pod on every eligible node",
+        "Run short-lived tasks until completion",
+        "Manage Pods with stable identities and persistent storage associations",
+        "Expose applications outside the cluster"
+      ],
+      "answerIndex": 2,
+      "explanation": "StatefulSets provide stable Pod identities and can associate each Pod with its own persistent volume claim. DaemonSets handle per-node workloads; Jobs handle run-to-completion tasks."
+    },
+    {
+      "id": "k8s-008",
+      "topic": "Networking",
+      "question": "A Service does not reach your application Pods. Which check directly verifies whether it selects those Pods?",
+      "options": [
+        "Compare the Service selector with the Pods’ labels",
+        "Compare the Service name with the Deployment name",
+        "Check that the Pods use the latest image tag",
+        "Compare their creation timestamps"
+      ],
+      "answerIndex": 0,
+      "explanation": "A selector-based Service matches Pods by labels in its namespace. Also inspect EndpointSlices, Pod readiness, targetPort, and network policies when troubleshooting traffic."
+    },
+    {
+      "id": "k8s-009",
+      "topic": "Access control",
+      "question": "What does a namespace-scoped RoleBinding referencing a ClusterRole do?",
+      "options": [
+        "Grants permissions across every namespace",
+        "Grants applicable permissions within the RoleBinding’s namespace",
+        "Converts the ClusterRole into a Role",
+        "Grants access only to cluster-scoped resources"
+      ],
+      "answerIndex": 1,
+      "explanation": "A RoleBinding limits its grant to its namespace, even when referencing a reusable ClusterRole. Cluster-wide grants require a ClusterRoleBinding."
+    },
+    {
+      "id": "k8s-010",
+      "topic": "Security",
+      "question": "Which statement about Kubernetes Secrets is correct?",
+      "options": [
+        "Base64 encoding encrypts Secret values",
+        "Secrets are always encrypted in etcd by default",
+        "Base64 alone provides no confidentiality; encryption at rest must be configured separately",
+        "Every Pod can read every Secret by default"
+      ],
+      "answerIndex": 2,
+      "explanation": "Base64 is encoding, not encryption. Configure encryption at rest and restrict access with RBAC. Managed Kubernetes providers may configure encryption for you."
+    }
+  ]
+}

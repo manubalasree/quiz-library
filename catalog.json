@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "title": "Choose your next challenge",
+  "quizzes": [
+    {
+      "id": "kubernetes",
+      "title": "Kubernetes",
+      "description": "Workloads, networking, security, and troubleshooting.",
+      "url": "quizzes/kubernetes.json"
+    },
+    {
+      "id": "linux",
+      "title": "Linux",
+      "description": "Permissions, processes, and command-line fundamentals.",
+      "url": "quizzes/linux.json"
+    },
+    {
+      "id": "git",
+      "title": "Git",
+      "description": "Commits, branches, and everyday version control.",
+      "url": "quizzes/git.json"
+    }
+  ]
+}

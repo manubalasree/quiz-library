@@ -1,0 +1,5 @@
+{"version":1,"title":"Linux Fundamentals","questions":[
+{"id":"linux-001","topic":"Permissions","question":"What does chmod 600 notes.txt allow?","options":["Everyone can read and write","Only the owner can read and write","The owner can execute only","The group can read and execute"],"answerIndex":1,"explanation":"6 grants read (4) plus write (2) to the owner. Both zeroes remove permissions for the group and others."},
+{"id":"linux-002","topic":"Processes","question":"Which signal does kill send by default?","options":["SIGKILL","SIGSTOP","SIGTERM","SIGHUP"],"answerIndex":2,"explanation":"kill sends SIGTERM by default. A process can handle this signal to shut down gracefully, unlike SIGKILL."},
+{"id":"linux-003","topic":"Shell","question":"What does the pipe operator | normally connect?","options":["A command’s standard output to the next command’s standard input","Two files into a directory","A command’s exit code to the next command’s arguments","All output streams to a log file"],"answerIndex":0,"explanation":"A normal pipe connects standard output to standard input. Standard error remains separate unless explicitly redirected."}
+]}

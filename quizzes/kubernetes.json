@@ -1,136 +1,678 @@
 {
   "version": 1,
-  "title": "Kubernetes Practice Lab",
+  "title": "Kubernetes: Operations and Troubleshooting",
   "questions": [
     {
-      "id": "k8s-001",
+      "id": "kubernetes-001",
       "topic": "Workloads",
       "question": "A Deployment specifies three replicas. One Pod is deleted manually. What normally happens?",
       "options": [
         "The Deployment scales down to two replicas",
-        "The ReplicaSet creates a replacement Pod",
+        "An administrator must recreate the Pod",
         "The deleted Pod restarts with the same UID",
-        "An administrator must recreate the Pod"
+        "The ReplicaSet creates a replacement Pod"
       ],
-      "answerIndex": 1,
+      "answerIndex": 3,
       "explanation": "The ReplicaSet reconciles the actual Pod count with the desired count. The replacement Pod has a new UID."
     },
     {
-      "id": "k8s-002",
+      "id": "kubernetes-002",
       "topic": "Networking",
       "question": "Which Service type provides an internal cluster IP by default?",
       "options": [
-        "NodePort",
-        "LoadBalancer",
+        "ExternalName",
         "ClusterIP",
-        "ExternalName"
+        "LoadBalancer",
+        "NodePort"
       ],
-      "answerIndex": 2,
+      "answerIndex": 1,
       "explanation": "ClusterIP is the default Service type. It provides a virtual IP for reaching a Service from within the cluster."
     },
     {
-      "id": "k8s-003",
+      "id": "kubernetes-003",
       "topic": "Troubleshooting",
       "question": "A container repeatedly exits, and the Pod shows CrashLoopBackOff. What does this indicate?",
       "options": [
-        "The image cannot be downloaded",
         "Kubernetes is delaying repeated container restart attempts",
+        "A readiness probe removed the Pod from service traffic",
         "The Pod cannot find a suitable node",
-        "A readiness probe removed the Pod from service traffic"
+        "The image cannot be downloaded"
       ],
-      "answerIndex": 1,
+      "answerIndex": 0,
       "explanation": "CrashLoopBackOff means the container keeps failing and Kubernetes backs off between restart attempts. Check its logs and termination details to find the underlying cause."
     },
     {
-      "id": "k8s-004",
+      "id": "kubernetes-004",
       "topic": "kubectl",
       "question": "Which command shows logs from the previous instance of a restarted container?",
       "options": [
-        "kubectl logs <pod> --previous",
-        "kubectl describe <pod> --logs",
         "kubectl logs <pod> --history",
-        "kubectl get events <pod> --previous"
+        "kubectl logs <pod> --previous",
+        "kubectl get events <pod> --previous",
+        "kubectl describe <pod> --logs"
       ],
-      "answerIndex": 0,
+      "answerIndex": 1,
       "explanation": "Use kubectl logs <pod> --previous to inspect the previous terminated container instance, if available. Add -c <container> for the relevant container in a multi-container Pod."
     },
     {
-      "id": "k8s-005",
+      "id": "kubernetes-005",
       "topic": "Health checks",
       "question": "What happens when a container’s readiness probe fails?",
       "options": [
-        "Kubernetes immediately restarts the container",
         "Kubernetes deletes the Pod",
+        "Kubernetes moves the Pod to another node",
         "The Pod is marked unready and normally stops receiving matching Service traffic",
-        "Kubernetes moves the Pod to another node"
+        "Kubernetes immediately restarts the container"
       ],
       "answerIndex": 2,
       "explanation": "Readiness controls whether the Pod is ready to receive traffic. A failed readiness probe does not itself restart a container; liveness probes can trigger restarts."
     },
     {
-      "id": "k8s-006",
+      "id": "kubernetes-006",
       "topic": "Scheduling",
       "question": "A Pod requests 2 CPUs, but no eligible node has enough CPU available for scheduling. What normally happens?",
       "options": [
-        "Kubernetes automatically lowers the request",
+        "An arbitrary running Pod is immediately evicted",
         "The Pod remains Pending",
         "The Pod starts with a CPU limit of 1",
-        "An arbitrary running Pod is immediately evicted"
+        "Kubernetes automatically lowers the request"
       ],
       "answerIndex": 1,
       "explanation": "The scheduler uses resource requests when placing Pods. Without a suitable node, the Pod remains Pending. Check kubectl describe pod for scheduling events."
     },
     {
-      "id": "k8s-007",
+      "id": "kubernetes-007",
       "topic": "Workloads",
       "question": "What is the main purpose of a StatefulSet?",
       "options": [
         "Run one Pod on every eligible node",
+        "Expose applications outside the cluster",
         "Run short-lived tasks until completion",
-        "Manage Pods with stable identities and persistent storage associations",
-        "Expose applications outside the cluster"
+        "Manage Pods with stable identities and persistent storage associations"
       ],
-      "answerIndex": 2,
+      "answerIndex": 3,
       "explanation": "StatefulSets provide stable Pod identities and can associate each Pod with its own persistent volume claim. DaemonSets handle per-node workloads; Jobs handle run-to-completion tasks."
     },
     {
-      "id": "k8s-008",
+      "id": "kubernetes-008",
       "topic": "Networking",
       "question": "A Service does not reach your application Pods. Which check directly verifies whether it selects those Pods?",
       "options": [
-        "Compare the Service selector with the Pods’ labels",
-        "Compare the Service name with the Deployment name",
         "Check that the Pods use the latest image tag",
-        "Compare their creation timestamps"
+        "Compare the Service name with the Deployment name",
+        "Compare their creation timestamps",
+        "Compare the Service selector with the Pods’ labels"
       ],
-      "answerIndex": 0,
+      "answerIndex": 3,
       "explanation": "A selector-based Service matches Pods by labels in its namespace. Also inspect EndpointSlices, Pod readiness, targetPort, and network policies when troubleshooting traffic."
     },
     {
-      "id": "k8s-009",
+      "id": "kubernetes-009",
       "topic": "Access control",
       "question": "What does a namespace-scoped RoleBinding referencing a ClusterRole do?",
       "options": [
-        "Grants permissions across every namespace",
         "Grants applicable permissions within the RoleBinding’s namespace",
+        "Grants access only to cluster-scoped resources",
         "Converts the ClusterRole into a Role",
-        "Grants access only to cluster-scoped resources"
+        "Grants permissions across every namespace"
       ],
-      "answerIndex": 1,
+      "answerIndex": 0,
       "explanation": "A RoleBinding limits its grant to its namespace, even when referencing a reusable ClusterRole. Cluster-wide grants require a ClusterRoleBinding."
     },
     {
-      "id": "k8s-010",
+      "id": "kubernetes-010",
       "topic": "Security",
       "question": "Which statement about Kubernetes Secrets is correct?",
       "options": [
-        "Base64 encoding encrypts Secret values",
         "Secrets are always encrypted in etcd by default",
-        "Base64 alone provides no confidentiality; encryption at rest must be configured separately",
-        "Every Pod can read every Secret by default"
+        "Every Pod can read every Secret by default",
+        "Base64 encoding encrypts Secret values",
+        "Base64 alone provides no confidentiality; encryption at rest must be configured separately"
+      ],
+      "answerIndex": 3,
+      "explanation": "Base64 is encoding, not encryption. Configure encryption at rest and restrict access with RBAC. Managed Kubernetes providers may configure encryption for you."
+    },
+    {
+      "topic": "Health checks",
+      "question": "Why add a startup probe to a container that can take several minutes to initialize?",
+      "options": [
+        "It reserves a node exclusively for the Pod",
+        "It increases the container memory limit",
+        "It prevents the container from ever restarting",
+        "It delays liveness and readiness probes until startup succeeds"
+      ],
+      "answerIndex": 3,
+      "explanation": "Startup probes give slow applications time to initialize. Once startup succeeds, normal readiness and liveness checks take over.",
+      "id": "kubernetes-011"
+    },
+    {
+      "topic": "Health checks",
+      "question": "What does this liveness configuration do after the application has started?",
+      "options": [
+        "Marks the node permanently unschedulable",
+        "Scales the application to three replicas",
+        "Restarts the container after three consecutive failed checks",
+        "Deletes the Deployment after one failed check"
       ],
       "answerIndex": 2,
-      "explanation": "Base64 is encoding, not encryption. Configure encryption at rest and restrict access with RBAC. Managed Kubernetes providers may configure encryption for you."
+      "explanation": "Liveness failure triggers a container restart after the configured failure threshold. Readiness controls traffic eligibility instead.",
+      "code": "livenessProbe:\n  httpGet:\n    path: /healthz\n    port: 8080\n  periodSeconds: 10\n  failureThreshold: 3",
+      "language": "yaml",
+      "id": "kubernetes-012"
+    },
+    {
+      "topic": "Resources",
+      "question": "How much CPU does this container request?",
+      "options": [
+        "One quarter of a CPU",
+        "2.5 CPU cores",
+        "250 CPU cores",
+        "A quarter of the node’s total CPU capacity"
+      ],
+      "answerIndex": 0,
+      "explanation": "1000m equals one CPU. CPU requests are absolute CPU quantities, not percentages of the node.",
+      "code": "resources:\n  requests:\n    cpu: \"250m\"",
+      "language": "yaml",
+      "id": "kubernetes-013"
+    },
+    {
+      "topic": "Resources",
+      "question": "A container exceeds its memory limit and its last termination reason is OOMKilled. What is the likely cause?",
+      "options": [
+        "The image registry rejected the container",
+        "The container was terminated after exceeding its enforced memory allowance",
+        "The readiness probe redirected its memory",
+        "CPU throttling always produces this reason"
+      ],
+      "answerIndex": 1,
+      "explanation": "Memory limits can result in out-of-memory termination. Inspect usage, application behavior, limits, and termination details before increasing resources.",
+      "id": "kubernetes-014"
+    },
+    {
+      "topic": "Scheduling",
+      "question": "A node has low measured CPU usage, yet a CPU-heavy Pod cannot be scheduled there. What should you inspect first?",
+      "options": [
+        "The number of Dockerfiles in the repository",
+        "CPU already allocated through other Pods’ requests",
+        "Whether the Service uses port 80",
+        "The lexical order of Pod names"
+      ],
+      "answerIndex": 1,
+      "explanation": "Scheduling considers requested resources and placement constraints. Low instantaneous utilization does not mean unallocated requested capacity is available.",
+      "id": "kubernetes-015"
+    },
+    {
+      "topic": "Rollouts",
+      "question": "For a healthy Deployment with four desired replicas, what does this strategy permit during an update?",
+      "options": [
+        "Five unavailable replicas at once",
+        "At most three available replicas",
+        "Up to five replicas, while keeping at least four available",
+        "Exactly four replicas with up to one unavailable"
+      ],
+      "answerIndex": 2,
+      "explanation": "maxSurge permits one extra Pod; maxUnavailable zero prevents deliberately reducing available replicas below the desired count during rollout.",
+      "code": "replicas: 4\nstrategy:\n  type: RollingUpdate\n  rollingUpdate:\n    maxSurge: 1\n    maxUnavailable: 0",
+      "language": "yaml",
+      "id": "kubernetes-016"
+    },
+    {
+      "topic": "Troubleshooting",
+      "question": "A Pod is waiting with ImagePullBackOff. Which investigation is most relevant?",
+      "options": [
+        "Delete the application Service",
+        "Check the image name, registry access, credentials, and Pod events",
+        "Change the container’s working directory",
+        "Increase the readiness probe timeout only"
+      ],
+      "answerIndex": 1,
+      "explanation": "ImagePullBackOff indicates repeated image-pull failures with retry backoff. Events often identify missing tags, authentication failures, or registry connectivity problems.",
+      "id": "kubernetes-017"
+    },
+    {
+      "topic": "Pod lifecycle",
+      "question": "A regular init container exits with a nonzero status before application containers start. What normally happens in a Pod with restartPolicy Always?",
+      "options": [
+        "The application containers start immediately anyway",
+        "The Service automatically repairs the init script",
+        "Kubernetes retries the init container before starting the application containers",
+        "The Pod skips all remaining init containers"
+      ],
+      "answerIndex": 2,
+      "explanation": "Regular init containers must complete successfully in sequence. Failures block application startup and are retried according to Pod behavior.",
+      "id": "kubernetes-018"
+    },
+    {
+      "topic": "Workloads",
+      "question": "You need a log-collection agent on each eligible node. Which workload controller fits best?",
+      "options": [
+        "Job",
+        "StatefulSet",
+        "DaemonSet",
+        "CronJob"
+      ],
+      "answerIndex": 2,
+      "explanation": "A DaemonSet manages node-local Pods across eligible nodes. Node selectors, affinity, and tolerations can affect which nodes receive an agent.",
+      "id": "kubernetes-019"
+    },
+    {
+      "topic": "Workloads",
+      "question": "Which controller tracks a task that should run to successful completion?",
+      "options": [
+        "Deployment",
+        "DaemonSet",
+        "Service",
+        "Job"
+      ],
+      "answerIndex": 3,
+      "explanation": "Jobs track successful completions and can retry failed work. Applications that must run continuously are usually managed by other workload controllers.",
+      "id": "kubernetes-020"
+    },
+    {
+      "topic": "Scheduled workloads",
+      "question": "A previous Job from this CronJob is still running when the next schedule arrives. What does Forbid do?",
+      "options": [
+        "Skips creating an overlapping Job for that scheduled run",
+        "Queues an unlimited number of overlapping Jobs",
+        "Terminates the running Job immediately",
+        "Disables all future scheduling permanently"
+      ],
+      "answerIndex": 0,
+      "explanation": "Forbid prevents overlap among Jobs created by this same CronJob. It does not coordinate unrelated CronJobs.",
+      "code": "spec:\n  schedule: \"*/5 * * * *\"\n  concurrencyPolicy: Forbid",
+      "language": "yaml",
+      "id": "kubernetes-021"
+    },
+    {
+      "topic": "Networking",
+      "question": "A client connects to this Service on port 80. Which Pod port receives the traffic?",
+      "options": [
+        "80",
+        "The Pod’s first declared containerPort regardless of targetPort",
+        "8080",
+        "443"
+      ],
+      "answerIndex": 2,
+      "explanation": "Service port is the client-facing port; targetPort identifies the destination port on selected Pods.",
+      "code": "ports:\n  - port: 80\n    targetPort: 8080",
+      "language": "yaml",
+      "id": "kubernetes-022"
+    },
+    {
+      "topic": "Networking",
+      "question": "A selector-based Service has no ready endpoints. Which condition could explain it?",
+      "options": [
+        "The Pods have more than one label",
+        "The Service name differs from the Deployment name",
+        "Matching Pods are failing their readiness checks",
+        "The Deployment has a revision history limit"
+      ],
+      "answerIndex": 2,
+      "explanation": "Ready endpoints depend on matching, ready Pods under normal Service behavior. Check selectors, EndpointSlices, and Pod readiness together.",
+      "id": "kubernetes-023"
+    },
+    {
+      "topic": "DNS",
+      "question": "From a Pod in namespace frontend, which name identifies Service api in namespace backend using normal Kubernetes DNS conventions?",
+      "options": [
+        "api.backend.svc.cluster.local, assuming cluster.local is the cluster domain",
+        "Only the bare name api can cross namespaces",
+        "backend.api.frontend",
+        "api.frontend.svc.cluster.local"
+      ],
+      "answerIndex": 0,
+      "explanation": "Cross-namespace lookups include the Service namespace. The cluster DNS suffix can be configured, so cluster.local is an assumption here.",
+      "id": "kubernetes-024"
+    },
+    {
+      "topic": "Ingress",
+      "question": "You created an Ingress object, but no component handles incoming HTTP traffic. What is usually also required?",
+      "options": [
+        "An Ingress controller implementing the selected ingress class",
+        "A ConfigMap with the same name as every Service",
+        "A StatefulSet named ingress",
+        "A Secret for every Pod even for plain HTTP"
+      ],
+      "answerIndex": 0,
+      "explanation": "An Ingress object declares routing rules; a controller implements them. Creating the API object alone does not deploy the controller.",
+      "id": "kubernetes-025"
+    },
+    {
+      "topic": "Network policy",
+      "question": "Two ingress NetworkPolicies select the same Pod. One allows port 80; the other allows port 443. With policy enforcement enabled, how are these permissions combined?",
+      "options": [
+        "The second policy always overrides the first",
+        "The allowed ingress traffic is the union of both policies",
+        "Only the policy with the longest name applies",
+        "All ingress is denied because the rules conflict"
+      ],
+      "answerIndex": 1,
+      "explanation": "NetworkPolicy allows are additive. Multiple policies selecting a Pod contribute allowed traffic rather than overriding each other.",
+      "id": "kubernetes-026"
+    },
+    {
+      "topic": "Network policy",
+      "question": "After enabling default-deny egress, a Pod cannot resolve Service names. Which allowance may be missing?",
+      "options": [
+        "Ingress from the container image registry",
+        "A larger Service targetPort",
+        "Egress to the cluster DNS service on the required DNS ports",
+        "A label named dns=true on the Deployment"
+      ],
+      "answerIndex": 2,
+      "explanation": "DNS lookups require network access to the cluster DNS implementation. Review UDP and TCP port 53 and the relevant destination selectors.",
+      "id": "kubernetes-027"
+    },
+    {
+      "topic": "Configuration",
+      "question": "A ConfigMap value is consumed through an environment variable. After updating the ConfigMap, how does an already-running container receive the new value?",
+      "options": [
+        "kubectl get configmap rewrites its environment",
+        "The Service injects the value on each request",
+        "It generally needs to be restarted or replaced",
+        "The process environment updates automatically every second"
+      ],
+      "answerIndex": 2,
+      "explanation": "Environment variables are set when the container starts. Mounted ConfigMap files have different update behavior from environment variables.",
+      "id": "kubernetes-028"
+    },
+    {
+      "topic": "Configuration",
+      "question": "Will changes to this ConfigMap automatically update the mounted subPath file in an already-running container?",
+      "options": [
+        "Yes, but only if the Service is NodePort",
+        "Yes, when kubectl logs is run",
+        "Yes, on every file read",
+        "No; ConfigMap subPath mounts do not receive automatic updates"
+      ],
+      "answerIndex": 3,
+      "explanation": "A ConfigMap mounted using subPath does not receive the automatic projected-volume updates. Recreate the container or change the mounting approach.",
+      "code": "volumeMounts:\n  - name: config\n    mountPath: /app/settings.yaml\n    subPath: settings.yaml",
+      "language": "yaml",
+      "id": "kubernetes-029"
+    },
+    {
+      "topic": "Storage",
+      "question": "A PersistentVolumeClaim remains Pending. What is a useful first investigation?",
+      "options": [
+        "Rename the Service to match the claim",
+        "Inspect claim events, StorageClass provisioning, capacity, and access-mode compatibility",
+        "Restart CoreDNS before checking events",
+        "Increase the container CPU limit"
+      ],
+      "answerIndex": 1,
+      "explanation": "Binding and provisioning failures are usually visible in PVC events. StorageClass configuration and matching volume requirements are central checks.",
+      "id": "kubernetes-030"
+    },
+    {
+      "topic": "Storage",
+      "question": "What does ReadWriteOnce mean for a PersistentVolume access mode?",
+      "options": [
+        "Exactly one Pod may use the volume under all circumstances",
+        "Read-write mounting by a single node",
+        "The volume becomes read-only after the first write",
+        "Exactly one process may open a file"
+      ],
+      "answerIndex": 1,
+      "explanation": "ReadWriteOnce constrains node-level read-write mounting, not necessarily one Pod. ReadWriteOncePod is the distinct single-Pod access mode.",
+      "id": "kubernetes-031"
+    },
+    {
+      "topic": "Storage",
+      "question": "A bound PV has reclaimPolicy Retain. What should you expect after its PVC is deleted?",
+      "options": [
+        "The volume and data require manual reclamation rather than automatic deletion",
+        "The volume becomes a ConfigMap",
+        "The PV is automatically attached to every new PVC",
+        "The backing storage is always erased immediately"
+      ],
+      "answerIndex": 0,
+      "explanation": "Retain preserves the storage asset for administrator handling. It does not automatically make previously used storage safe for another claim.",
+      "id": "kubernetes-032"
+    },
+    {
+      "topic": "Scheduling",
+      "question": "What does a toleration matching a NoSchedule taint guarantee?",
+      "options": [
+        "The Pod can never be evicted",
+        "The Pod bypasses CPU and memory requests",
+        "The Pod must be placed on that node",
+        "Only that the matching taint will not block scheduling; other constraints still apply"
+      ],
+      "answerIndex": 3,
+      "explanation": "Tolerations permit placement despite matching taints. They do not select nodes or override resource and affinity constraints.",
+      "id": "kubernetes-033"
+    },
+    {
+      "topic": "Scheduling",
+      "question": "What does this node selector require?",
+      "options": [
+        "The Pod must run on a node labeled disktype=ssd",
+        "The Pod requests an SSD through a PVC automatically",
+        "The condition is only a soft preference",
+        "The scheduler adds that label to any chosen node"
+      ],
+      "answerIndex": 0,
+      "explanation": "nodeSelector is a hard label match for scheduling. If no eligible node matches, the Pod remains unscheduled.",
+      "code": "spec:\n  nodeSelector:\n    disktype: ssd",
+      "language": "yaml",
+      "id": "kubernetes-034"
+    },
+    {
+      "topic": "Scheduling",
+      "question": "You want replicas of the same application placed on different nodes. Which feature directly expresses that relationship?",
+      "options": [
+        "A Service sessionAffinity setting",
+        "A ConfigMap with one key per replica",
+        "A larger imagePullPolicy",
+        "Pod anti-affinity using a hostname topology key"
+      ],
+      "answerIndex": 3,
+      "explanation": "Pod anti-affinity can separate Pods based on labels and topology. Required rules can make Pods unschedulable when insufficient topology domains exist.",
+      "id": "kubernetes-035"
+    },
+    {
+      "topic": "Node maintenance",
+      "question": "How does kubectl cordon differ from kubectl drain?",
+      "options": [
+        "Cordon blocks new scheduling; drain also attempts to evict eligible existing Pods",
+        "Drain only updates the node’s CPU requests",
+        "They both immediately power off the node",
+        "Cordon deletes all Pods; drain only changes node labels"
+      ],
+      "answerIndex": 0,
+      "explanation": "Cordon marks a node unschedulable. Drain performs maintenance-oriented eviction and respects relevant constraints such as disruption budgets.",
+      "id": "kubernetes-036"
+    },
+    {
+      "topic": "Availability",
+      "question": "Three replicas are healthy. With this disruption budget, how many can normally be voluntarily evicted at once while maintaining the budget?",
+      "options": [
+        "Three",
+        "Zero",
+        "One",
+        "Two"
+      ],
+      "answerIndex": 2,
+      "explanation": "With three healthy selected Pods and minAvailable two, one disruption is allowed. A PDB does not prevent all involuntary failures.",
+      "code": "apiVersion: policy/v1\nkind: PodDisruptionBudget\nspec:\n  minAvailable: 2\n  selector:\n    matchLabels:\n      app: checkout",
+      "language": "yaml",
+      "id": "kubernetes-037"
+    },
+    {
+      "topic": "Access control",
+      "question": "An RBAC rule allows get on pods but not list. Which operation can still be denied?",
+      "options": [
+        "Getting a named Pod when authorized in the namespace",
+        "Reading the API server version anonymously if allowed",
+        "Using the singular API resource name in documentation",
+        "Listing all Pods with kubectl get pods"
+      ],
+      "answerIndex": 3,
+      "explanation": "RBAC distinguishes get, list, and watch. Permission to retrieve one named object does not imply permission to list a collection.",
+      "id": "kubernetes-038"
+    },
+    {
+      "topic": "Access control",
+      "question": "What identity does a Pod normally use for Kubernetes API authentication when a ServiceAccount token is mounted?",
+      "options": [
+        "The ServiceAccount of the default namespace regardless of Pod namespace",
+        "The user who authored its Dockerfile",
+        "The Deployment name as a cluster administrator",
+        "The ServiceAccount assigned to that Pod in its namespace"
+      ],
+      "answerIndex": 3,
+      "explanation": "ServiceAccounts are namespaced identities for workloads. Their API permissions are controlled by RBAC grants rather than by the container image author.",
+      "id": "kubernetes-039"
+    },
+    {
+      "topic": "Container security",
+      "question": "What is the purpose of this setting?",
+      "options": [
+        "Grant the container root privileges on the host",
+        "Require the container to run as a non-root user",
+        "Make the image filesystem writable by all users",
+        "Automatically create an OS user in the image"
+      ],
+      "answerIndex": 1,
+      "explanation": "runAsNonRoot enforces a non-root execution requirement. It does not create users inside the image, and incompatible image settings can prevent startup.",
+      "code": "securityContext:\n  runAsNonRoot: true",
+      "language": "yaml",
+      "id": "kubernetes-040"
+    },
+    {
+      "topic": "Container security",
+      "question": "An app must write temporary files while using readOnlyRootFilesystem: true. What is an appropriate design?",
+      "options": [
+        "Add a label named writable=true",
+        "Use a Service of type LoadBalancer",
+        "Disable all liveness probes",
+        "Mount a writable volume at the required temporary directory"
+      ],
+      "answerIndex": 3,
+      "explanation": "A read-only root filesystem can be combined with writable volumes at specific paths, such as an emptyDir mounted at /tmp.",
+      "id": "kubernetes-041"
+    },
+    {
+      "topic": "Pod termination",
+      "question": "What happens if a container ignores graceful termination and remains running after its termination grace period expires?",
+      "options": [
+        "The Service becomes permanently unavailable",
+        "Its remaining processes can be forcibly killed",
+        "The Pod automatically gains an unlimited grace period",
+        "The Deployment is deleted to preserve the container"
+      ],
+      "answerIndex": 1,
+      "explanation": "Kubernetes gives the container time to terminate gracefully, then can force termination. Applications should handle shutdown signals and stop accepting work appropriately.",
+      "id": "kubernetes-042"
+    },
+    {
+      "topic": "Autoscaling",
+      "question": "For CPU utilization-based HPA, a container uses 200m CPU and requests 500m. What is its CPU utilization relative to its request?",
+      "options": [
+        "200%",
+        "40%",
+        "0.4%",
+        "250%"
+      ],
+      "answerIndex": 1,
+      "explanation": "CPU utilization for this HPA metric is usage divided by request. Requests are therefore important inputs to utilization-based scaling.",
+      "id": "kubernetes-043"
+    },
+    {
+      "topic": "Namespace resources",
+      "question": "A new Pod is rejected because the namespace has exhausted its CPU request quota. Which resource enforces that aggregate namespace limit?",
+      "options": [
+        "LimitRange alone",
+        "ResourceQuota",
+        "EndpointSlice",
+        "PodDisruptionBudget"
+      ],
+      "answerIndex": 1,
+      "explanation": "ResourceQuota can bound aggregate namespace consumption. LimitRange typically supplies defaults or constrains individual objects within the namespace.",
+      "id": "kubernetes-044"
+    },
+    {
+      "topic": "Namespace resources",
+      "question": "Which object can set default container resource requests and limits for newly admitted Pods in a namespace?",
+      "options": [
+        "LimitRange",
+        "VolumeAttachment",
+        "IngressClass",
+        "ServiceAccount"
+      ],
+      "answerIndex": 0,
+      "explanation": "A LimitRange can supply resource defaults and enforce minimums or maximums. Defaults apply during admission rather than retroactively changing running containers.",
+      "id": "kubernetes-045"
+    },
+    {
+      "topic": "Debugging",
+      "question": "A running application image has no shell or network tools. What can help inspect its Pod without rebuilding the application image?",
+      "options": [
+        "An ephemeral debug container, subject to permissions and runtime support",
+        "Changing the Service to ExternalName",
+        "Adding commands to the Pod’s labels",
+        "Increasing revisionHistoryLimit"
+      ],
+      "answerIndex": 0,
+      "explanation": "kubectl debug can add an ephemeral container with diagnostic tools. Security policy and permissions still apply.",
+      "id": "kubernetes-046"
+    },
+    {
+      "topic": "kubectl",
+      "question": "What does the -c option select in this command?",
+      "options": [
+        "The namespace named api",
+        "A ConfigMap named api",
+        "The container named api inside the Pod",
+        "A cluster context named api"
+      ],
+      "answerIndex": 2,
+      "explanation": "For multi-container Pods, -c chooses which container receives the exec request. The command after -- runs inside that container.",
+      "code": "kubectl exec checkout-abc -c api -- printenv",
+      "language": "shell",
+      "id": "kubernetes-047"
+    },
+    {
+      "topic": "kubectl",
+      "question": "Which Pods does this command select?",
+      "options": [
+        "Pods having either label but not necessarily both",
+        "All Pods in namespaces named web or frontend",
+        "Pods having both app=web and tier=frontend",
+        "Only Pods whose names contain frontend"
+      ],
+      "answerIndex": 2,
+      "explanation": "Comma-separated equality requirements in this selector are combined with logical AND.",
+      "code": "kubectl get pods -l app=web,tier=frontend",
+      "language": "shell",
+      "id": "kubernetes-048"
+    },
+    {
+      "topic": "Rollouts",
+      "question": "A Deployment rollout introduced a broken image. What does kubectl rollout undo deployment/web normally do?",
+      "options": [
+        "Rolls back to a previous retained Pod-template revision",
+        "Reverts all ConfigMaps in the namespace",
+        "Restores application database contents from backup",
+        "Reverts the Git commit that built the image"
+      ],
+      "answerIndex": 0,
+      "explanation": "Deployment rollback targets retained rollout history for the Pod template. It does not roll back external data or independently changed resources.",
+      "id": "kubernetes-049"
+    },
+    {
+      "topic": "Labels and ownership",
+      "question": "Why should two unrelated Deployment controllers avoid overlapping Pod selectors?",
+      "options": [
+        "They can interfere with management of matching workloads",
+        "Overlapping selectors automatically merge Deployments",
+        "Kubernetes converts their Pods into a StatefulSet",
+        "Selectors determine the order of container logs"
+      ],
+      "answerIndex": 0,
+      "explanation": "Controllers use selectors to identify their managed workload sets. Unintended overlap makes ownership and reconciliation behavior unsafe or confusing.",
+      "id": "kubernetes-050"
     }
   ]
 }

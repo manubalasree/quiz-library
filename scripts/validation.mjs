@@ -8,6 +8,8 @@ export function validateQuiz(data) {
   for (const [index, q] of data.questions.entries()) {
     if (!q || !nonempty(q.id) || ids.has(q.id) || !nonempty(q.topic) ||
         !nonempty(q.question) || !nonempty(q.explanation) ||
+        (q.code !== undefined && !nonempty(q.code)) ||
+        (q.language !== undefined && (!nonempty(q.language) || !nonempty(q.code))) ||
         !Array.isArray(q.options) || q.options.length !== 4 ||
         !q.options.every(nonempty) || new Set(q.options).size !== 4 ||
         !Number.isInteger(q.answerIndex) || q.answerIndex < 0 || q.answerIndex > 3) {

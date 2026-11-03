@@ -5,20 +5,32 @@
     {
       "id": "kubernetes",
       "title": "Kubernetes",
-      "description": "Workloads, networking, security, and troubleshooting.",
+      "description": "50 questions on workloads, networking, security, and manifests.",
       "url": "quizzes/kubernetes.json"
     },
     {
       "id": "linux",
       "title": "Linux",
-      "description": "Permissions, processes, and command-line fundamentals.",
+      "description": "50 questions on shell scripts, permissions, processes, and troubleshooting.",
       "url": "quizzes/linux.json"
     },
     {
       "id": "git",
       "title": "Git",
-      "description": "Commits, branches, and everyday version control.",
+      "description": "50 questions on history, branches, collaboration, and recovery.",
       "url": "quizzes/git.json"
+    },
+    {
+      "id": "ansible",
+      "title": "Ansible",
+      "description": "50 questions on playbooks, roles, handlers, and automation scenarios.",
+      "url": "quizzes/ansible.json"
+    },
+    {
+      "id": "terraform",
+      "title": "Terraform",
+      "description": "50 questions on HCL, state, modules, and infrastructure workflows.",
+      "url": "quizzes/terraform.json"
     }
   ]
 }

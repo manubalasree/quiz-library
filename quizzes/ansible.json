@@ -1,0 +1,698 @@
+{
+  "version": 1,
+  "title": "Ansible: Playbooks and Automation Troubleshooting",
+  "questions": [
+    {
+      "topic": "Inventory",
+      "question": "Which hosts belong to the web group in this INI inventory?",
+      "options": [
+        "All three hosts",
+        "Only app1",
+        "app1 and app2",
+        "db1 and app1"
+      ],
+      "answerIndex": 2,
+      "explanation": "Inventory group headings assign the following hosts to that group until another heading begins.",
+      "code": "[web]\napp1\napp2\n[database]\ndb1",
+      "language": "ini",
+      "id": "ansible-001"
+    },
+    {
+      "topic": "Inventory",
+      "question": "Which built-in inventory group contains every host?",
+      "options": [
+        "default",
+        "localhost",
+        "all",
+        "ungrouped"
+      ],
+      "answerIndex": 2,
+      "explanation": "all includes every inventory host. ungrouped contains hosts that belong to no other group apart from all.",
+      "id": "ansible-002"
+    },
+    {
+      "topic": "Host patterns",
+      "question": "Which hosts does the quoted pattern select?",
+      "options": [
+        "Only a host literally named production",
+        "Hosts in either group, including non-overlapping hosts",
+        "Hosts present in both web and production",
+        "All hosts except web"
+      ],
+      "answerIndex": 2,
+      "explanation": "The & intersection operator limits the selection to hosts in both groups. Quoting prevents the shell from interpreting special characters.",
+      "code": "ansible 'web:&production' -m ansible.builtin.ping",
+      "language": "shell",
+      "id": "ansible-003"
+    },
+    {
+      "topic": "Connectivity",
+      "question": "What does ansible.builtin.ping primarily verify for a typical Linux target?",
+      "options": [
+        "That the target’s web application is healthy",
+        "That every TCP port is open",
+        "ICMP echo reachability only",
+        "Ansible connection and usable Python execution on the target"
+      ],
+      "answerIndex": 3,
+      "explanation": "The Ansible ping module is not network ICMP ping. It exercises the Ansible connection and remote module execution path.",
+      "id": "ansible-004"
+    },
+    {
+      "topic": "Facts",
+      "question": "Which built-in module normally gathers target system facts?",
+      "options": [
+        "ansible.builtin.setup",
+        "ansible.builtin.assert",
+        "ansible.builtin.meta",
+        "ansible.builtin.copy"
+      ],
+      "answerIndex": 0,
+      "explanation": "setup gathers facts such as platform and interfaces. These facts can be referenced through ansible_facts during playbook execution.",
+      "id": "ansible-005"
+    },
+    {
+      "topic": "Facts",
+      "question": "What should you consider when a play uses gather_facts: false but a task reads ansible_facts?",
+      "options": [
+        "Those facts may be unavailable unless collected or supplied another way",
+        "Ansible always gathers all facts despite the setting",
+        "Every task will run on localhost",
+        "ansible_facts becomes the host’s environment automatically"
+      ],
+      "answerIndex": 0,
+      "explanation": "Disabling automatic fact gathering can save time, but facts must come from another deliberate source before tasks rely on them.",
+      "id": "ansible-006"
+    },
+    {
+      "topic": "Privilege escalation",
+      "question": "What does become: true request for this play?",
+      "options": [
+        "A new SSH key for every task",
+        "Permanent root access for every local user",
+        "A switch to a different inventory file",
+        "Privilege escalation using the configured become method and user"
+      ],
+      "answerIndex": 3,
+      "explanation": "become requests privilege escalation. Its success depends on the remote account’s configured authorization and any required credentials.",
+      "code": "- hosts: web\n  become: true\n  tasks:\n    - ansible.builtin.package:\n        name: nginx\n        state: present",
+      "language": "yaml",
+      "id": "ansible-007"
+    },
+    {
+      "topic": "Idempotency",
+      "question": "What is the goal of an idempotent configuration-management task?",
+      "options": [
+        "Every execution must restart the machine",
+        "It must never report a failure",
+        "Repeated execution converges to the desired state without unnecessary changes",
+        "It must only execute once in the lifetime of a host"
+      ],
+      "answerIndex": 2,
+      "explanation": "Idempotency concerns repeated effects, not simply whether a command runs. Desired-state modules often inspect existing state before changing it.",
+      "id": "ansible-008"
+    },
+    {
+      "topic": "Commands",
+      "question": "Which module should normally be preferred for running an executable without needing shell operators?",
+      "options": [
+        "ansible.builtin.raw for every Python-capable host",
+        "ansible.builtin.command",
+        "ansible.builtin.debug",
+        "ansible.builtin.shell in all cases"
+      ],
+      "answerIndex": 1,
+      "explanation": "command avoids shell interpretation, reducing quoting and injection risks. Use shell only when shell features are actually required.",
+      "id": "ansible-009"
+    },
+    {
+      "topic": "Commands",
+      "question": "Why does this task not create a shell pipeline?",
+      "options": [
+        "Ansible forbids the printf executable",
+        "command does not interpret | as a shell operator",
+        "The pipe runs only on the controller automatically",
+        "command interprets pipes only when become is enabled"
+      ],
+      "answerIndex": 1,
+      "explanation": "command passes arguments without shell parsing. Use a suitable module or an explicitly justified shell task for pipelines.",
+      "code": "- ansible.builtin.command: printf hello | wc -c",
+      "language": "yaml",
+      "id": "ansible-010"
+    },
+    {
+      "topic": "Commands",
+      "question": "What does creates accomplish here?",
+      "options": [
+        "Guarantees the command is safe under all conditions",
+        "Creates the marker automatically before running the command",
+        "Deletes the marker after success",
+        "Skips command execution when /opt/app/.initialized already exists"
+      ],
+      "answerIndex": 3,
+      "explanation": "creates is a guard checked before execution. The command or another task must actually create the marker when initialization succeeds.",
+      "code": "- ansible.builtin.command: /opt/app/init\n  args:\n    creates: /opt/app/.initialized",
+      "language": "yaml",
+      "id": "ansible-011"
+    },
+    {
+      "topic": "Handlers",
+      "question": "When is the notified handler normally scheduled?",
+      "options": [
+        "Before the template task runs",
+        "Only when the task is skipped",
+        "Only when the notifying task reports changed",
+        "After every successful task regardless of changed status"
+      ],
+      "answerIndex": 2,
+      "explanation": "Notifications are driven by changed status. A successful but unchanged task does not normally notify handlers.",
+      "code": "- ansible.builtin.template:\n    src: app.conf.j2\n    dest: /etc/app.conf\n  notify: Restart app",
+      "language": "yaml",
+      "id": "ansible-012"
+    },
+    {
+      "topic": "Handlers",
+      "question": "Three tasks notify the same handler before the handler phase. How many times does it normally run in that phase?",
+      "options": [
+        "Three times in parallel",
+        "Once",
+        "Once per notification character",
+        "It never runs if more than one task notifies it"
+      ],
+      "answerIndex": 1,
+      "explanation": "Ansible deduplicates handler notifications within a handler execution phase. Handlers run in their defined order rather than notification order.",
+      "id": "ansible-013"
+    },
+    {
+      "topic": "Handlers",
+      "question": "What does this meta task request?",
+      "options": [
+        "Restart the controller process",
+        "Run handlers notified so far at this point",
+        "Skip all pending tasks permanently",
+        "Delete every handler definition"
+      ],
+      "answerIndex": 1,
+      "explanation": "flush_handlers creates an earlier handler execution point. Later changed tasks may notify the same handlers again.",
+      "code": "- ansible.builtin.meta: flush_handlers",
+      "language": "yaml",
+      "id": "ansible-014"
+    },
+    {
+      "topic": "Files",
+      "question": "When should you use template rather than copy for a configuration file?",
+      "options": [
+        "When the source contains Jinja expressions that must be rendered",
+        "Only when copying a binary image",
+        "Whenever the file is larger than one kilobyte",
+        "When file permissions must be ignored"
+      ],
+      "answerIndex": 0,
+      "explanation": "template renders Jinja on the controller before transferring content. copy is appropriate for content that does not require template rendering.",
+      "id": "ansible-015"
+    },
+    {
+      "topic": "Permissions",
+      "question": "Why is the mode quoted in this task?",
+      "options": [
+        "To avoid unintended numeric interpretation and pass the intended permission string",
+        "Because every YAML scalar must be quoted",
+        "To make the file executable automatically",
+        "To encrypt the permission bits"
+      ],
+      "answerIndex": 0,
+      "explanation": "Quoting permission modes avoids YAML numeric-interpretation surprises. The file module then applies the intended octal mode.",
+      "code": "- ansible.builtin.file:\n    path: /etc/app.conf\n    mode: \"0640\"",
+      "language": "yaml",
+      "id": "ansible-016"
+    },
+    {
+      "topic": "YAML and Jinja",
+      "question": "Why must a YAML value beginning with {{ commonly be quoted?",
+      "options": [
+        "To make the variable globally immutable",
+        "To make it a YAML string containing a Jinja expression",
+        "To prevent Jinja from ever evaluating it",
+        "To convert the expression into an inventory group"
+      ],
+      "answerIndex": 1,
+      "explanation": "YAML parses the document before Ansible renders expressions. Quoting avoids confusion with YAML mapping syntax.",
+      "code": "dest: \"{{ config_directory }}/app.conf\"",
+      "language": "yaml",
+      "id": "ansible-017"
+    },
+    {
+      "topic": "Variables",
+      "question": "An inventory variable and an extra variable passed with -e have the same name. Which normally wins?",
+      "options": [
+        "The shorter value",
+        "The inventory variable always wins",
+        "The extra variable",
+        "Whichever appears first alphabetically"
+      ],
+      "answerIndex": 2,
+      "explanation": "Extra variables have very high variable precedence. Use them deliberately because they can override values from many other variable sources.",
+      "id": "ansible-018"
+    },
+    {
+      "topic": "Jinja filters",
+      "question": "If optional_port is undefined, what does this expression yield?",
+      "options": [
+        "The number zero",
+        "8080",
+        "An undefined-variable error in all cases",
+        "The string optional_port"
+      ],
+      "answerIndex": 1,
+      "explanation": "The default filter supplies a fallback for undefined values. Treating empty or false values as missing requires the filter’s optional boolean behavior.",
+      "code": "port: \"{{ optional_port | default(8080) }}\"",
+      "language": "yaml",
+      "id": "ansible-019"
+    },
+    {
+      "topic": "Conditionals",
+      "question": "Why apply the bool filter when enabled may be a string such as \"false\"?",
+      "options": [
+        "To make the task run exactly twice",
+        "To quote every shell argument",
+        "To convert recognized boolean-like values before evaluating the condition",
+        "To turn a variable into a fact on all hosts"
+      ],
+      "answerIndex": 2,
+      "explanation": "Explicit conversion avoids treating a nonempty string as an intended boolean value. Modern conditionals should evaluate to booleans.",
+      "code": "- ansible.builtin.debug:\n    msg: Feature enabled\n  when: enabled | bool",
+      "language": "yaml",
+      "id": "ansible-020"
+    },
+    {
+      "topic": "Conditionals",
+      "question": "How are these two when entries combined?",
+      "options": [
+        "They are evaluated only on localhost",
+        "The second overrides the first",
+        "Both must be true",
+        "Either may be true"
+      ],
+      "answerIndex": 2,
+      "explanation": "A list of when conditions is combined with logical AND. The condition is evaluated for each host executing the task.",
+      "code": "when:\n  - ansible_facts[\"os_family\"] == \"Debian\"\n  - deploy_enabled | bool",
+      "language": "yaml",
+      "id": "ansible-021"
+    },
+    {
+      "topic": "Conditionals",
+      "question": "What does this when expression require?",
+      "options": [
+        "Both must be true",
+        "Either maintenance or emergency must evaluate true",
+        "Both must be false",
+        "Only maintenance is evaluated in all cases"
+      ],
+      "answerIndex": 1,
+      "explanation": "An explicit or expression expresses alternative conditions. A YAML list of separate conditions would instead use AND.",
+      "code": "when: (maintenance | bool) or (emergency | bool)",
+      "language": "yaml",
+      "id": "ansible-022"
+    },
+    {
+      "topic": "Loops",
+      "question": "Which loop items run this debug task?",
+      "options": [
+        "Only values greater than 2",
+        "Only the first item",
+        "No items because when cannot be used with loop",
+        "All items because one matches"
+      ],
+      "answerIndex": 0,
+      "explanation": "A condition on a looping task is evaluated separately for each item.",
+      "code": "- ansible.builtin.debug:\n    var: item\n  loop: [1, 2, 3, 4]\n  when: item > 2",
+      "language": "yaml",
+      "id": "ansible-023"
+    },
+    {
+      "topic": "Registered results",
+      "question": "A task loops over several items and uses register: checks. Where are its per-item results normally stored?",
+      "options": [
+        "hostvars.results for every host automatically",
+        "checks.results",
+        "checks.stdout contains every item as a dictionary",
+        "The inventory file is rewritten with each result"
+      ],
+      "answerIndex": 1,
+      "explanation": "A registered looping task returns an aggregate result with a results list. Individual module result fields live inside those entries.",
+      "id": "ansible-024"
+    },
+    {
+      "topic": "Changed status",
+      "question": "What is the effect of changed_when: false here?",
+      "options": [
+        "The result is not registered",
+        "The command never runs",
+        "The return code becomes zero automatically",
+        "The task does not report changed even if the command executes"
+      ],
+      "answerIndex": 3,
+      "explanation": "changed_when controls change reporting. It does not alter execution, erase failures, or make a command idempotent by itself.",
+      "code": "- ansible.builtin.command: /usr/bin/app --version\n  register: app_version\n  changed_when: false",
+      "language": "yaml",
+      "id": "ansible-025"
+    },
+    {
+      "topic": "Failure conditions",
+      "question": "When does this task fail according to the custom failed_when list?",
+      "options": [
+        "When either condition is true",
+        "Never, because failed_when cannot be a list",
+        "Whenever stderr is nonempty regardless of the second test",
+        "Only when both conditions are true"
+      ],
+      "answerIndex": 3,
+      "explanation": "A failed_when list combines expressions with AND. Use one expression with or if either condition should independently indicate failure.",
+      "code": "register: result\nfailed_when:\n  - result.rc != 0\n  - '\"FATAL\" in result.stderr'",
+      "language": "yaml",
+      "id": "ansible-026"
+    },
+    {
+      "topic": "Retries",
+      "question": "What makes this task retry rather than simply executing once?",
+      "options": [
+        "register automatically retries every failed task",
+        "changed_when always enables retries",
+        "The until condition is checked after an attempt",
+        "Every command module task retries by default"
+      ],
+      "answerIndex": 2,
+      "explanation": "until defines the success condition for retrying this task. retries and delay control the retry budget and waiting period.",
+      "code": "- ansible.builtin.command: /opt/app/healthcheck\n  register: health\n  until: health.rc == 0\n  retries: 5\n  delay: 2\n  changed_when: false",
+      "language": "yaml",
+      "id": "ansible-027"
+    },
+    {
+      "topic": "Error handling",
+      "question": "Does ignore_errors: true generally make an unreachable host continue as if its SSH connection succeeded?",
+      "options": [
+        "Yes, it converts every connection into local execution",
+        "Yes, it repairs the SSH connection",
+        "Only if the inventory name contains a dot",
+        "No; unreachable errors require separate handling"
+      ],
+      "answerIndex": 3,
+      "explanation": "ignore_errors applies to ordinary task failure results, not every possible failure mode. Ansible has separate unreachable-host handling.",
+      "id": "ansible-028"
+    },
+    {
+      "topic": "Blocks",
+      "question": "When does a rescue section normally run?",
+      "options": [
+        "When a task in the associated block returns a failed result",
+        "Only when every block task succeeds",
+        "Before the block starts",
+        "For every syntax error anywhere in the playbook"
+      ],
+      "answerIndex": 0,
+      "explanation": "rescue handles normal block task failures. Invalid task definitions and unreachable hosts are not ordinary rescuable failed results.",
+      "id": "ansible-029"
+    },
+    {
+      "topic": "Blocks",
+      "question": "What is the role of always in an Ansible block?",
+      "options": [
+        "Run its tasks after the block and any rescue in normal block error handling",
+        "Prevent any task from failing",
+        "Make all tasks run forever",
+        "Gather facts before every task"
+      ],
+      "answerIndex": 0,
+      "explanation": "always is used for actions such as cleanup after block execution. It does not overcome all fatal execution or connectivity problems.",
+      "id": "ansible-030"
+    },
+    {
+      "topic": "Check mode",
+      "question": "Which statement about ansible-playbook --check is accurate?",
+      "options": [
+        "It simulates supported operations, but support and result detail vary by module",
+        "It guarantees every application behavior has been tested",
+        "Every module executes real changes exactly as usual",
+        "It prevents reading any remote state"
+      ],
+      "answerIndex": 0,
+      "explanation": "Check mode depends on module support and task behavior. Unsupported tasks may be skipped, and registered-result-dependent flows may not simulate fully.",
+      "id": "ansible-031"
+    },
+    {
+      "topic": "Diff mode",
+      "question": "Why should you be careful enabling --diff on tasks that render secret-bearing configuration?",
+      "options": [
+        "It permanently disables Ansible Vault",
+        "Diff mode always changes file ownership",
+        "The before-and-after output can expose sensitive content",
+        "Diff mode bypasses SSH authentication"
+      ],
+      "answerIndex": 2,
+      "explanation": "Diff output can reveal file contents. Use appropriate output controls such as diff: false for sensitive tasks.",
+      "id": "ansible-032"
+    },
+    {
+      "topic": "Vault",
+      "question": "What does Ansible Vault primarily protect?",
+      "options": [
+        "Encrypted data at rest in files or variables",
+        "All target host disks automatically",
+        "Every network request made by managed applications",
+        "The confidentiality of all decrypted debug output"
+      ],
+      "answerIndex": 0,
+      "explanation": "Vault protects stored content. Once decrypted for use, secrets still need careful handling in tasks, logs, and application configuration.",
+      "id": "ansible-033"
+    },
+    {
+      "topic": "Secret handling",
+      "question": "What does no_log: true aim to prevent for a task?",
+      "options": [
+        "The task from contacting remote hosts",
+        "The value from existing in process memory",
+        "Sensitive task data appearing in normal Ansible output",
+        "Every later task from printing the same secret"
+      ],
+      "answerIndex": 2,
+      "explanation": "no_log suppresses normal task-result logging. Do not expose the same secret through a separate debug task or assume it solves every logging path.",
+      "id": "ansible-034"
+    },
+    {
+      "topic": "Delegation",
+      "question": "In this delegated task, which host does inventory_hostname normally identify?",
+      "options": [
+        "Every member of the web group at once",
+        "The controller’s operating-system hostname",
+        "Always 127.0.0.1",
+        "The original inventory host the task is executing for"
+      ],
+      "answerIndex": 3,
+      "explanation": "Delegation changes where the action runs. inventory_hostname still identifies the original host context, though other connection variables can come from the delegated host.",
+      "code": "- ansible.builtin.command: /usr/bin/hostname\n  delegate_to: localhost\n  register: delegated_result",
+      "language": "yaml",
+      "id": "ansible-035"
+    },
+    {
+      "topic": "Execution control",
+      "question": "A play uses serial: 2 and a task uses run_once: true. How is run_once normally scoped?",
+      "options": [
+        "Once per worker process forever",
+        "Once per task loop item on every host",
+        "Exactly once for the entire inventory regardless of batching",
+        "Once for each serial batch"
+      ],
+      "answerIndex": 3,
+      "explanation": "run_once normally applies to the current host batch. If an operation truly must run once for the entire play, design its condition accordingly.",
+      "id": "ansible-036"
+    },
+    {
+      "topic": "Rolling changes",
+      "question": "What is the main purpose of serial in a play?",
+      "options": [
+        "Control the number of loop items per task",
+        "Make YAML keys execute alphabetically",
+        "Change the SSH port to a serial device",
+        "Process hosts in batches instead of all targeted hosts at once"
+      ],
+      "answerIndex": 3,
+      "explanation": "serial bounds the batch of hosts progressing through the play. It is useful for rolling maintenance and controlled deployments.",
+      "id": "ansible-037"
+    },
+    {
+      "topic": "Concurrency",
+      "question": "What does throttle: 1 on a task limit?",
+      "options": [
+        "The total number of hosts in inventory",
+        "The command’s CPU frequency",
+        "The number of handlers defined in a role",
+        "The number of workers executing that task concurrently"
+      ],
+      "answerIndex": 3,
+      "explanation": "throttle can constrain task concurrency below the broader worker or batch limits. It does not set a permanent host count.",
+      "id": "ansible-038"
+    },
+    {
+      "topic": "Strategies",
+      "question": "How does the free strategy differ from the default linear strategy?",
+      "options": [
+        "Hosts can advance through tasks without waiting for every other host at each task boundary",
+        "The inventory becomes read-only",
+        "Every task runs on the controller only",
+        "Handlers are completely disabled"
+      ],
+      "answerIndex": 0,
+      "explanation": "free lets hosts progress independently within applicable limits. Cross-host synchronization assumptions that fit linear execution may no longer hold.",
+      "id": "ansible-039"
+    },
+    {
+      "topic": "Controller workers",
+      "question": "What does the forks setting primarily control?",
+      "options": [
+        "The number of tasks defined in each role",
+        "The number of Git branches checked out",
+        "The maximum number of parallel worker processes Ansible uses for host execution",
+        "The maximum number of inventory groups"
+      ],
+      "answerIndex": 2,
+      "explanation": "forks affects parallel host work. serial, throttle, strategy, and target responsiveness can further limit effective concurrency.",
+      "id": "ansible-040"
+    },
+    {
+      "topic": "Task reuse",
+      "question": "Which distinction between import_tasks and include_tasks is generally correct?",
+      "options": [
+        "include_tasks cannot use variables",
+        "import_tasks is static reuse; include_tasks is dynamic reuse",
+        "import_tasks automatically creates a role",
+        "Both always execute tasks during inventory parsing"
+      ],
+      "answerIndex": 1,
+      "explanation": "Static imports are expanded earlier; dynamic includes are processed during execution. This affects conditionals, loops, and tag handling.",
+      "id": "ansible-041"
+    },
+    {
+      "topic": "Tags",
+      "question": "A dynamic include has a tag, but its included tasks are untagged. What should you consider when selecting tasks by that tag?",
+      "options": [
+        "Tags are only valid on handlers",
+        "The include’s tag is not automatically inherited by all included tasks",
+        "Selecting a tag disables every include",
+        "All included tasks always inherit it"
+      ],
+      "answerIndex": 1,
+      "explanation": "Dynamic includes need deliberate tag propagation, such as apply tags or tagging the included tasks. Tagging the include alone is not blanket inheritance.",
+      "id": "ansible-042"
+    },
+    {
+      "topic": "Roles",
+      "question": "Where should a reusable role normally place variables that callers are expected to override easily?",
+      "options": [
+        "A hardcoded shell command string",
+        "defaults/main.yml",
+        "meta/main.yml only",
+        "handlers/main.yml"
+      ],
+      "answerIndex": 1,
+      "explanation": "Role defaults have low variable precedence and are designed for customization. Role vars have higher precedence and are harder for callers to override.",
+      "id": "ansible-043"
+    },
+    {
+      "topic": "Handlers",
+      "question": "What does listen allow in a handler definition?",
+      "options": [
+        "Subscribe a handler to a notification topic independent of its name",
+        "Make a handler run unconditionally",
+        "Gather facts from every inventory group",
+        "Open a TCP port on the managed host"
+      ],
+      "answerIndex": 0,
+      "explanation": "listen topics decouple notifications from individual handler names. Multiple handlers can listen to the same topic.",
+      "id": "ansible-044"
+    },
+    {
+      "topic": "Collections",
+      "question": "Why use ansible.builtin.copy instead of an ambiguous short module name in shared playbooks?",
+      "options": [
+        "It disables all module argument checks",
+        "It encrypts the copied file by default",
+        "It guarantees the file is copied only once",
+        "It identifies the intended collection and module explicitly"
+      ],
+      "answerIndex": 3,
+      "explanation": "Fully qualified collection names clarify module resolution and reduce collisions with similarly named modules from other collections.",
+      "id": "ansible-045"
+    },
+    {
+      "topic": "Host variables",
+      "question": "What does hostvars[\"db1\"][\"service_port\"] access when that host and variable exist?",
+      "options": [
+        "The controller’s local environment variable",
+        "The service_port variable for inventory host db1",
+        "An SSH connection to db1 that runs automatically",
+        "Only the currently targeted host’s operating-system port"
+      ],
+      "answerIndex": 1,
+      "explanation": "hostvars exposes inventory-host variable contexts. Reading gathered facts from another host still requires those facts to be available.",
+      "id": "ansible-046"
+    },
+    {
+      "topic": "Task environment",
+      "question": "What does this environment setting apply to?",
+      "options": [
+        "The environment of the task executed on its target host",
+        "Every later playbook invocation automatically",
+        "The inventory file’s YAML parser",
+        "The controller’s permanent shell environment"
+      ],
+      "answerIndex": 0,
+      "explanation": "The environment keyword supplies environment variables for task execution. It does not permanently modify the controller or target account’s login configuration.",
+      "code": "- ansible.builtin.command: /opt/app/check\n  environment:\n    APP_MODE: staging",
+      "language": "yaml",
+      "id": "ansible-047"
+    },
+    {
+      "topic": "Asynchronous work",
+      "question": "What does poll: 0 request for an async task?",
+      "options": [
+        "Run synchronously with no timeout",
+        "Poll every zero milliseconds until completion",
+        "Cancel the task immediately",
+        "Start it asynchronously without waiting for completion in that task"
+      ],
+      "answerIndex": 3,
+      "explanation": "poll zero is fire-and-forget behavior for the launching task. Use the returned job information to inspect or wait for completion separately.",
+      "code": "- ansible.builtin.command: /opt/app/long-job\n  async: 600\n  poll: 0\n  register: job",
+      "language": "yaml",
+      "id": "ansible-048"
+    },
+    {
+      "topic": "Asynchronous work",
+      "question": "Which module checks the result of a job launched with async and poll: 0?",
+      "options": [
+        "ansible.builtin.set_stats always",
+        "ansible.builtin.async_status",
+        "ansible.builtin.add_host",
+        "ansible.builtin.wait_for_connection only"
+      ],
+      "answerIndex": 1,
+      "explanation": "async_status uses the async job ID to retrieve status. A polling loop with until can wait for its finished result.",
+      "id": "ansible-049"
+    },
+    {
+      "topic": "Validation",
+      "question": "What does this task enforce?",
+      "options": [
+        "The desired replicas value must be greater than zero",
+        "It creates that many replicas automatically",
+        "It silently skips all later tasks when the assertion passes",
+        "It converts replicas to zero on failure"
+      ],
+      "answerIndex": 0,
+      "explanation": "assert checks preconditions and produces a failure if its expression is false. Validation is distinct from actually provisioning the desired resource.",
+      "code": "- ansible.builtin.assert:\n    that:\n      - replicas | int > 0\n    fail_msg: replicas must be positive",
+      "language": "yaml",
+      "id": "ansible-050"
+    }
+  ]
+}

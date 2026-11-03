@@ -1,5 +1,684 @@
-{"version":1,"title":"Linux Fundamentals","questions":[
-{"id":"linux-001","topic":"Permissions","question":"What does chmod 600 notes.txt allow?","options":["Everyone can read and write","Only the owner can read and write","The owner can execute only","The group can read and execute"],"answerIndex":1,"explanation":"6 grants read (4) plus write (2) to the owner. Both zeroes remove permissions for the group and others."},
-{"id":"linux-002","topic":"Processes","question":"Which signal does kill send by default?","options":["SIGKILL","SIGSTOP","SIGTERM","SIGHUP"],"answerIndex":2,"explanation":"kill sends SIGTERM by default. A process can handle this signal to shut down gracefully, unlike SIGKILL."},
-{"id":"linux-003","topic":"Shell","question":"What does the pipe operator | normally connect?","options":["A command’s standard output to the next command’s standard input","Two files into a directory","A command’s exit code to the next command’s arguments","All output streams to a log file"],"answerIndex":0,"explanation":"A normal pipe connects standard output to standard input. Standard error remains separate unless explicitly redirected."}
-]}
+{
+  "version": 1,
+  "title": "Linux: Shell and Systems Troubleshooting",
+  "questions": [
+    {
+      "id": "linux-001",
+      "topic": "Permissions",
+      "question": "What does chmod 600 notes.txt allow?",
+      "options": [
+        "Everyone can read and write",
+        "The owner can execute only",
+        "Only the owner can read and write",
+        "The group can read and execute"
+      ],
+      "answerIndex": 2,
+      "explanation": "6 grants read (4) plus write (2) to the owner. Both zeroes remove permissions for the group and others."
+    },
+    {
+      "id": "linux-002",
+      "topic": "Processes",
+      "question": "Which signal does kill send by default?",
+      "options": [
+        "SIGKILL",
+        "SIGTERM",
+        "SIGSTOP",
+        "SIGHUP"
+      ],
+      "answerIndex": 1,
+      "explanation": "kill sends SIGTERM by default. A process can handle this signal to shut down gracefully, unlike SIGKILL."
+    },
+    {
+      "id": "linux-003",
+      "topic": "Shell",
+      "question": "What does the pipe operator | normally connect?",
+      "options": [
+        "A command’s standard output to the next command’s standard input",
+        "Two files into a directory",
+        "A command’s exit code to the next command’s arguments",
+        "All output streams to a log file"
+      ],
+      "answerIndex": 0,
+      "explanation": "A normal pipe connects standard output to standard input. Standard error remains separate unless explicitly redirected."
+    },
+    {
+      "topic": "Shell quoting",
+      "question": "In Bash, what does this print?",
+      "options": [
+        "A syntax error",
+        "The literal text $name",
+        "Ada",
+        "An empty line"
+      ],
+      "answerIndex": 1,
+      "explanation": "Single quotes prevent parameter expansion. Double quotes would allow the variable to expand while preserving the resulting text as one argument.",
+      "code": "name=Ada\nprintf '%s\\n' '$name'",
+      "language": "shell",
+      "id": "linux-004"
+    },
+    {
+      "topic": "Shell quoting",
+      "question": "Why quote \"$path\" when passing a possibly space-containing pathname to a command?",
+      "options": [
+        "To prevent word splitting and pathname expansion of its value",
+        "To force the file to be executable",
+        "To encrypt the path",
+        "To resolve symbolic links automatically"
+      ],
+      "answerIndex": 0,
+      "explanation": "Quoting keeps an expanded pathname as one argument. Unquoted expansion can split it into words or interpret wildcard characters.",
+      "id": "linux-005"
+    },
+    {
+      "topic": "Shell arguments",
+      "question": "Inside a Bash function, which expansion preserves each original positional argument as a separate word?",
+      "options": [
+        "${#@}",
+        "\"$*\"",
+        "\"$@\"",
+        "Unquoted $*"
+      ],
+      "answerIndex": 2,
+      "explanation": "Quoted \"$@\" expands each positional argument separately. Quoted \"$*\" joins them into one word using the first IFS character.",
+      "id": "linux-006"
+    },
+    {
+      "topic": "Pipelines",
+      "question": "In Bash, what is the exit status of this pipeline?",
+      "options": [
+        "Always 127",
+        "Zero because true is the last command",
+        "The text false",
+        "Nonzero because pipefail exposes the failure"
+      ],
+      "answerIndex": 3,
+      "explanation": "With pipefail, a pipeline returns the status of its rightmost failing command, or zero if none fail.",
+      "code": "set -o pipefail\nfalse | true",
+      "language": "shell",
+      "id": "linux-007"
+    },
+    {
+      "topic": "Redirections",
+      "question": "Assume stdout initially goes to a terminal. Where does stderr go here?",
+      "options": [
+        "It is discarded",
+        "To the original stdout destination, normally the terminal",
+        "Into out.log together with stdout",
+        "Into a file named 1"
+      ],
+      "answerIndex": 1,
+      "explanation": "Redirections are processed left to right. stderr is duplicated from the original stdout before stdout is redirected.",
+      "code": "command 2>&1 >out.log",
+      "language": "shell",
+      "id": "linux-008"
+    },
+    {
+      "topic": "Redirections",
+      "question": "Which redirection appends stdout without truncating an existing log?",
+      "options": [
+        "command 2<app.log",
+        "command >>app.log",
+        "command >app.log",
+        "command <app.log"
+      ],
+      "answerIndex": 1,
+      "explanation": "The >> operator opens the destination for appending. A single > normally truncates an existing regular file.",
+      "id": "linux-009"
+    },
+    {
+      "topic": "Redirections",
+      "question": "What does this command discard?",
+      "options": [
+        "Standard error only",
+        "Standard output only",
+        "The input file contents",
+        "Both stdout and stderr"
+      ],
+      "answerIndex": 0,
+      "explanation": "File descriptor 2 is stderr. Redirecting it to /dev/null leaves stdout unchanged.",
+      "code": "command 2>/dev/null",
+      "language": "shell",
+      "id": "linux-010"
+    },
+    {
+      "topic": "Permissions",
+      "question": "What does execute permission on a directory primarily allow?",
+      "options": [
+        "Listing all its entries without read permission",
+        "Executing every file inside it regardless of file permissions",
+        "Changing its owner",
+        "Searching or traversing that directory"
+      ],
+      "answerIndex": 3,
+      "explanation": "Directory execute permission permits pathname traversal. Listing entries requires directory read permission; file access also depends on other applicable checks.",
+      "id": "linux-011"
+    },
+    {
+      "topic": "Permissions",
+      "question": "Ignoring sticky bits, ACLs, and other restrictions, what permissions usually allow deleting a file from a directory?",
+      "options": [
+        "Write permission on the file alone",
+        "Write and execute permissions on the containing directory",
+        "Execute permission on the file alone",
+        "Ownership of the file is always mandatory"
+      ],
+      "answerIndex": 1,
+      "explanation": "Unlinking changes the directory entry. Permission to modify a file’s contents is distinct from permission to remove its name from a directory.",
+      "id": "linux-012"
+    },
+    {
+      "topic": "Permissions",
+      "question": "What is the purpose of the sticky bit on a shared directory such as /tmp?",
+      "options": [
+        "Encrypt all new files",
+        "Prevent files from being read by their owners",
+        "Make every file executable",
+        "Restrict who can remove or rename entries despite shared write access"
+      ],
+      "answerIndex": 3,
+      "explanation": "In a sticky directory, removal and renaming are restricted to appropriately privileged users, the file owner, or the directory owner.",
+      "id": "linux-013"
+    },
+    {
+      "topic": "Permissions",
+      "question": "Assuming a program requests mode 0666 for a new regular file and no default ACL changes the result, what does umask 027 produce?",
+      "options": [
+        "0666",
+        "0027",
+        "0750",
+        "0640"
+      ],
+      "answerIndex": 3,
+      "explanation": "The umask removes permission bits from the requested mode. It does not add execute bits to a regular file requested with 0666.",
+      "id": "linux-014"
+    },
+    {
+      "topic": "Permissions",
+      "question": "What is a common effect of setting the setgid bit on a Linux directory?",
+      "options": [
+        "Every new file becomes owned by root",
+        "All files become immutable",
+        "New entries inherit the directory’s group ownership",
+        "Group members automatically gain sudo access"
+      ],
+      "answerIndex": 2,
+      "explanation": "Setgid directories support shared group ownership for new entries. Access permissions remain governed by modes, ACLs, and the creating process.",
+      "id": "linux-015"
+    },
+    {
+      "topic": "Filesystems",
+      "question": "You create a hard link to a regular file, then unlink the original name. What happens to the data?",
+      "options": [
+        "The remaining name contains only a backup snapshot",
+        "It is immediately deleted from both names",
+        "The hard link becomes a symbolic link",
+        "It remains accessible through the other hard link"
+      ],
+      "answerIndex": 3,
+      "explanation": "Hard links refer to the same inode. Storage is reclaimed only when no links and no relevant open references remain.",
+      "id": "linux-016"
+    },
+    {
+      "topic": "Filesystems",
+      "question": "How does a symbolic link differ from a hard link?",
+      "options": [
+        "It stores a target pathname and can point across filesystems",
+        "It guarantees the target will always exist",
+        "It always shares the target inode",
+        "It cannot point to a directory"
+      ],
+      "answerIndex": 0,
+      "explanation": "A symbolic link resolves a pathname and may dangle if its target disappears. Hard links bind another name to the same filesystem object.",
+      "id": "linux-017"
+    },
+    {
+      "topic": "Disk troubleshooting",
+      "question": "df shows a nearly full filesystem, but du finds much less usage. Which situation can explain this?",
+      "options": [
+        "All files have read-only permissions",
+        "The filesystem has no directories",
+        "The shell has an empty PATH",
+        "A process still holds a large deleted file open"
+      ],
+      "answerIndex": 3,
+      "explanation": "Unlinked but open files still occupy storage until their open references are released. Tools such as lsof can help identify them.",
+      "id": "linux-018"
+    },
+    {
+      "topic": "Disk troubleshooting",
+      "question": "New file creation fails with No space left on device, but many bytes remain free. What should you check?",
+      "options": [
+        "The current Git branch",
+        "Only the CPU load average",
+        "Free inodes using df -i",
+        "Whether /etc/hosts contains localhost"
+      ],
+      "answerIndex": 2,
+      "explanation": "Filesystems can exhaust inodes before exhausting data blocks. Byte-capacity and inode-capacity checks diagnose different limits.",
+      "id": "linux-019"
+    },
+    {
+      "topic": "Safe filename handling",
+      "question": "Why pair these options when processing arbitrary filenames?",
+      "options": [
+        "They sort files by inode number",
+        "They remove execute permissions first",
+        "They preserve filenames containing whitespace or newlines",
+        "They prevent every race condition"
+      ],
+      "answerIndex": 2,
+      "explanation": "NUL separators preserve pathname boundaries. This handles unusual filenames but is not a universal defense against filesystem races.",
+      "code": "find /data -type f -print0 | xargs -0 -r sha256sum",
+      "language": "shell",
+      "id": "linux-020"
+    },
+    {
+      "topic": "Text tools",
+      "question": "With GNU grep, what does exit status 1 normally mean?",
+      "options": [
+        "A match was found",
+        "The file was encrypted",
+        "No matching lines were selected",
+        "The pattern was automatically corrected"
+      ],
+      "answerIndex": 2,
+      "explanation": "GNU grep normally returns zero for a selected match, one for no match, and two for an error. Scripts should distinguish absence from execution failure.",
+      "id": "linux-021"
+    },
+    {
+      "topic": "Text tools",
+      "question": "Why does this command sort before using uniq -c?",
+      "options": [
+        "The pipe converts line counts to bytes",
+        "uniq requires alphabetical input or it crashes",
+        "uniq groups adjacent identical lines, so sorting brings duplicates together",
+        "sort removes all duplicate lines by itself"
+      ],
+      "answerIndex": 2,
+      "explanation": "uniq only combines adjacent equal lines. Sorting is a common way to group identical lines before counting them.",
+      "code": "sort names.txt | uniq -c",
+      "language": "shell",
+      "id": "linux-022"
+    },
+    {
+      "topic": "Text tools",
+      "question": "What does this awk command print for a normal colon-separated /etc/passwd entry?",
+      "options": [
+        "The last character of each line",
+        "The first field, typically the account name",
+        "The numeric user ID only",
+        "The complete line with colons removed"
+      ],
+      "answerIndex": 1,
+      "explanation": "-F selects the field separator and $1 references the first field.",
+      "code": "awk -F: '{print $1}' /etc/passwd",
+      "language": "shell",
+      "id": "linux-023"
+    },
+    {
+      "topic": "Text tools",
+      "question": "Does this sed command modify config.txt in place?",
+      "options": [
+        "No; it writes transformed text to stdout",
+        "Yes, it overwrites the input automatically",
+        "It deletes config.txt after reading it",
+        "Yes, but only the first line"
+      ],
+      "answerIndex": 0,
+      "explanation": "Without an in-place editing option or explicit output handling, sed writes its transformed stream to stdout.",
+      "code": "sed 's/old/new/g' config.txt",
+      "language": "shell",
+      "id": "linux-024"
+    },
+    {
+      "topic": "Archives",
+      "question": "What does tar -czf backup.tar.gz app/ normally do?",
+      "options": [
+        "Creates a gzip-compressed archive containing app/",
+        "Lists open network sockets",
+        "Extracts an archive into app/",
+        "Changes the owner of app/ recursively"
+      ],
+      "answerIndex": 0,
+      "explanation": "c creates an archive, z uses gzip, and f selects the archive filename. Extraction would use x instead of c.",
+      "id": "linux-025"
+    },
+    {
+      "topic": "systemd",
+      "question": "What does systemctl enable app.service do without --now?",
+      "options": [
+        "Rewrites the service executable",
+        "Configures activation links according to the unit’s installation settings",
+        "Restarts the service every minute",
+        "Starts the service immediately in all cases"
+      ],
+      "answerIndex": 1,
+      "explanation": "Enabling and starting a unit are separate operations. Use --now when you intend to enable and start together.",
+      "id": "linux-026"
+    },
+    {
+      "topic": "systemd",
+      "question": "After editing a systemd unit file, which operation makes the manager reread unit definitions?",
+      "options": [
+        "systemctl reload app.service always rereads all unit files",
+        "systemctl reset-failed only",
+        "systemctl daemon-reload",
+        "journalctl --rotate"
+      ],
+      "answerIndex": 2,
+      "explanation": "daemon-reload reloads unit configuration and dependencies. A service reload requests application-specific reload behavior instead.",
+      "id": "linux-027"
+    },
+    {
+      "topic": "systemd logs",
+      "question": "What logs does this command request?",
+      "options": [
+        "The contents of the unit’s environment variables",
+        "Only messages from the previous boot",
+        "Every file under /var/log",
+        "Journal entries for app.service from the current boot"
+      ],
+      "answerIndex": 3,
+      "explanation": "-u filters by unit and -b restricts output to the selected boot, the current boot by default.",
+      "code": "journalctl -u app.service -b",
+      "language": "shell",
+      "id": "linux-028"
+    },
+    {
+      "topic": "Processes",
+      "question": "What does /proc/<PID>/fd contain on Linux?",
+      "options": [
+        "Only TCP connection passwords",
+        "The process’s executable source code",
+        "Entries representing that process’s open file descriptors",
+        "Copies of every file ever opened"
+      ],
+      "answerIndex": 2,
+      "explanation": "These entries link to open file descriptions such as files, pipes, and sockets. Access depends on permissions and process visibility restrictions.",
+      "id": "linux-029"
+    },
+    {
+      "topic": "Processes",
+      "question": "What is a zombie process?",
+      "options": [
+        "An exited process whose parent has not yet collected its exit status",
+        "A process that cannot be listed by ps",
+        "A process using all available CPU",
+        "A process waiting for keyboard input"
+      ],
+      "answerIndex": 0,
+      "explanation": "A zombie retains minimal process-table information until reaped. Sending it SIGKILL does not make it exit again.",
+      "id": "linux-030"
+    },
+    {
+      "topic": "Processes",
+      "question": "In ps output, what does state D commonly indicate on Linux?",
+      "options": [
+        "A daemon that is guaranteed healthy",
+        "Uninterruptible sleep, often related to I/O",
+        "A process with deleted source code",
+        "A successfully completed process"
+      ],
+      "answerIndex": 1,
+      "explanation": "D commonly indicates an uninterruptible kernel wait. Investigate the underlying I/O or kernel wait rather than assuming CPU contention.",
+      "id": "linux-031"
+    },
+    {
+      "topic": "Scheduling",
+      "question": "For ordinary Linux scheduling, what does a higher numeric nice value generally mean?",
+      "options": [
+        "Higher real-time priority",
+        "Lower CPU scheduling priority relative to less-nice competitors",
+        "Guaranteed exclusive CPU access",
+        "A larger memory limit"
+      ],
+      "answerIndex": 1,
+      "explanation": "Niceness influences fair-scheduler priority. It is not a memory limit or a guarantee of a particular CPU percentage.",
+      "id": "linux-032"
+    },
+    {
+      "topic": "Signals",
+      "question": "What does kill -0 <PID> do?",
+      "options": [
+        "Terminates the process with status zero",
+        "Resets its CPU usage counters",
+        "Pauses the process for zero seconds",
+        "Checks process existence and signaling permission without delivering a signal"
+      ],
+      "answerIndex": 3,
+      "explanation": "Signal zero performs permission and existence checks. Failure may reflect insufficient permission rather than absence alone.",
+      "id": "linux-033"
+    },
+    {
+      "topic": "Sessions",
+      "question": "What does nohup primarily change?",
+      "options": [
+        "It guarantees the process survives all failures",
+        "It arranges for the command to ignore SIGHUP",
+        "It turns the command into a systemd unit",
+        "It automatically backgrounds every command"
+      ],
+      "answerIndex": 1,
+      "explanation": "nohup addresses hangup-signal handling and may redirect terminal output. Use & separately to run a shell job in the background.",
+      "id": "linux-034"
+    },
+    {
+      "topic": "Environment",
+      "question": "In a clean Bash session where LAB_VALUE was not previously exported, why does this child shell print an empty line?",
+      "options": [
+        "A child shell always inherits every parent variable",
+        "Bash variable names cannot contain lowercase letters",
+        "Single quotes delete the parent variable",
+        "The variable was not exported into the child environment"
+      ],
+      "answerIndex": 3,
+      "explanation": "Shell variables are not automatically environment variables. export makes a variable available in subsequently launched child processes.",
+      "code": "LAB_VALUE=hello\nbash -c 'printf \"%s\\n\" \"$LAB_VALUE\"'",
+      "language": "shell",
+      "id": "linux-035"
+    },
+    {
+      "topic": "Environment",
+      "question": "How can a shell script set a variable in the current Bash session?",
+      "options": [
+        "Source the script in that session",
+        "Run it through nohup",
+        "Pipe it into any external command",
+        "Execute it as a separate process normally"
+      ],
+      "answerIndex": 0,
+      "explanation": "source or . executes commands in the current shell context. A normal child process cannot directly modify its parent shell’s environment.",
+      "id": "linux-036"
+    },
+    {
+      "topic": "Shell expansion",
+      "question": "What does Bash command substitution remove from captured standard output?",
+      "options": [
+        "Trailing newline characters",
+        "The first line only",
+        "Every newline including internal ones",
+        "All spaces"
+      ],
+      "answerIndex": 0,
+      "explanation": "$(...) replaces itself with command output after removing trailing newlines. Quoting the expansion still matters for argument boundaries.",
+      "id": "linux-037"
+    },
+    {
+      "topic": "Shell expansion",
+      "question": "If port is unset, what value is printed?",
+      "options": [
+        "8080",
+        "A syntax error",
+        "The literal text port:-8080",
+        "An empty string"
+      ],
+      "answerIndex": 0,
+      "explanation": "The :- parameter expansion supplies a default when the parameter is unset or null. It does not assign that default to the variable.",
+      "code": "unset port\nprintf \"%s\\n\" \"${port:-8080}\"",
+      "language": "shell",
+      "id": "linux-038"
+    },
+    {
+      "topic": "Shell control flow",
+      "question": "When is cleanup executed in this list?",
+      "options": [
+        "Always, regardless of build’s status",
+        "Before build starts",
+        "Only if build exits with status zero",
+        "Only if build fails"
+      ],
+      "answerIndex": 2,
+      "explanation": "&& executes its right-hand command only after a successful left-hand command. It is not equivalent to a finally block.",
+      "code": "build && cleanup",
+      "language": "shell",
+      "id": "linux-039"
+    },
+    {
+      "topic": "Shell options",
+      "question": "What is a common purpose of set -u in Bash scripts?",
+      "options": [
+        "Treat many expansions of unset variables as errors",
+        "Disable variable expansion entirely",
+        "Force all variables to be integers",
+        "Stop on every possible command failure"
+      ],
+      "answerIndex": 0,
+      "explanation": "nounset helps catch missing variables. It is distinct from errexit and has exceptions for certain special parameters and expansion forms.",
+      "id": "linux-040"
+    },
+    {
+      "topic": "Scheduled jobs",
+      "question": "A command works interactively but not in cron because a helper executable cannot be found. What is a likely cause?",
+      "options": [
+        "Cron deletes executables before starting jobs",
+        "Cron has a different or minimal PATH",
+        "The command must be stored in /tmp",
+        "Cron always runs in the user’s interactive login shell"
+      ],
+      "answerIndex": 1,
+      "explanation": "Scheduled jobs often have a limited environment. Set required paths explicitly or use suitable absolute executable paths.",
+      "id": "linux-041"
+    },
+    {
+      "topic": "Networking",
+      "question": "What does this command show?",
+      "options": [
+        "Listening TCP sockets with numeric addresses and ports",
+        "All files owned by root",
+        "A route table with DNS names",
+        "Only established UDP sessions"
+      ],
+      "answerIndex": 0,
+      "explanation": "ss reports socket information; -l selects listening sockets, -t selects TCP, and -n disables name resolution.",
+      "code": "ss -ltn",
+      "language": "shell",
+      "id": "linux-042"
+    },
+    {
+      "topic": "Networking",
+      "question": "Which command helps determine the route and source address Linux would use for a specific destination?",
+      "options": [
+        "uname -r 203.0.113.10",
+        "chmod 203.0.113.10",
+        "systemctl route 203.0.113.10",
+        "ip route get 203.0.113.10"
+      ],
+      "answerIndex": 3,
+      "explanation": "ip route get asks the kernel to resolve a route lookup. It helps distinguish routing decisions from DNS resolution problems.",
+      "id": "linux-043"
+    },
+    {
+      "topic": "Name resolution",
+      "question": "Why can getent hosts app.example differ from a direct DNS query tool?",
+      "options": [
+        "getent always ignores /etc/hosts",
+        "getent only reads the Git configuration",
+        "getent follows the system’s configured name-service sources",
+        "DNS tools modify /etc/nsswitch.conf"
+      ],
+      "answerIndex": 2,
+      "explanation": "The system resolver may consult sources such as files and DNS according to name-service configuration. A direct DNS query does not reproduce every NSS lookup path.",
+      "id": "linux-044"
+    },
+    {
+      "topic": "HTTP troubleshooting",
+      "question": "A server returns HTTP 404. With curl --fail, what normally happens?",
+      "options": [
+        "curl retries forever until the page exists",
+        "curl reports a nonzero exit status for that HTTP error",
+        "curl changes the response to 200",
+        "curl reports success because the TCP connection worked"
+      ],
+      "answerIndex": 1,
+      "explanation": "--fail makes HTTP error responses produce a failure status. Transport success and application-level HTTP success are different concepts.",
+      "id": "linux-045"
+    },
+    {
+      "topic": "TLS troubleshooting",
+      "question": "What does curl -k disable for HTTPS requests?",
+      "options": [
+        "All TLS encryption",
+        "The HTTP Host header",
+        "TCP connection establishment",
+        "Certificate verification checks"
+      ],
+      "answerIndex": 3,
+      "explanation": "-k skips certificate verification, weakening server identity checks. It does not disable encryption and is not the correct fix for a trust-chain problem.",
+      "id": "linux-046"
+    },
+    {
+      "topic": "SSH",
+      "question": "An SSH private key is readable by other users and OpenSSH refuses it. What is an appropriate first fix?",
+      "options": [
+        "Disable host-key checking",
+        "Make the key world-writable",
+        "Restrict its permissions so only its owner can read it",
+        "Copy the private key into authorized_keys on every host"
+      ],
+      "answerIndex": 2,
+      "explanation": "OpenSSH protects private keys from unsafe file permissions. Owner-only access such as mode 600 is appropriate for a typical private key file.",
+      "id": "linux-047"
+    },
+    {
+      "topic": "File descriptors",
+      "question": "A process reports Too many open files. Which limit and usage should you inspect?",
+      "options": [
+        "Only its disk byte quota",
+        "Only its nice value",
+        "The number of lines in /etc/passwd",
+        "Its open descriptor count and RLIMIT_NOFILE"
+      ],
+      "answerIndex": 3,
+      "explanation": "Open files include sockets and pipes as well as regular files. A descriptor leak can exhaust the per-process open-file limit.",
+      "id": "linux-048"
+    },
+    {
+      "topic": "Filesystems",
+      "question": "Writes fail with Read-only file system even though file permissions allow writing. What should you inspect?",
+      "options": [
+        "Only the file’s extension",
+        "The mount’s read-only state and filesystem error logs",
+        "Whether the current shell is interactive",
+        "The DNS search domain"
+      ],
+      "answerIndex": 1,
+      "explanation": "Filesystem mount state can prevent writes independently of permission bits. Some filesystems remount read-only after serious errors.",
+      "id": "linux-049"
+    },
+    {
+      "topic": "Shell tests",
+      "question": "In Bash, why is -eq appropriate in this test?",
+      "options": [
+        "It compares integer values rather than lexicographic string order",
+        "It expands a regular expression",
+        "It tests whether a file exists",
+        "It assigns n to 10"
+      ],
+      "answerIndex": 0,
+      "explanation": "The test command’s -eq operator compares integers. String equality uses a different operator and does not perform numeric comparison.",
+      "code": "n=10\n[ \"$n\" -eq 10 ] && printf \"match\\n\"",
+      "language": "shell",
+      "id": "linux-050"
+    }
+  ]
+}

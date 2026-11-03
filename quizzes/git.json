@@ -1,5 +1,678 @@
-{"version":1,"title":"Git Fundamentals","questions":[
-{"id":"git-001","topic":"Staging","question":"What does git add stage?","options":["Every future change to a file","A snapshot of the selected working-tree content","Only files already committed","A remote branch"],"answerIndex":1,"explanation":"git add copies the selected content into the index. Later edits must be staged again if you want them in the next commit."},
-{"id":"git-002","topic":"Branches","question":"What does git switch -c feature create?","options":["A remote repository named feature","A new branch named feature and switches to it","A tag named feature","A copy of every remote branch"],"answerIndex":1,"explanation":"git switch -c creates a new branch at the chosen starting point (HEAD by default), then checks it out."},
-{"id":"git-003","topic":"Remotes","question":"What does git fetch normally do?","options":["Overwrites working-tree files with remote files","Commits local changes","Downloads objects and updates remote-tracking references","Merges every remote branch into the current branch"],"answerIndex":2,"explanation":"git fetch downloads repository data and updates remote-tracking references. It does not normally merge changes into your current branch."}
-]}
+{
+  "version": 1,
+  "title": "Git: History, Collaboration, and Recovery",
+  "questions": [
+    {
+      "id": "git-001",
+      "topic": "Staging",
+      "question": "What does git add stage?",
+      "options": [
+        "Every future change to a file",
+        "A snapshot of the selected working-tree content",
+        "Only files already committed",
+        "A remote branch"
+      ],
+      "answerIndex": 1,
+      "explanation": "git add copies the selected content into the index. Later edits must be staged again if you want them in the next commit."
+    },
+    {
+      "id": "git-002",
+      "topic": "Branches",
+      "question": "What does git switch -c feature create?",
+      "options": [
+        "A remote repository named feature",
+        "A tag named feature",
+        "A copy of every remote branch",
+        "A new branch named feature and switches to it"
+      ],
+      "answerIndex": 3,
+      "explanation": "git switch -c creates a new branch at the chosen starting point (HEAD by default), then checks it out."
+    },
+    {
+      "id": "git-003",
+      "topic": "Remotes",
+      "question": "What does git fetch normally do?",
+      "options": [
+        "Overwrites working-tree files with remote files",
+        "Commits local changes",
+        "Merges every remote branch into the current branch",
+        "Downloads objects and updates remote-tracking references"
+      ],
+      "answerIndex": 3,
+      "explanation": "git fetch downloads repository data and updates remote-tracking references. It does not normally merge changes into your current branch."
+    },
+    {
+      "topic": "Inspecting changes",
+      "question": "Which changes does git diff --staged display?",
+      "options": [
+        "The working tree compared with the index",
+        "The index compared with HEAD",
+        "All commits on every remote branch",
+        "Only untracked files"
+      ],
+      "answerIndex": 1,
+      "explanation": "The staged diff previews changes currently prepared for the next commit. A plain git diff normally shows unstaged tracked changes.",
+      "id": "git-004"
+    },
+    {
+      "topic": "Inspecting changes",
+      "question": "A tracked file has staged edits and further unstaged edits. What does plain git diff normally show?",
+      "options": [
+        "Only the difference between the working tree and the index",
+        "Nothing until the file is committed",
+        "Only the difference between HEAD and the index",
+        "Both sets combined against the remote branch"
+      ],
+      "answerIndex": 0,
+      "explanation": "The index is the comparison baseline for a normal working-tree diff. Use --staged to inspect the already-staged part.",
+      "id": "git-005"
+    },
+    {
+      "topic": "Status",
+      "question": "What does this short-status line mean?",
+      "options": [
+        "The file is staged for deletion only",
+        "The file is untracked",
+        "The file has both staged and unstaged modifications",
+        "The branch has two merge commits"
+      ],
+      "answerIndex": 2,
+      "explanation": "In short status, the first column describes the index and the second describes the working tree.",
+      "code": "MM app.py",
+      "language": "text",
+      "id": "git-006"
+    },
+    {
+      "topic": "Staging",
+      "question": "Which command unstages config.yml while keeping its working-tree edits?",
+      "options": [
+        "git clean -f config.yml",
+        "git reset --hard HEAD",
+        "git restore config.yml",
+        "git restore --staged config.yml"
+      ],
+      "answerIndex": 3,
+      "explanation": "--staged changes the index rather than discarding the working-tree edit. A normal restore without it targets working-tree content.",
+      "id": "git-007"
+    },
+    {
+      "topic": "Restoring files",
+      "question": "What does this command normally discard?",
+      "options": [
+        "Unstaged tracked changes in settings.ini, replacing them from the index",
+        "The entire Git repository",
+        "Every commit touching settings.ini",
+        "Only the remote version of settings.ini"
+      ],
+      "answerIndex": 0,
+      "explanation": "Without --staged or --source, restore normally copies the index version into the working tree for the selected path.",
+      "code": "git restore -- settings.ini",
+      "language": "shell",
+      "id": "git-008"
+    },
+    {
+      "topic": "Reset",
+      "question": "What does git reset --soft HEAD~1 do on a branch with a parent commit?",
+      "options": [
+        "Deletes all working-tree files",
+        "Moves the branch back one commit while leaving the index and working tree unchanged",
+        "Creates a new reversing commit",
+        "Moves HEAD but clears all staged changes"
+      ],
+      "answerIndex": 1,
+      "explanation": "A soft reset moves the branch reference but preserves staged and working-tree content. The former commit’s changes remain available to recommit.",
+      "id": "git-009"
+    },
+    {
+      "topic": "Reset",
+      "question": "What does a mixed reset to HEAD normally do?",
+      "options": [
+        "Deletes untracked files",
+        "Updates only remote-tracking branches",
+        "Resets the index to HEAD while preserving working-tree changes",
+        "Creates an annotated tag"
+      ],
+      "answerIndex": 2,
+      "explanation": "Mixed is the default reset mode. Resetting to HEAD commonly unstages changes without discarding their working-tree content.",
+      "id": "git-010"
+    },
+    {
+      "topic": "Reset",
+      "question": "Which statement about git reset --hard is correct?",
+      "options": [
+        "It is always safe for uncommitted work",
+        "It can discard tracked working-tree changes as well as reset the index",
+        "It only changes the commit message",
+        "It creates a backup branch automatically"
+      ],
+      "answerIndex": 1,
+      "explanation": "A hard reset aligns the index and tracked working tree with the target commit. Do not rely on reflog to recover edits that were never committed.",
+      "id": "git-011"
+    },
+    {
+      "topic": "Shared history",
+      "question": "A bad commit is already on a shared main branch. Which approach usually preserves existing history while undoing its change?",
+      "options": [
+        "git revert <commit>",
+        "Edit the remote-tracking ref manually",
+        "git reset --hard <parent> followed by an unconditional force push",
+        "Delete the .git directory"
+      ],
+      "answerIndex": 0,
+      "explanation": "Revert records a new inverse change. It avoids rewriting the shared commits that collaborators may already have based work on.",
+      "id": "git-012"
+    },
+    {
+      "topic": "Merging",
+      "question": "When is a fast-forward merge possible?",
+      "options": [
+        "Whenever the two branches have the same name",
+        "Only when the working tree has untracked files",
+        "Only if both branches contain merge commits",
+        "When the current branch tip is an ancestor of the branch being merged"
+      ],
+      "answerIndex": 3,
+      "explanation": "A fast-forward simply moves the branch pointer along existing history. Diverged histories cannot be combined by only moving that pointer.",
+      "id": "git-013"
+    },
+    {
+      "topic": "Merging",
+      "question": "What does --no-ff request when a fast-forward would otherwise be possible?",
+      "options": [
+        "Create a merge commit instead of only moving the branch pointer",
+        "Refuse all merges",
+        "Delete the source branch automatically",
+        "Squash all repository history into one commit"
+      ],
+      "answerIndex": 0,
+      "explanation": "--no-ff preserves an explicit merge boundary. It does not itself squash commits or remove the merged branch.",
+      "code": "git merge --no-ff feature",
+      "language": "shell",
+      "id": "git-014"
+    },
+    {
+      "topic": "Rebasing",
+      "question": "Why do replayed commits usually receive new object IDs during a rebase?",
+      "options": [
+        "Rebase merely renames files alphabetically",
+        "Git assigns random IDs each time a commit is read",
+        "Their parent relationships and possibly other commit contents change",
+        "Only remote servers can preserve commit IDs"
+      ],
+      "answerIndex": 2,
+      "explanation": "A commit ID hashes the commit object, including its parent references. Replaying the same patch on another parent creates a different commit.",
+      "id": "git-015"
+    },
+    {
+      "topic": "Rebase conflicts",
+      "question": "After resolving a rebase conflict and staging the resolved file, what normally resumes the operation?",
+      "options": [
+        "git fetch --continue",
+        "git switch --finish",
+        "git merge --start",
+        "git rebase --continue"
+      ],
+      "answerIndex": 3,
+      "explanation": "Staging marks the conflict resolution. --continue lets rebase proceed to the next commit in the replay sequence.",
+      "id": "git-016"
+    },
+    {
+      "topic": "Merge conflicts",
+      "question": "You started a merge and want to abandon it. Which command is designed for that?",
+      "options": [
+        "git branch --abort",
+        "git revert --all",
+        "git merge --accept-all",
+        "git merge --abort"
+      ],
+      "answerIndex": 3,
+      "explanation": "--abort attempts to restore the pre-merge state. Keeping unrelated uncommitted edits out of an operation makes recovery more predictable.",
+      "id": "git-017"
+    },
+    {
+      "topic": "Conflict markers",
+      "question": "During a normal merge into your current branch, which region is the current branch’s side?",
+      "options": [
+        "The entire file is automatically staged",
+        "The lines after >>>>>>> only",
+        "The lines between <<<<<<< HEAD and =======",
+        "The text feature means the file is untracked"
+      ],
+      "answerIndex": 2,
+      "explanation": "In a normal merge conflict, the HEAD region is the current side. Resolve the intended content and remove the markers before staging.",
+      "code": "<<<<<<< HEAD\nport = 8080\n=======\nport = 9090\n>>>>>>> feature",
+      "language": "text",
+      "id": "git-018"
+    },
+    {
+      "topic": "Stashing",
+      "question": "What does git stash push -u add compared with the usual tracked-change stash?",
+      "options": [
+        "Untracked files",
+        "Every remote branch",
+        "The repository’s reflog history",
+        "Every ignored file regardless of flags"
+      ],
+      "answerIndex": 0,
+      "explanation": "-u includes untracked files. Ignored files require a different choice, such as --all, and may include local material you should handle carefully.",
+      "id": "git-019"
+    },
+    {
+      "topic": "Stashing",
+      "question": "A git stash pop encounters conflicts. What normally happens to the stash entry?",
+      "options": [
+        "It is pushed to origin automatically",
+        "It is converted into a tag",
+        "It is retained so it can be handled after resolving the conflict",
+        "It is always deleted even if application fails"
+      ],
+      "answerIndex": 2,
+      "explanation": "pop drops the entry only after successful application. A conflicted application normally leaves the stash available.",
+      "id": "git-020"
+    },
+    {
+      "topic": "Ignore rules",
+      "question": "You add a tracked secrets.env file to .gitignore. What happens to its existing tracking?",
+      "options": [
+        "It instantly disappears from remote history",
+        "Git deletes it from every commit",
+        "Git encrypts its previous contents",
+        "It remains tracked until explicitly removed from the index"
+      ],
+      "answerIndex": 3,
+      "explanation": "Ignore rules mainly affect untracked paths. Removing tracking also does not erase historical secrets; exposed credentials require separate remediation.",
+      "id": "git-021"
+    },
+    {
+      "topic": "Ignore rules",
+      "question": "What does this command do for an already-tracked local.env?",
+      "options": [
+        "Erases every historical version",
+        "Deletes the working-tree file immediately",
+        "Renames it to .gitignore",
+        "Removes it from the index while leaving the working-tree file"
+      ],
+      "answerIndex": 3,
+      "explanation": "--cached targets the index. Commit the removal and add an appropriate ignore rule if the file should stay local.",
+      "code": "git rm --cached local.env",
+      "language": "shell",
+      "id": "git-022"
+    },
+    {
+      "topic": "Pulling",
+      "question": "Your branch and its upstream have diverged. What does this command do?",
+      "options": [
+        "Overwrites the remote branch",
+        "Refuses to integrate because a fast-forward is not possible",
+        "Rebases your branch automatically",
+        "Creates a merge commit anyway"
+      ],
+      "answerIndex": 1,
+      "explanation": "--ff-only prevents pull from introducing a merge commit or silently choosing a rebase when histories diverge.",
+      "code": "git pull --ff-only",
+      "language": "shell",
+      "id": "git-023"
+    },
+    {
+      "topic": "Upstreams",
+      "question": "What is the purpose of -u here after a successful push?",
+      "options": [
+        "Make feature a protected branch",
+        "Set origin/feature as the upstream for local feature",
+        "Remove the origin remote",
+        "Upload every local branch"
+      ],
+      "answerIndex": 1,
+      "explanation": "The upstream relationship supports default pull/push behavior and ahead/behind reporting. It is not repository access control.",
+      "code": "git push -u origin feature",
+      "language": "shell",
+      "id": "git-024"
+    },
+    {
+      "topic": "Detached HEAD",
+      "question": "You made useful commits while HEAD was detached. What should you do to retain an easy branch reference to them?",
+      "options": [
+        "Run git clean -fd",
+        "Create a branch at the current commit",
+        "Delete the index",
+        "Rename the .git folder"
+      ],
+      "answerIndex": 1,
+      "explanation": "A new branch keeps a named reference to the detached work. Otherwise it can become hard to find after switching away and eventually be garbage-collected.",
+      "id": "git-025"
+    },
+    {
+      "topic": "Recovery",
+      "question": "Which mechanism can help find a recent branch tip after a local reset?",
+      "options": [
+        "The filesystem’s file extension database",
+        "The current .gitignore file",
+        "The reflog",
+        "The remote README rendered as HTML"
+      ],
+      "answerIndex": 2,
+      "explanation": "Reflogs record local reference movements. They are local, expire over time, and are not a universal backup of uncommitted file contents.",
+      "id": "git-026"
+    },
+    {
+      "topic": "Cherry-picking",
+      "question": "What does git cherry-pick <commit> normally do?",
+      "options": [
+        "Applies that commit’s change and records a new commit on the current branch",
+        "Merges every commit from the source branch",
+        "Creates a remote automatically",
+        "Moves the original branch pointer without changing files"
+      ],
+      "answerIndex": 0,
+      "explanation": "Cherry-picking selects a change for replay. The resulting commit usually has a different parent and therefore a different ID.",
+      "id": "git-027"
+    },
+    {
+      "topic": "Reverting merges",
+      "question": "Why does reverting a merge commit require choosing a mainline parent with -m?",
+      "options": [
+        "Git needs the parent relative to which the merge change should be reversed",
+        "The flag supplies a replacement commit message",
+        "It chooses the remote authentication method",
+        "Merge commits contain no parent references"
+      ],
+      "answerIndex": 0,
+      "explanation": "A merge has multiple parents. The mainline selection defines the baseline for interpreting and reversing its changes.",
+      "id": "git-028"
+    },
+    {
+      "topic": "Tags",
+      "question": "What distinguishes an annotated tag from a lightweight tag?",
+      "options": [
+        "It is automatically pushed by every normal git push",
+        "It can only point to untracked files",
+        "It always moves automatically with the branch",
+        "It creates a tag object with metadata and a message"
+      ],
+      "answerIndex": 3,
+      "explanation": "Annotated tags carry metadata and can be signed. A lightweight tag is essentially a direct reference; tags do not move with branch development.",
+      "id": "git-029"
+    },
+    {
+      "topic": "Remote tracking",
+      "question": "What does origin/main normally represent in a local repository?",
+      "options": [
+        "The current working directory",
+        "A local remote-tracking reference updated by fetch",
+        "A branch stored only on the remote and never locally",
+        "A live network connection that is always current"
+      ],
+      "answerIndex": 1,
+      "explanation": "Remote-tracking refs reflect the remote as last fetched. They can be stale until network synchronization occurs.",
+      "id": "git-030"
+    },
+    {
+      "topic": "History ranges",
+      "question": "Which commits does this log range select?",
+      "options": [
+        "Commits common to both branches only",
+        "Every commit preceding the repository’s first commit",
+        "Commits reachable from feature but not from main",
+        "Only merge commits on main"
+      ],
+      "answerIndex": 2,
+      "explanation": "For revision traversal, A..B excludes commits reachable from A and includes those reachable from B.",
+      "code": "git log main..feature",
+      "language": "shell",
+      "id": "git-031"
+    },
+    {
+      "topic": "Diff ranges",
+      "question": "In git diff main...feature, what baseline is normally used?",
+      "options": [
+        "The working tree compared with the index",
+        "The remote default branch regardless of main",
+        "The merge base of main and feature, compared with feature",
+        "Every commit on both branches printed as patches"
+      ],
+      "answerIndex": 2,
+      "explanation": "Three-dot diff is useful for the changes introduced on feature since its common ancestor with main. It differs from three-dot log traversal.",
+      "id": "git-032"
+    },
+    {
+      "topic": "Ancestry",
+      "question": "What does git merge-base main feature identify?",
+      "options": [
+        "A best common ancestor of the two histories",
+        "The branch with fewer commits",
+        "The newest untracked file",
+        "The repository’s configured username"
+      ],
+      "answerIndex": 0,
+      "explanation": "A merge base is an ancestry relationship used in merge and comparison operations. Criss-cross histories can have more than one best base.",
+      "id": "git-033"
+    },
+    {
+      "topic": "Debugging",
+      "question": "What does git bisect help locate?",
+      "options": [
+        "A malformed SSH private key",
+        "The commit that introduced a reproducible regression",
+        "Every unused local branch simultaneously",
+        "A line that contains a syntax error without running tests"
+      ],
+      "answerIndex": 1,
+      "explanation": "Bisect searches a good-to-bad commit range using repeated test results. A reliable test and a correct starting range are important.",
+      "id": "git-034"
+    },
+    {
+      "topic": "Debugging",
+      "question": "What does git blame normally show for each line?",
+      "options": [
+        "Which user last opened the file in an editor",
+        "Who originally designed the whole application",
+        "Only the author of the current branch",
+        "The commit that last changed that line in the selected history"
+      ],
+      "answerIndex": 3,
+      "explanation": "Blame attributes line changes to commits. It is an investigation aid, not proof of who caused a bug or who first conceived the code.",
+      "id": "git-035"
+    },
+    {
+      "topic": "Worktrees",
+      "question": "What is a useful purpose of git worktree add?",
+      "options": [
+        "Check out another branch into a separate working directory sharing the repository",
+        "Automatically deploy the branch to production",
+        "Duplicate every object into an unrelated repository",
+        "Make all branches share one index"
+      ],
+      "answerIndex": 0,
+      "explanation": "Linked worktrees enable parallel working directories with separate checkouts. Git normally prevents checking out the same branch in multiple worktrees simultaneously.",
+      "id": "git-036"
+    },
+    {
+      "topic": "Submodules",
+      "question": "What does --recurse-submodules request during a clone?",
+      "options": [
+        "Flatten every submodule’s history into the parent",
+        "Initialize and clone the configured submodules as well",
+        "Ignore .gitmodules",
+        "Replace all submodules with symbolic links"
+      ],
+      "answerIndex": 1,
+      "explanation": "Submodules refer to other repositories at recorded commits. Recursive cloning populates their working directories instead of leaving only the parent checkout.",
+      "id": "git-037"
+    },
+    {
+      "topic": "Cleaning",
+      "question": "Why run this command before a destructive clean?",
+      "options": [
+        "It commits untracked files to a backup branch",
+        "It previews untracked files and directories that would be removed",
+        "It verifies that all tests pass",
+        "It permanently deletes ignored files too"
+      ],
+      "answerIndex": 1,
+      "explanation": "-n is a dry run and -d includes untracked directories. Actual clean removal can destroy work that Git has never stored.",
+      "code": "git clean -nd",
+      "language": "shell",
+      "id": "git-038"
+    },
+    {
+      "topic": "Pushing",
+      "question": "What protection does --force-with-lease provide compared with an unconditional force push?",
+      "options": [
+        "It encrypts the pushed commits",
+        "It prevents all possible accidental overwrites",
+        "It checks that the remote ref has an expected value before replacing it",
+        "It locks the branch forever"
+      ],
+      "answerIndex": 2,
+      "explanation": "A lease protects against unexpected remote updates. Its default expectation can be affected by fetched remote-tracking refs, so it is not a universal safety guarantee.",
+      "id": "git-039"
+    },
+    {
+      "topic": "Amending",
+      "question": "Why should you be cautious amending a commit already shared with others?",
+      "options": [
+        "The amended commit has a new ID and may require history rewriting to publish",
+        "Amend always deletes all previous commits",
+        "The command only works on remote branches",
+        "It makes the commit impossible to review"
+      ],
+      "answerIndex": 0,
+      "explanation": "Amend creates a replacement for the current tip commit. Collaborators may already depend on the old ID.",
+      "id": "git-040"
+    },
+    {
+      "topic": "Commits",
+      "question": "After staging a file, you edit it again and run plain git commit. Which version is normally committed?",
+      "options": [
+        "All working-tree edits whether staged or not",
+        "Only the file version on origin",
+        "The staged snapshot, not the later unstaged edits",
+        "An empty version of the file"
+      ],
+      "answerIndex": 2,
+      "explanation": "A normal commit records the index. Stage subsequent edits if they should also be included.",
+      "id": "git-041"
+    },
+    {
+      "topic": "Path reset",
+      "question": "What does this path-limited reset do?",
+      "options": [
+        "Deletes config.yml from all history",
+        "Resets config.yml in the index to HEAD without moving the branch",
+        "Discards the working-tree copy unconditionally",
+        "Moves the branch to a commit named config.yml"
+      ],
+      "answerIndex": 1,
+      "explanation": "The path form resets index entries. It is different from resetting the branch tip to another commit.",
+      "code": "git reset HEAD -- config.yml",
+      "language": "shell",
+      "id": "git-042"
+    },
+    {
+      "topic": "Restore source",
+      "question": "What does this restore command normally change?",
+      "options": [
+        "The remote branch named app.py",
+        "The working-tree copy of app.py using the version in v1.0",
+        "Every file in the repository",
+        "The current branch to point at v1.0"
+      ],
+      "answerIndex": 1,
+      "explanation": "--source chooses the content source. Without --staged, the destination is normally the working tree for the specified path.",
+      "code": "git restore --source=v1.0 -- app.py",
+      "language": "shell",
+      "id": "git-043"
+    },
+    {
+      "topic": "Large repositories",
+      "question": "What is the primary purpose of sparse checkout?",
+      "options": [
+        "Limit which tracked paths are populated in the working tree",
+        "Automatically split a repository into submodules",
+        "Remove unwanted history from the remote",
+        "Encrypt selected directories"
+      ],
+      "answerIndex": 0,
+      "explanation": "Sparse checkout narrows the working-tree view. It does not by itself remove historical objects or change repository access permissions.",
+      "id": "git-044"
+    },
+    {
+      "topic": "Revision syntax",
+      "question": "For an ordinary non-merge tip commit, what does HEAD~1 refer to?",
+      "options": [
+        "Its first parent",
+        "The upstream remote branch",
+        "The next commit that will be created",
+        "The first commit in the repository"
+      ],
+      "answerIndex": 0,
+      "explanation": "The ~ operator follows first-parent ancestry. ~1 is one first-parent step backward.",
+      "id": "git-045"
+    },
+    {
+      "topic": "Revision syntax",
+      "question": "For a merge commit, what does HEAD^2 select?",
+      "options": [
+        "The second file changed in the merge",
+        "Its first parent’s first parent",
+        "The second-most-recent remote branch",
+        "Its second parent"
+      ],
+      "answerIndex": 3,
+      "explanation": "^n selects a numbered parent. ~n instead walks first-parent ancestry repeatedly.",
+      "id": "git-046"
+    },
+    {
+      "topic": "Attributes",
+      "question": "What is a suitable purpose for a .gitattributes rule with text and eol settings?",
+      "options": [
+        "Configure branch protection on GitHub",
+        "Change every file’s executable permission",
+        "Control text normalization and checkout line-ending behavior",
+        "Store repository passwords securely"
+      ],
+      "answerIndex": 2,
+      "explanation": "Attributes can describe path-specific content handling. They are distinct from ignore rules and hosting-service branch policies.",
+      "id": "git-047"
+    },
+    {
+      "topic": "Conflict reuse",
+      "question": "What does git rerere help reuse?",
+      "options": [
+        "Recorded conflict resolutions for similar future conflicts",
+        "Every commit message from a different repository",
+        "Remote authentication tokens",
+        "The operating system’s file cache"
+      ],
+      "answerIndex": 0,
+      "explanation": "rerere records how conflicts were resolved and can reapply matching resolutions later. Review the result rather than assuming every reused resolution is appropriate.",
+      "id": "git-048"
+    },
+    {
+      "topic": "Conflict sides",
+      "question": "During a normal merge into main, what does git checkout --ours -- config.yml choose for that conflicted path?",
+      "options": [
+        "The version from the remote default branch automatically",
+        "The incoming branch’s version",
+        "A merged version containing both sides",
+        "The current main-side version"
+      ],
+      "answerIndex": 3,
+      "explanation": "In a normal merge, ours refers to the current side. Stage the file afterward if that selection is the intended resolution.",
+      "id": "git-049"
+    },
+    {
+      "topic": "Hooks",
+      "question": "Are executable client-side hooks in .git/hooks automatically distributed by a normal clone?",
+      "options": [
+        "Only if the repository has a README",
+        "Only if the branch is called main",
+        "No; hook installation requires a separate arrangement",
+        "Yes, every hook is part of every commit"
+      ],
+      "answerIndex": 2,
+      "explanation": "The local .git directory is not tracked as project content. Teams can version hook scripts elsewhere and arrange installation explicitly.",
+      "id": "git-050"
+    }
+  ]
+}

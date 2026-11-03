@@ -19,6 +19,10 @@ Then ask what a successful test at one layer does and does not prove about the n
 | VMware | 14–22 | Distinguish HA, vMotion, Storage vMotion, DRS, failover capacity, compatibility, and maintenance. |
 | VMware | 23–35 | Interpret CPU/memory controls and identify the host, guest, and networking layers. |
 | VMware | 36–50 | Practice read-only inspection, storage incidents, patch planning, and service recovery validation. |
+| VMware | 51–55 | Diagnose HA primary elections, partitions, heartbeats, isolation response, and FDM agent evidence. |
+| VMware | 56–60 | Explain vSAN witness/object quorum, compute versus storage recovery, and maintenance/heartbeat limitations. |
+| VMware | 61–65 | Investigate APD policies, host-specific storage access, disk locks, MTU and vMotion stack selection. |
+| VMware | 66–70 | Diagnose guest-network migration failures, iSCSI/NFS access, mandatory affinity constraints, and restart readiness. |
 | NetApp | 1–19 | Explain controllers, clusters, HA pairs, aggregates/local tiers, volumes, SVMs, LIFs, NAS/SAN, and multipathing. |
 | NetApp | 20–31 | Distinguish disk protection, snapshots, replication, application consistency, RPO/RTO, and usable capacity. |
 | NetApp | 32–47 | Interpret performance symptoms, authorization, storage paths, and read-only diagnostic commands. |

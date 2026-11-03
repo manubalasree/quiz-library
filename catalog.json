@@ -41,7 +41,7 @@
     {
       "id": "vmware",
       "title": "VMware vSphere",
-      "description": "50 fundamentals on VMs, HA/DRS, storage, networking, performance, and recovery.",
+      "description": "70 questions on vSphere, HA elections, vSAN quorum, storage paths, networking, and recovery.",
       "url": "quizzes/vmware.json"
     }
   ]

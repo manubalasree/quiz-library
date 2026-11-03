@@ -675,6 +675,286 @@
       "answerIndex": 0,
       "explanation": "Infrastructure recovery and service recovery are different. Confirm representative transactions and dependencies, communicate with the service owner, and preserve evidence for the root-cause investigation.",
       "id": "vmware-050"
+    },
+    {
+      "id": "vmware-051",
+      "topic": "HA primary election",
+      "question": "The ESXi host acting as the vSphere HA primary fails. What should the surviving HA agents normally do if they can communicate?",
+      "options": [
+        "Wait indefinitely for an administrator to promote the vCenter appliance to ESXi primary",
+        "Elect another primary and continue evaluating protected VMs for recovery",
+        "Restart every VM on every surviving host merely because the primary changed",
+        "Disable all shared datastores until the failed host returns"
+      ],
+      "answerIndex": 1,
+      "explanation": "The HA primary is an elected host-agent role, not a fixed vCenter role. Losing it requires another election. VM recovery still depends on the affected workloads, storage access, eligible hosts and resources; a primary change alone does not require restarting unaffected VMs."
+    },
+    {
+      "id": "vmware-052",
+      "topic": "HA partition scenario",
+      "question": "What does this communication pattern most directly suggest in a traditional, non-vSAN vSphere HA cluster?",
+      "options": [
+        "A mandatory vCenter database restore because all hosts are powered off",
+        "A datastore-capacity failure because each group contains two hosts",
+        "A normal vMotion operation that guarantees every VM has moved",
+        "A network partition between two groups, rather than proof that all four hosts have failed"
+      ],
+      "answerIndex": 3,
+      "explanation": "A partition separates groups that can still communicate internally. An isolated host has lost HA peer connectivity and uses isolation detection to assess its situation. Correlate datastore heartbeats and agent evidence; do not declare hosts dead from a broken inter-group network path alone.",
+      "code": "Illustrative HA network observations:\nHost A <-> Host B: reachable\nHost C <-> Host D: reachable\nA/B <-> C/D: unreachable\nAll four hosts remain powered on",
+      "language": "text"
+    },
+    {
+      "id": "vmware-053",
+      "topic": "Datastore heartbeat scenario",
+      "question": "In a non-vSAN cluster, a host stops sending HA network heartbeats but continues updating its selected shared-datastore heartbeat. What does that evidence support?",
+      "options": [
+        "The host may still be running despite a network problem; distinguish partition or isolation from host failure",
+        "The host must be powered off because network heartbeats are the only usable evidence",
+        "Every guest application on the host has passed a functional health check",
+        "Every VM on that host can safely be powered on simultaneously elsewhere"
+      ],
+      "answerIndex": 0,
+      "explanation": "Datastore heartbeating gives HA another observation when its normal network path is lost. It helps classify the host state, but it neither validates application transactions nor grants permission to create duplicate running VM instances."
+    },
+    {
+      "id": "vmware-054",
+      "topic": "HA isolation response",
+      "question": "Why would this configuration explain a VM staying powered on during a confirmed host-isolation event?",
+      "options": [
+        "The same setting necessarily disables VM restart after a physical host failure",
+        "HA must live-migrate the VM before applying any isolation response",
+        "The effective isolation response tells HA not to shut down or power off that VM for isolation",
+        "Reachable storage guarantees that the VM still has a working client network"
+      ],
+      "answerIndex": 2,
+      "explanation": "Isolation response is a configurable action and may have per-VM overrides. A disabled response can leave a VM running even when its network is unusable. Host isolation, host failure and datastore failure are separate conditions with separate recovery considerations.",
+      "code": "Illustrative effective VM settings:\nVM: app01\nHA restart priority: Medium\nHost isolation response: Disabled",
+      "language": "text"
+    },
+    {
+      "id": "vmware-055",
+      "topic": "HA agent diagnostics",
+      "question": "After an HA network change, agents repeatedly lose contact. Why inspect this log as part of the investigation?",
+      "options": [
+        "It is the guest OS log used to diagnose database service startup",
+        "It contains FDM agent evidence about HA communication, elections and protection activity",
+        "It replaces testing HA network reachability because every HA issue is a local agent fault",
+        "It supplies the complete component-vote layout of every vSAN virtual disk"
+      ],
+      "answerIndex": 1,
+      "explanation": "FDM is the host-side HA agent. Correlate its timestamps with host health and network changes, including the required HA traffic between hosts. Reading a log provides evidence; it does not by itself fix an HA configuration or network fault.",
+      "code": "less /var/run/log/fdm.log",
+      "language": "text"
+    },
+    {
+      "id": "vmware-056",
+      "topic": "vSAN witness fundamentals",
+      "question": "In a supported two-node or stretched vSAN design, what is the witness primarily for?",
+      "options": [
+        "Keeping an independent full backup of every guest virtual disk",
+        "Running a third production copy of every protected application VM",
+        "Replacing the need for data components on the storage hosts",
+        "Hosting witness metadata and participating in object-quorum decisions"
+      ],
+      "answerIndex": 3,
+      "explanation": "Witness components contribute to quorum without storing the production data blocks. A witness is therefore neither a backup repository nor a substitute for an accessible data replica."
+    },
+    {
+      "id": "vmware-057",
+      "topic": "vSAN quorum scenario",
+      "question": "For this simplified mirrored object, which surviving set satisfies both the stated vote majority and availability of a full data copy? Assume the displayed votes do not change.",
+      "options": [
+        "Data component A plus the witness",
+        "The witness alone",
+        "Data component A alone",
+        "The vCenter appliance alone, regardless of accessible components"
+      ],
+      "answerIndex": 0,
+      "explanation": "Two of the three shown votes exceed half, and A supplies a complete data copy. This is an object-level exercise, not a rule that each host always has one vote. Actual component votes and supported failure behavior depend on layout, version and failure sequence.",
+      "code": "Illustrative object layout:\nData component A: complete mirror, 1 vote\nData component B: complete mirror, 1 vote\nWitness: metadata only, 1 vote\nData component B becomes unavailable",
+      "language": "text"
+    },
+    {
+      "id": "vmware-058",
+      "topic": "HA versus vSAN availability",
+      "question": "HA agents are healthy, but a VM cannot access a vSAN object that has lost quorum. Why is another HA primary election not a complete remedy?",
+      "options": [
+        "The HA primary automatically contains a backup of every vSAN object",
+        "A new HA primary can ignore all object-consistency checks without affecting data",
+        "HA restart coordination cannot recreate missing storage quorum or an accessible complete data set",
+        "Healthy HA agents prove every vSAN component is available"
+      ],
+      "answerIndex": 2,
+      "explanation": "Compute recovery and storage-object availability are different layers. Investigate the affected object, component reachability, failures and resynchronization state. Moving or restarting compute cannot by itself recover inaccessible storage components."
+    },
+    {
+      "id": "vmware-059",
+      "topic": "vSAN maintenance scenario",
+      "question": "A vSAN maintenance pre-check with Ensure accessibility reports that some objects will remain accessible but become noncompliant. What is the best interpretation?",
+      "options": [
+        "The VM storage policy has automatically been changed to tolerate zero failures",
+        "The option can preserve access while reducing policy redundancy, so assess additional-failure risk before proceeding",
+        "Every reported noncompliant object is necessarily already inaccessible",
+        "Every remaining host can be maintained simultaneously because access was checked once"
+      ],
+      "answerIndex": 1,
+      "explanation": "Ensure accessibility moves only what is needed to keep objects usable; it does not promise full policy compliance. Review the pre-check, capacity and topology. Full data migration has different requirements and may not be possible in every cluster layout."
+    },
+    {
+      "id": "vmware-060",
+      "topic": "vSAN and HA heartbeat datastores",
+      "question": "A cluster uses vSAN storage only. Should you expect its vSAN datastore to appear as an ordinary VMFS/NFS datastore-heartbeat target for vSphere HA?",
+      "options": [
+        "Yes; every datastore listed in vCenter is equally eligible for conventional datastore heartbeating",
+        "Yes; vSAN witness components automatically become ordinary shared VMFS heartbeat files",
+        "No; vSphere HA is unsupported whenever vSAN is enabled",
+        "No; vSAN does not serve as that kind of HA heartbeat datastore"
+      ],
+      "answerIndex": 3,
+      "explanation": "vSAN clusters have specific HA network and isolation design considerations. They cannot use the vSAN datastore as a conventional datastore-heartbeat target. If additional shared VMFS/NFS datastores are present, evaluate them separately rather than assuming one design applies to all storage types."
+    },
+    {
+      "id": "vmware-061",
+      "topic": "APD and VMCP scenario",
+      "question": "An ESXi host experiences APD on a datastore, but VMs are not automatically terminated and restarted. Which setting makes that behavior plausible?",
+      "options": [
+        "The effective VM Component Protection APD response is Issue Events rather than a power-off-and-restart policy",
+        "DRS automation alone controls APD termination, so VMCP settings are irrelevant",
+        "A reachable heartbeat datastore proves every other datastore on the host is accessible",
+        "HA restart priority alone always overrides the configured APD response"
+      ],
+      "answerIndex": 0,
+      "explanation": "An Issue Events response reports the condition without itself changing the VM power state. Check the effective cluster policy, VM overrides, timeout state and alternate-host storage access. Enabling HA does not make every datastore failure trigger an identical recovery action.",
+      "code": "Illustrative effective protection settings:\nDatastore condition: All Paths Down\nAPD failure response: Issue Events\nAffected VM still powered on",
+      "language": "text"
+    },
+    {
+      "id": "vmware-062",
+      "topic": "Host-specific storage failure",
+      "question": "A shared VMFS datastore works on two ESXi hosts but is inaccessible on a third after a SAN change. What is the strongest next step?",
+      "options": [
+        "Reformat the datastore from the affected host because two hosts can still read it",
+        "Delete the datastore from vCenter to force all hosts to rediscover it",
+        "Compare the affected host’s device paths, fabric or IP connectivity, and array initiator/LUN presentation with a healthy host",
+        "Assume the whole array has lost all disks because one host cannot see the LUN"
+      ],
+      "answerIndex": 2,
+      "explanation": "The different host outcomes help isolate the fault domain. Correlate the same device identifier across hosts and verify zoning, initiator mapping, masking and paths as appropriate. Do not destroy a working shared filesystem to resolve one host’s visibility issue.",
+      "code": "Read-only device-path inspection; replace the placeholder:\nesxcli storage core path list -d <device-id>",
+      "language": "text"
+    },
+    {
+      "id": "vmware-063",
+      "topic": "VM disk locking scenario",
+      "question": "A VM fails to start with a disk-lock error after backup activity. What should you establish before attempting lock recovery?",
+      "options": [
+        "Which lock-related files can be deleted without checking any owner",
+        "Which host or process owns the lock and whether the disk is still legitimately open by a running VM or backup proxy",
+        "Whether attaching the same disk to another ordinary VM will bypass all locking",
+        "Whether formatting the datastore removes only the lock and preserves every file"
+      ],
+      "answerIndex": 1,
+      "explanation": "A lock can protect a disk that another process is using. Confirm the active owner and backup attachments, then follow the supported recovery procedure. Forcing concurrent access or deleting storage files without that evidence risks data integrity."
+    },
+    {
+      "id": "vmware-064",
+      "topic": "vMotion MTU scenario",
+      "question": "For IPv4 on a planned 9000-byte vMotion path, small probes succeed but the second probe fails. What should you investigate?",
+      "options": [
+        "Normal behavior: setting an interface MTU to 9000 requires large no-fragment probes to fail",
+        "The need to allow fragmentation and treat a fragmented ping as proof of a 9000-byte path",
+        "A definitive CPU compatibility failure that can be identified from ICMP payload size alone",
+        "A jumbo-frame or MTU inconsistency along the selected VMkernel-to-peer path"
+      ],
+      "answerIndex": 3,
+      "explanation": "The 8972-byte ICMP payload plus IPv4 and ICMP headers exercises a 9000-byte IP packet with fragmentation disallowed. Verify endpoints and the physical path; small-packet reachability does not establish jumbo-frame support. This example assumes the interface uses the default TCP/IP stack.",
+      "code": "vmkping -I vmk2 192.0.2.22\nvmkping -I vmk2 -d -s 8972 192.0.2.22",
+      "language": "text"
+    },
+    {
+      "id": "vmware-065",
+      "topic": "vMotion TCP/IP stack",
+      "question": "vmk2 uses the dedicated vMotion TCP/IP stack. What is the purpose of the stack selector in this diagnostic?",
+      "options": [
+        "Test from the vMotion stack’s network context instead of assuming the default stack’s routing applies",
+        "Move all guest traffic onto the vMotion VLAN",
+        "Change the destination VM’s CPU compatibility level",
+        "Convert a standard virtual switch into a distributed switch"
+      ],
+      "answerIndex": 0,
+      "explanation": "VMkernel service placement and TCP/IP stack selection affect the path being tested. A successful probe from a management interface or another stack does not prove connectivity for the vMotion stack.",
+      "code": "vmkping -I vmk2 -S vmotion 192.0.2.22",
+      "language": "text"
+    },
+    {
+      "id": "vmware-066",
+      "topic": "Post-vMotion networking scenario",
+      "question": "A live migration completes, but the VM loses guest-network connectivity only on the destination host. What is the best first investigation?",
+      "options": [
+        "Only the vMotion VMkernel subnet because guest packets always use that subnet",
+        "Only the VM snapshot count because migration success guarantees the guest network",
+        "The destination VM network mapping, VLAN, active uplinks and physical switch path",
+        "The source host’s boot disk because destination uplinks cannot affect a migrated VM"
+      ],
+      "answerIndex": 2,
+      "explanation": "The migration network and the guest network are distinct paths. Successful memory transfer and compatibility checks do not validate every physical VLAN or uplink at the destination. Compare the guest-facing path with a known-good host."
+    },
+    {
+      "id": "vmware-067",
+      "topic": "iSCSI port-binding scenario",
+      "question": "On ESXi 7/8, two software-iSCSI VMkernel interfaces use different broadcast domains and IP subnets. Is adding both to one port-binding configuration a universal fix for missing paths?",
+      "options": [
+        "Yes; port binding automatically routes between all VLANs and storage subnets",
+        "No; validate the supported topology because software-iSCSI port binding has specific same-subnet and network-placement requirements",
+        "Yes; adding more bindings always increases valid paths regardless of topology",
+        "No; iSCSI can never use more than one VMkernel interface in any supported design"
+      ],
+      "answerIndex": 1,
+      "explanation": "Port binding is a particular software-iSCSI design, not a generic path-repair switch. Broadcom documents common broadcast-domain/subnet, virtual-switch and uplink-mapping requirements. Match the host and array design rather than copying bindings from a different topology."
+    },
+    {
+      "id": "vmware-068",
+      "topic": "NFS datastore access scenario",
+      "question": "An ESXi storage VMkernel interface can ping the NFS server, but its mount request is explicitly denied by the server. What should you check next?",
+      "options": [
+        "Assume export authorization is correct because the server answers ping",
+        "Increase MTU immediately because an explicit mount denial always means jumbo-frame loss",
+        "Change the VM guest filesystem permissions before checking the host-to-server export access",
+        "The export path and server authorization for the actual ESXi client address and intended NFS protocol configuration"
+      ],
+      "answerIndex": 3,
+      "explanation": "An explicit server denial points toward the export and access configuration, not proof that the server is unreachable. Validate the client source address, exported path, permissions and supported NFS settings. Ping establishes neither mount authorization nor read/write permission."
+    },
+    {
+      "id": "vmware-069",
+      "topic": "HA placement constraints",
+      "question": "A host fails, and a protected VM does not restart even though other hosts have spare CPU and RAM. What can this rule explain?",
+      "options": [
+        "The remaining hosts may be ineligible because HA must respect the mandatory VM-to-host placement restriction",
+        "Every host with free RAM automatically belongs to the named host group",
+        "A Must rule is always ignored during HA recovery",
+        "The rule means vCenter has reserved a full backup copy of the VM"
+      ],
+      "answerIndex": 0,
+      "explanation": "A mandatory VM-to-host affinity rule can prevent HA restart when no permitted host is available. Check effective rules, VM overrides, storage access and resources. Free capacity on an ineligible host is not sufficient.",
+      "code": "Illustrative VM/Host rule:\nVM group: database_vms\nHost group: licensed_hosts\nRule: Must run on hosts in group",
+      "language": "text"
+    },
+    {
+      "id": "vmware-070",
+      "topic": "HA restart dependencies",
+      "question": "After HA recovery, the application VM starts immediately after the database VM powers on, but the database is not ready to accept connections. What does this reveal?",
+      "options": [
+        "Powered On guarantees the database has completed recovery and accepts transactions",
+        "HA restart ordering replaces all guest-service health checks",
+        "The configured restart condition or ordering does not necessarily prove application-service readiness",
+        "The application must use the vMotion network for database traffic"
+      ],
+      "answerIndex": 2,
+      "explanation": "Infrastructure milestones such as resource allocation, power-on or guest heartbeats are not equivalent to a ready database service. Review dependency conditions and application retry or health mechanisms, then validate a representative transaction.",
+      "code": "Illustrative recovery sequence:\nDatabase VM: Powered On\nDatabase service: still recovering\nApplication VM: started\nApplication connection: refused",
+      "language": "text"
     }
   ]
 }

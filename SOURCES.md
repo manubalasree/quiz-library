@@ -104,3 +104,21 @@ The VMware bank teaches durable host/guest, compute, networking, storage, and re
 - [ESXCLI networking reference](https://developer.broadcom.com/xapis/esxcli-command-reference/latest/namespace/esxcli_network.html)
 - [ESXCLI system reference](https://developer.broadcom.com/xapis/esxcli-command-reference/latest/namespace/esxcli_system.html)
 - [PowerCLI Get-VM](https://developer.broadcom.com/powercli/latest/vmware.vimautomation.core/commands/get-vm)
+
+### HA, vSAN and incident scenarios expansion (questions 51–70)
+
+- 51–52, 55: [HA primary election, failure classification and FDM investigation](https://knowledge.broadcom.com/external/article/318936/troubleshooting-vmware-high-availability.html) and [HA issue categories](https://knowledge.broadcom.com/external/article/417885/vsphere-high-availability-ha-issues.html). The partition exercise specifies non-vSAN networking; do not assume HA uses the same network in vSAN designs.
+- 53, 60: [HA heartbeat datastore troubleshooting and vSAN exclusion](https://knowledge.broadcom.com/external/article/341625/troubleshoot-esxi-heartbeat-datastore-pr.html).
+- 54: [Disabled isolation response and VM behavior](https://knowledge.broadcom.com/external/article/423983/virtual-machines-do-not-restart-on-anoth.html).
+- 56–57: [vSAN witness, components and quorum terminology](https://knowledge.broadcom.com/external/article/326549/glossary-of-vsan-terms-and-acronyms.html), [Witness host role](https://blogs.vmware.com/cloud-foundation/2018/05/31/understanding-the-vsan-witness-host/), and [vSAN availability technologies](https://www.vmware.com/docs/vmw-vSAN-Availability-Technologies). The three-vote example explicitly fixes its illustrative object layout and votes; actual voting can be weighted and can change in supported failure sequences.
+- 58: [Inaccessible vSAN object caused by quorum loss](https://knowledge.broadcom.com/external/article/402384/vm-on-vsan-osa-cluster-in-inaccessible-s.html).
+- 59: [Maintenance pre-checks and reduced policy compliance](https://knowledge.broadcom.com/external/article/405096/vsan-data-migration-precheck-shows-xxx-n.html).
+- 61: [VMCP APD response behavior](https://knowledge.broadcom.com/external/article/324862).
+- 62: [A VMFS datastore visible on some hosts but not others](https://knowledge.broadcom.com/external/article/406778/vmfs-volume-is-mounted-on-one-or-more-ho.html) and [Storage path command reference](https://developer.broadcom.com/xapis/esxcli-command-reference/latest/namespace/esxcli_storage.html).
+- 63: [Disk locks associated with backup proxy attachments](https://knowledge.broadcom.com/external/article/367921/backup-proxy-vm-poweron-fails-with-locke.html).
+- 64–65: [vMotion network diagnostics](https://knowledge.broadcom.com/external/article/318636/troubleshooting-vmotion-network-related.html), [MTU probe failure](https://knowledge.broadcom.com/external/article/458256/vmotion-network-ping-fails-with-payload.html), and [Explicit vMotion TCP/IP stack selection](https://knowledge.broadcom.com/external/article/415366/unable-to-vmotion-virtual-machines-betwe.html). The 8972-byte payload calculation assumes IPv4.
+- 66: [Destination network mapping and VLAN integrity](https://knowledge.broadcom.com/external/article/429958).
+- 67: [Software-iSCSI port-binding considerations](https://knowledge.broadcom.com/external/article/317719/considerations-for-using-software-iscsi.html).
+- 68: [NFS mount requests denied by the server](https://knowledge.broadcom.com/external/article/310920/nfs-datastore-fails-to-mount-with-error.html).
+- 69: [HA and mandatory VM-to-host affinity rules](https://knowledge.broadcom.com/external/article/427723/how-vsphere-ha-respects-affinity-rules-w.html).
+- 70: [Restart dependencies and conditions](https://www.vmware.com/docs/vmw-metro-storage-clustering-best-practices-vvols). A power-on or guest-heartbeat milestone is not an application transaction test.

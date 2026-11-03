@@ -23,6 +23,10 @@ Then ask what a successful test at one layer does and does not prove about the n
 | NetApp | 20–31 | Distinguish disk protection, snapshots, replication, application consistency, RPO/RTO, and usable capacity. |
 | NetApp | 32–47 | Interpret performance symptoms, authorization, storage paths, and read-only diagnostic commands. |
 | NetApp | 48–50 | Handle version/platform changes safely and validate end-to-end recovery. |
+| NetApp | 51–56 | Explain quorum, epsilon, equal partitions, ring primaries, two-node cluster HA, and maintenance readiness. |
+| NetApp | 57–60 | Explain VLDB location metadata, inspect its RDB ring, and reason about cutover and quorum faults. |
+| NetApp | 61–64 | Separate cluster/HA/intercluster networks and troubleshoot cluster-link or peer-replication failures. |
+| NetApp | 65–70 | Distinguish LIF and volume mobility, failover targets, home/current placement, node scope, service policies, and release-specific SAN behavior. |
 
 ## Rehearse the distinctions aloud
 

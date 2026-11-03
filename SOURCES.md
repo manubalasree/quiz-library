@@ -72,6 +72,21 @@ The NetApp bank primarily teaches conventional ONTAP AFF/FAS fundamentals. It ex
 - [ASA r2 differences](https://docs.netapp.com/us-en/asa-r2/learn-more/hardware-comparison.html)
 - [vSphere with ONTAP SAN datastores](https://docs.netapp.com/us-en/ontap-apps-dbs/vmware/vmware-vsphere-datastores-san.html)
 
+### Cluster internals and networking expansion (questions 51–70)
+
+- 51–53, 55–56: [Quorum and epsilon](https://docs.netapp.com/us-en/ontap/system-admin/quorum-epsilon-concept.html) and [Cluster HA and RDB quorum](https://kb.netapp.com/on-prem/ontap/Ontap_OS/OS-KBs/What_is_Cluster_HA_and_how_is_Epsilon_utilized_to_maintain_RDB_Quorum). The equal-partition exercise states its assumptions and does not equate quorum with universal data availability.
+- 54, 60: [MHost RDB applications out of quorum](https://kb.netapp.com/on-prem/ontap/Ontap_OS/OS-KBs/Troubleshooting_Workflow__MHost_RDB_apps_out_of_quorum). Epsilon is not the ring primary/master.
+- 57, 59: [VLDB update failure during volume move](https://docs.netapp.com/us-en/ontap-ems-9151/moveagent-swapvldb-events.html).
+- 58: [Inspect cluster replication rings](https://docs.netapp.com/us-en/ontap/system-admin/display-status-cluster-replication-rings-task.html). The advanced command is a support-workflow inspection exercise, not database-repair guidance.
+- 61: [Network architecture](https://docs.netapp.com/us-en/ontap/concepts/network-connectivity-concept.html) and [Platforms sharing physical cluster and HA Ethernet ports](https://kb.netapp.com/on-prem/ontap/OHW/OHW-KBs/What_AFF_ASA_and_FAS_platforms_use_shared_Cluster_and_HA_Ethernet_ports).
+- 62–63: [Cluster connectivity diagnostic](https://docs.netapp.com/us-en/ontap-cli-9111/cluster-ping-cluster.html) and [Cluster networking and cabling guidance](https://docs.netapp.com/us-en/ontap/pdfs/fullsite-sidebar/ONTAP_9_documentation.pdf).
+- 64: [Intercluster LIFs and peering](https://docs.netapp.com/us-en/ontap/peering/peering-basics-concept.html).
+- 65: [LIF configuration concepts](https://docs.netapp.com/us-en/ontap/networking/configure_lifs_cluster_administrators_only_overview.html) and [NAS namespace and volume placement](https://docs.netapp.com/us-en/ontap/concepts/namespaces-junction-points-concept.html).
+- 66, 68: [LIF migration prerequisites and node-scoped restrictions](https://docs.netapp.com/us-en/ontap/networking/migrate_a_lif.html).
+- 67: [Home-port and auto-revert properties](https://docs.netapp.com/us-en/ontap/networking/create_a_lif.html).
+- 69: [LIF service policies](https://docs.netapp.com/us-en/ontap/networking/lifs_and_service_policies96.html).
+- 70: [ASA iSCSI LIF failover](https://docs.netapp.com/us-en/ontap/san-admin/asa-iscsi-lif-fo-task.html) and [SAN multipath and automatic LIF failover support](https://docs.netapp.com/us-en/ontap/san-admin/multipath-automatic-lif-failover-support.html). The question deliberately specifies ONTAP 9.12.1; newer AFF behavior is not generalized from that release.
+
 ## VMware vSphere
 
 The VMware bank teaches durable host/guest, compute, networking, storage, and recovery concepts. Exact migration prerequisites, limits, licensing, supported builds, and patch procedures must be checked for the installed release rather than learned as timeless facts.

@@ -35,7 +35,7 @@
     {
       "id": "netapp",
       "title": "NetApp ONTAP",
-      "description": "50 fundamentals on NAS/SAN, storage layout, snapshots, availability, and recovery.",
+      "description": "70 questions on storage, quorum/epsilon, VLDB, cluster interconnects, LIFs, and recovery.",
       "url": "quizzes/netapp.json"
     },
     {

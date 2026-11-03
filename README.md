@@ -55,7 +55,7 @@ This repository is public so browsers can load it without credentials. It contai
 
 ## Current coverage
 
-Each of Kubernetes, Linux, Git, Ansible, Terraform, NetApp ONTAP, and VMware vSphere contains 50 questions (350 total). The banks mix fundamentals, troubleshooting, and code-reading exercises. Answer positions are balanced across A–D. Explanations describe why the selected answer is correct and call out relevant limitations.
+NetApp ONTAP contains 70 questions; Kubernetes, Linux, Git, Ansible, Terraform, and VMware vSphere each contain 50 (370 total). The banks mix fundamentals, troubleshooting, and code-reading exercises. Answer positions are balanced across A–D. Explanations describe why the selected answer is correct and call out relevant limitations.
 
 For a snippet question, add optional `code` and `language` fields alongside `question`:
 

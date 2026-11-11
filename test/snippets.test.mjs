@@ -4,9 +4,10 @@ import {fileURLToPath} from 'node:url';
 import {readFile} from 'node:fs/promises';
 import {loadLibrary,validateMetadata,validateCode,validateLinks,assetPath,bundle} from '../scripts/snippet-validation.mjs';
 const repo=fileURLToPath(new URL('../',import.meta.url));
-test('all 100 answer examples have assets and correct topic links',async()=>{
- const snippets=await loadLibrary(repo);assert.equal(snippets.length,100);
- for(const topic of ['kubernetes','terraform'])assert.equal(snippets.filter(s=>s.topic===topic).length,50);
+test('every Kubernetes and Terraform question has an asset with the correct topic link',async()=>{
+ const snippets=await loadLibrary(repo);let total=0;
+ for(const topic of ['kubernetes','terraform']){const quiz=JSON.parse(await readFile(new URL(`../quizzes/${topic}.json`,import.meta.url),'utf8'));assert.equal(snippets.filter(s=>s.topic===topic).length,quiz.questions.length);total+=quiz.questions.length;}
+ assert.equal(snippets.length,total);
  assert.equal(await readFile(new URL('../assets/snippets/library.json',import.meta.url),'utf8'),bundle(snippets));
 });
 test('QA rejects duplicate IDs, unsafe paths, malformed YAML, and teaching-value regressions',async()=>{

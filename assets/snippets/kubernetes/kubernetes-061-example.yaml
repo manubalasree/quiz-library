@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: tolerant-app, namespace: interview-lab}
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {app: tolerant-app}
+  template:
+    metadata:
+      labels: {app: tolerant-app}
+    spec:
+      tolerations:
+        - key: interview-lab/dedicated
+          operator: Equal
+          value: practice
+          effect: NoSchedule
+      containers:
+        - name: app
+          image: nginx:1.28

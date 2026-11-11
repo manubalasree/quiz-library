@@ -5,7 +5,7 @@
     {
       "id": "kubernetes",
       "title": "Kubernetes",
-      "description": "50 questions on workloads, networking, security, and manifests.",
+      "description": "74 questions on Kubernetes fundamentals, manifests, and interview-lab scheduling, taints, and rollout scenarios.",
       "url": "quizzes/kubernetes.json"
     },
     {

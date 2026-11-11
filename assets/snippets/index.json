@@ -1106,6 +1106,266 @@
       "description": "Backend settings are supplied during initialization, before ordinary variable evaluation. Replace the bucket name; avoid putting credentials in backend arguments or committed files.",
       "source": "https://developer.hashicorp.com/terraform/language/backend",
       "qa": {}
+    },
+    {
+      "id": "kubernetes-051-example",
+      "topic": "kubernetes",
+      "title": "CPU units \u2014 lab reference",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-051-example.yaml",
+      "description": "This corrected teaching manifest requests 100m, or 0.1 CPU. The lab\u2019s original \"1000\" requests 1,000 CPUs and cannot fit a normal lab node; namespace interview-lab must exist.",
+      "source": "https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/",
+      "qa": {
+        "assertions": {
+          "0.spec.containers.0.resources.requests.cpu": "100m"
+        }
+      }
+    },
+    {
+      "id": "kubernetes-052-example",
+      "topic": "kubernetes",
+      "title": "Admission versus scheduling \u2014 lab reference",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-052-example.sh",
+      "description": "A missing Pod plus the original admission error points to object creation, not a container runtime failure. Read the exact rejected resource and quota before changing the request.",
+      "source": "https://kubernetes.io/docs/concepts/policy/resource-quotas/",
+      "qa": {}
+    },
+    {
+      "id": "kubernetes-053-example",
+      "topic": "kubernetes",
+      "title": "Scheduling evidence \u2014 lab reference",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-053-example.sh",
+      "description": "Look for an empty NODE column, PodScheduled=False, and the event reason. Other scheduling constraints can appear in the same event.",
+      "source": "https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/",
+      "qa": {}
+    },
+    {
+      "id": "kubernetes-054-example",
+      "topic": "kubernetes",
+      "title": "Per-node capacity \u2014 lab reference",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-054-example.sh",
+      "description": "Allocatable is only the starting budget. Compare each candidate node\u2019s allocated requests and remaining capacity; do not sum spare CPU across nodes for one Pod.",
+      "source": "https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/",
+      "qa": {}
+    },
+    {
+      "id": "kubernetes-055-example",
+      "topic": "kubernetes",
+      "title": "Standalone Pod ownership \u2014 lab reference",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-055-example.sh",
+      "description": "Check ownership before assuming Kubernetes will recreate a deleted Pod. The lab explicitly reapplies this standalone object.",
+      "source": "https://kubernetes.io/docs/concepts/workloads/pods/",
+      "qa": {}
+    },
+    {
+      "id": "kubernetes-056-example",
+      "topic": "kubernetes",
+      "title": "Verify a scheduling repair \u2014 lab reference",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-056-example.sh",
+      "description": "Ready plus an assigned node verifies more than admission success. A timeout is a prompt to inspect the current events and conditions, not proof that CPU remains the cause.",
+      "source": "https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/",
+      "qa": {}
+    },
+    {
+      "id": "kubernetes-057-example",
+      "topic": "kubernetes",
+      "title": "Constrain the experiment \u2014 lab reference",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-057-example.yaml",
+      "description": "Replace colima with the selected node\u2019s actual hostname label. This hard selector excludes other hostnames; it does not tolerate any taint.",
+      "source": "https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/",
+      "qa": {}
+    },
+    {
+      "id": "kubernetes-058-example",
+      "topic": "kubernetes",
+      "title": "Match the taint precisely \u2014 lab reference",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-058-example.yaml",
+      "description": "This toleration matches the lab taint. Add the lab\u2019s hostname selector as well if placement must remain on the selected node.",
+      "source": "https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/",
+      "qa": {
+        "assertions": {
+          "0.spec.tolerations.0.value": "practice",
+          "0.spec.tolerations.0.effect": "NoSchedule"
+        }
+      }
+    },
+    {
+      "id": "kubernetes-059-example",
+      "topic": "kubernetes",
+      "title": "NoSchedule and existing Pods \u2014 lab reference",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-059-example.sh",
+      "description": "Existing Pods are not evicted merely by adding NoSchedule. The commands change a node and are reference examples, not part of automated QA.",
+      "source": "https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/",
+      "qa": {}
+    },
+    {
+      "id": "kubernetes-060-example",
+      "topic": "kubernetes",
+      "title": "NoExecute differs \u2014 lab reference",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-060-example.yaml",
+      "description": "This tolerates the specified NoExecute taint for 60 seconds after it is added, after which eviction can occur if the taint remains. It is distinct from the lab\u2019s NoSchedule toleration.",
+      "source": "https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/",
+      "qa": {
+        "assertions": {
+          "0.spec.tolerations.0.effect": "NoExecute",
+          "0.spec.tolerations.0.tolerationSeconds": 60
+        }
+      }
+    },
+    {
+      "id": "kubernetes-061-example",
+      "topic": "kubernetes",
+      "title": "Deployment Pod templates \u2014 lab reference",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-061-example.yaml",
+      "description": "The toleration is in the Pod template, so the Deployment carries it into replacement Pods. It still does not force placement on a particular node.",
+      "source": "https://kubernetes.io/docs/concepts/workloads/controllers/deployment/",
+      "qa": {}
+    },
+    {
+      "id": "kubernetes-062-example",
+      "topic": "kubernetes",
+      "title": "Clean up node-level changes \u2014 lab reference",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-062-example.sh",
+      "description": "Remove only the lab-owned taint. A missing-taint response is expected if it was already removed; do not remove unrelated node protections.",
+      "source": "https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/",
+      "qa": {}
+    },
+    {
+      "id": "kubernetes-063-example",
+      "topic": "kubernetes",
+      "title": "Establish a healthy baseline \u2014 lab reference",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-063-example.sh",
+      "description": "Verify the starting Deployment before deliberately changing its image. These checks observe the rollout and do not introduce the failure.",
+      "source": "https://kubernetes.io/docs/concepts/workloads/controllers/deployment/",
+      "qa": {}
+    },
+    {
+      "id": "kubernetes-064-example",
+      "topic": "kubernetes",
+      "title": "Rolling-update availability \u2014 lab reference",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-064-example.yaml",
+      "description": "This preserves two available replicas during a normal controlled rollout and permits one surge Pod. It cannot protect against every involuntary failure or guarantee capacity for the surge.",
+      "source": "https://kubernetes.io/docs/concepts/workloads/controllers/deployment/",
+      "qa": {
+        "assertions": {
+          "0.spec.replicas": 2,
+          "0.spec.strategy.rollingUpdate.maxSurge": 1,
+          "0.spec.strategy.rollingUpdate.maxUnavailable": 0
+        }
+      }
+    },
+    {
+      "id": "kubernetes-065-example",
+      "topic": "kubernetes",
+      "title": "Read the registry error \u2014 lab reference",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-065-example.sh",
+      "description": "Read the image name and exact pull error in Events. Do not assume a deliberately bad tag caused the failure if the registry instead reports authentication or connectivity trouble.",
+      "source": "https://kubernetes.io/docs/concepts/containers/images/",
+      "qa": {}
+    },
+    {
+      "id": "kubernetes-066-example",
+      "topic": "kubernetes",
+      "title": "Logs before container creation \u2014 lab reference",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-066-example.sh",
+      "description": "Inspect containerStatuses and Events for a waiting reason such as ImagePullBackOff. An application that never started has no current application output to inspect.",
+      "source": "https://kubernetes.io/docs/tasks/debug/debug-application/debug-pods/",
+      "qa": {}
+    },
+    {
+      "id": "kubernetes-067-example",
+      "topic": "kubernetes",
+      "title": "Progress deadline \u2014 lab reference",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-067-example.sh",
+      "description": "Look at the Progressing condition and its reason, alongside ReplicaSet and Pod status. A progress deadline is not an automatic rollback policy.",
+      "source": "https://kubernetes.io/docs/concepts/workloads/controllers/deployment/",
+      "qa": {}
+    },
+    {
+      "id": "kubernetes-068-example",
+      "topic": "kubernetes",
+      "title": "Client timeout versus controller deadline \u2014 lab reference",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-068-example.sh",
+      "description": "A timed-out waiting command does not stop the controller. Inspect its actual conditions and configured deadline before deciding what failed.",
+      "source": "https://kubernetes.io/docs/concepts/workloads/controllers/deployment/",
+      "qa": {}
+    },
+    {
+      "id": "kubernetes-069-example",
+      "topic": "kubernetes",
+      "title": "Surge capacity \u2014 lab reference",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-069-example.sh",
+      "description": "Distinguish an empty NODE and FailedScheduling from a scheduled Pod waiting for an image. Both can stall a rollout, but at different stages.",
+      "source": "https://kubernetes.io/docs/concepts/workloads/controllers/deployment/",
+      "qa": {}
+    },
+    {
+      "id": "kubernetes-070-example",
+      "topic": "kubernetes",
+      "title": "Available does not mean updated \u2014 lab reference",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-070-example.sh",
+      "description": "Healthy old replicas can maintain availability while updatedReplicas or progress signals reveal that the new version is not ready.",
+      "source": "https://kubernetes.io/docs/concepts/workloads/controllers/deployment/",
+      "qa": {}
+    },
+    {
+      "id": "kubernetes-071-example",
+      "topic": "kubernetes",
+      "title": "Service traffic during rollout \u2014 lab reference",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-071-example.sh",
+      "description": "Correlate ready EndpointSlice addresses with Pod IPs and images to identify which replicas can serve. A successful response alone does not verify the newest revision.",
+      "source": "https://kubernetes.io/docs/concepts/services-networking/service/",
+      "qa": {}
+    },
+    {
+      "id": "kubernetes-072-example",
+      "topic": "kubernetes",
+      "title": "Verify a rollout repair \u2014 lab reference",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-072-example.sh",
+      "description": "Verify the intended image and updated replicas rather than only checking that some replicas are available. Endpoint readiness supplies separate traffic-path evidence.",
+      "source": "https://kubernetes.io/docs/concepts/workloads/controllers/deployment/",
+      "qa": {}
+    },
+    {
+      "id": "kubernetes-073-example",
+      "topic": "kubernetes",
+      "title": "Container names in an image update \u2014 lab reference",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-073-example.sh",
+      "description": "Match web to the actual template container name before changing its image. stable-alpine is convenient for the disposable exercise; controlled releases should use immutable image references.",
+      "source": "https://kubernetes.io/docs/reference/kubectl/generated/kubectl_set/kubectl_set_image/",
+      "qa": {}
+    },
+    {
+      "id": "kubernetes-074-example",
+      "topic": "kubernetes",
+      "title": "Control-plane taints in a lab \u2014 lab reference",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-074-example.sh",
+      "description": "Replace colima with your selected lab node. Check its existing taints first and record which lab-owned change, if any, you introduce.",
+      "source": "https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/",
+      "qa": {}
     }
   ]
 }

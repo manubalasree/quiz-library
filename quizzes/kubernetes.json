@@ -723,6 +723,352 @@
       "explanation": "Controllers use selectors to identify their managed workload sets. Unintended overlap makes ownership and reconciliation behavior unsafe or confusing.",
       "id": "kubernetes-050",
       "exampleId": "kubernetes-050-example"
+    },
+    {
+      "id": "kubernetes-051",
+      "topic": "Interview lab · CPU units",
+      "question": "In the lab manifest, what does the quoted CPU request \"1000\" reserve for scheduling?",
+      "options": [
+        "One thousand CPUs as its scheduling request",
+        "One CPU because the value is quoted",
+        "One thousandth of a CPU",
+        "Ten CPUs because Kubernetes divides CPU requests by 100"
+      ],
+      "answerIndex": 0,
+      "explanation": "CPU quantities without the m suffix are measured in whole CPUs. Quoting the YAML value does not change its unit: \"1000\" means 1,000 CPUs, whereas \"1000m\" means one CPU.",
+      "exampleId": "kubernetes-051-example",
+      "code": "resources:\n  requests:\n    cpu: \"1000\"\n    memory: 32Mi",
+      "language": "yaml"
+    },
+    {
+      "id": "kubernetes-052",
+      "topic": "Interview lab · Admission versus scheduling",
+      "question": "Creating cpu-pending returns Forbidden with an exceeded-quota message, and the Pod is absent. Which failure stage should you investigate?",
+      "options": [
+        "The container started and was CPU-throttled",
+        "API admission rejected the request before a Pod could be scheduled",
+        "The kubelet failed to download the container image",
+        "The scheduler placed the Pod on a node with insufficient memory"
+      ],
+      "answerIndex": 1,
+      "explanation": "An admission rejection can prevent object creation entirely. Inspect the quota response and namespace policies before investigating scheduler placement or container behavior.",
+      "exampleId": "kubernetes-052-example"
+    },
+    {
+      "id": "kubernetes-053",
+      "topic": "Interview lab · Scheduling evidence",
+      "question": "cpu-pending exists but has no assigned node. Which evidence most directly establishes a CPU scheduling failure?",
+      "options": [
+        "A low value from kubectl top nodes by itself",
+        "A successful kubectl apply response by itself",
+        "PodScheduled=False with a FailedScheduling event reporting insufficient CPU",
+        "The absence of application logs by itself"
+      ],
+      "answerIndex": 2,
+      "explanation": "Pod existence is not successful placement. The scheduling condition and event identify why the scheduler has not assigned a node; current utilization and missing logs are not conclusive by themselves.",
+      "exampleId": "kubernetes-053-example"
+    },
+    {
+      "id": "kubernetes-054",
+      "topic": "Interview lab · Per-node capacity",
+      "question": "Three eligible nodes each have 1 CPU of unallocated requested capacity. A single-container Pod requests 2 CPUs. Can the scheduler combine that spare capacity to place it?",
+      "options": [
+        "Yes; the container automatically spans two nodes",
+        "Yes; creating a Service aggregates node CPU for its Pods",
+        "Yes; the scheduler divides the request evenly across all three nodes",
+        "No; all of this Pod’s containers must fit together on one node"
+      ],
+      "answerIndex": 3,
+      "explanation": "A Pod is scheduled as one unit onto one node. Spare capacity on several nodes does not form a combined placement budget for one Pod.",
+      "exampleId": "kubernetes-054-example"
+    },
+    {
+      "id": "kubernetes-055",
+      "topic": "Interview lab · Standalone Pod ownership",
+      "question": "You delete the standalone cpu-pending Pod created directly by the lab. What recreates it?",
+      "options": [
+        "Nothing automatically recreates it unless a controller or another actor manages it",
+        "Its namespace automatically creates a replacement",
+        "Every Pod has an implicit Deployment that recreates it",
+        "The scheduler restores the deleted Pod from its previous assignment"
+      ],
+      "answerIndex": 0,
+      "explanation": "The lab Pod is created directly, without a Deployment or other workload controller. Delete-and-recreate is an explicit lab step; controller-managed Pods have different replacement behavior.",
+      "exampleId": "kubernetes-055-example"
+    },
+    {
+      "id": "kubernetes-056",
+      "topic": "Interview lab · Verify a scheduling repair",
+      "question": "After recreating cpu-pending with a 100m request, kubectl apply succeeds. Which check best verifies that the repair actually worked?",
+      "options": [
+        "Treat the apply success message as proof the container is serving",
+        "Confirm the Pod is assigned to an eligible node and becomes Ready; inspect events if it does not",
+        "Check only that the namespace still exists",
+        "Increase the CPU limit repeatedly without inspecting Pod status"
+      ],
+      "answerIndex": 1,
+      "explanation": "Apply confirms that the API accepted the object. Successful scheduling and container readiness require separate verification, and another issue can surface after the original CPU problem is corrected.",
+      "exampleId": "kubernetes-056-example"
+    },
+    {
+      "id": "kubernetes-057",
+      "topic": "Interview lab · Constrain the experiment",
+      "question": "Why does taint-pending use a hostname nodeSelector as well as the lab’s chosen tainted node?",
+      "options": [
+        "To disable all taints on the selected node",
+        "To grant permission to add node taints",
+        "To prevent the Pod from avoiding the taint by scheduling on another node",
+        "To make the scheduler ignore CPU requests"
+      ],
+      "answerIndex": 2,
+      "explanation": "Without a placement constraint, a multi-node cluster might schedule the Pod on an untainted node. The selector makes the intended taint failure observable on the chosen hostname domain.",
+      "exampleId": "kubernetes-057-example",
+      "code": "nodeSelector:\n  kubernetes.io/hostname: selected-hostname",
+      "language": "yaml"
+    },
+    {
+      "id": "kubernetes-058",
+      "topic": "Interview lab · Match the taint precisely",
+      "question": "A node is tainted interview-lab/dedicated=practice:NoSchedule. Which toleration matches it with operator Equal?",
+      "options": [
+        "The same key, value production, and effect NoSchedule",
+        "A different key with value practice and effect NoSchedule",
+        "The same key and value, but only effect NoExecute",
+        "The same key, value practice, and effect NoSchedule"
+      ],
+      "answerIndex": 3,
+      "explanation": "With Equal and an explicit effect, the key, value, and effect must match the taint. A matching toleration removes that particular scheduling barrier while leaving other constraints in effect.",
+      "exampleId": "kubernetes-058-example"
+    },
+    {
+      "id": "kubernetes-059",
+      "topic": "Interview lab · NoSchedule and existing Pods",
+      "question": "You add the lab’s NoSchedule taint to a node that already has healthy Pods without that toleration. What happens to those existing Pods solely because of this taint?",
+      "options": [
+        "They remain; NoSchedule blocks ordinary new placement rather than evicting existing Pods",
+        "They are immediately deleted from the API",
+        "They are all automatically moved to other nodes",
+        "Their CPU requests are reset to zero"
+      ],
+      "answerIndex": 0,
+      "explanation": "NoSchedule affects scheduling eligibility for new placements. It does not by itself evict Pods already on that node; NoExecute has different effects.",
+      "exampleId": "kubernetes-059-example"
+    },
+    {
+      "id": "kubernetes-060",
+      "topic": "Interview lab · NoExecute differs",
+      "question": "How would changing the lab taint’s effect to NoExecute affect already-running Pods that lack a matching toleration?",
+      "options": [
+        "It only affects HTTP traffic through Services",
+        "It can cause those existing Pods to be evicted as well as block new placement",
+        "It has exactly the same effect as NoSchedule on existing Pods",
+        "It automatically adds a toleration to every existing Pod"
+      ],
+      "answerIndex": 1,
+      "explanation": "NoExecute can evict Pods that do not tolerate the taint. A matching toleration can allow continued execution; tolerationSeconds can bound the tolerated duration.",
+      "exampleId": "kubernetes-060-example"
+    },
+    {
+      "id": "kubernetes-061",
+      "topic": "Interview lab · Deployment Pod templates",
+      "question": "For a Deployment-managed workload, where should you define the toleration so future replacement Pods receive it?",
+      "options": [
+        "Under metadata.tolerations on the Deployment",
+        "Only on one current Pod, without changing the Deployment",
+        "Under spec.template.spec.tolerations in the Deployment",
+        "Under the Service’s spec.ports list"
+      ],
+      "answerIndex": 2,
+      "explanation": "The Deployment’s Pod template defines settings for newly created Pods. Patching an individual current Pod does not update that template for future replacements.",
+      "exampleId": "kubernetes-061-example"
+    },
+    {
+      "id": "kubernetes-062",
+      "topic": "Interview lab · Clean up node-level changes",
+      "question": "You delete namespace interview-lab after the taint exercise. What happens to the taint placed on the node?",
+      "options": [
+        "Namespace deletion removes every taint added during that namespace’s lifetime",
+        "It is converted automatically from NoSchedule to PreferNoSchedule",
+        "It disappears when the last namespaced Service is deleted",
+        "It remains until separately removed because the Node is cluster-scoped"
+      ],
+      "answerIndex": 3,
+      "explanation": "Namespace deletion removes namespaced resources, not changes to a cluster-scoped Node. Remove the specific lab taint separately, including when ending the lab early.",
+      "exampleId": "kubernetes-062-example"
+    },
+    {
+      "id": "kubernetes-063",
+      "topic": "Interview lab · Establish a healthy baseline",
+      "question": "Why does the failed-image lab wait for the initial Deployment rollout to succeed before introducing the missing image tag?",
+      "options": [
+        "To separate pre-existing setup failures from the intentional rollout failure",
+        "To make the later missing tag exist in the registry",
+        "To permanently reserve all spare CPU for future revisions",
+        "To disable image-pull authentication for the new ReplicaSet"
+      ],
+      "answerIndex": 0,
+      "explanation": "A known-good baseline establishes that the original image, scheduling, probes, and basic cluster setup work. A failed baseline must be diagnosed before treating later symptoms as the intended missing-tag experiment.",
+      "exampleId": "kubernetes-063-example"
+    },
+    {
+      "id": "kubernetes-064",
+      "topic": "Interview lab · Rolling-update availability",
+      "question": "rollout-lab has two healthy replicas, maxSurge: 1, and maxUnavailable: 0. A new Pod cannot pull its image. Why can the old version remain available?",
+      "options": [
+        "maxSurge forces the old Pods to download the broken image too",
+        "The controller can retain the two old available replicas while the extra new Pod fails to become available",
+        "The Service converts the failed new Pod into an old replica",
+        "ImagePullBackOff always changes maxUnavailable to 2"
+      ],
+      "answerIndex": 1,
+      "explanation": "With zero allowed unavailability, the controller does not need to remove the healthy old replicas to progress this stalled rollout. The surge allows an additional new Pod, but does not guarantee it can start.",
+      "exampleId": "kubernetes-064-example",
+      "code": "replicas: 2\nstrategy:\n  type: RollingUpdate\n  rollingUpdate:\n    maxSurge: 1\n    maxUnavailable: 0",
+      "language": "yaml"
+    },
+    {
+      "id": "kubernetes-065",
+      "topic": "Interview lab · Read the registry error",
+      "question": "A new Pod reports ImagePullBackOff. Which observation confirms the lab’s intended missing-tag failure rather than a different image-pull problem?",
+      "options": [
+        "ImagePullBackOff alone, regardless of the event details",
+        "An unauthorized response from the registry",
+        "A Pod event reporting that the requested image manifest or tag was not found",
+        "A timeout connecting to the registry"
+      ],
+      "answerIndex": 2,
+      "explanation": "ImagePullBackOff describes retries after pull failures, not their root cause. A missing manifest/tag, invalid credentials, rate limiting, and network failures require different investigations.",
+      "exampleId": "kubernetes-065-example"
+    },
+    {
+      "id": "kubernetes-066",
+      "topic": "Interview lab · Logs before container creation",
+      "question": "The new rollout Pod has never started its application container because its image cannot be pulled. Why are application logs not useful yet?",
+      "options": [
+        "The logs must already be stored in the Service object",
+        "A namespace must be recreated before any logs can be read",
+        "Image-pull failures always mean the application deleted its own logs",
+        "No application process has run to produce those logs; inspect Pod status and image-pull events"
+      ],
+      "answerIndex": 3,
+      "explanation": "The failure is before application execution. Pod status and events identify the waiting reason and registry response; logs from an old replica do not establish what happened in the new one.",
+      "exampleId": "kubernetes-066-example"
+    },
+    {
+      "id": "kubernetes-067",
+      "topic": "Interview lab · Progress deadline",
+      "question": "The Deployment reports ProgressDeadlineExceeded after the broken-image rollout stalls. What does Kubernetes do automatically because of that condition alone?",
+      "options": [
+        "It reports stalled progress; it does not automatically roll the Deployment back",
+        "It restores the previous image automatically",
+        "It deletes the namespace containing the Deployment",
+        "It marks the missing image as successfully pulled"
+      ],
+      "answerIndex": 0,
+      "explanation": "progressDeadlineSeconds provides a controller progress deadline and a failure signal. A rollback or other repair must be initiated separately; automation outside the Deployment controller may choose to act on that signal.",
+      "exampleId": "kubernetes-067-example",
+      "code": "spec:\n  progressDeadlineSeconds: 120",
+      "language": "yaml"
+    },
+    {
+      "id": "kubernetes-068",
+      "topic": "Interview lab · Client timeout versus controller deadline",
+      "question": "kubectl rollout status exits after --timeout=30s, while the Deployment has progressDeadlineSeconds: 120. What can you conclude from the client timeout alone?",
+      "options": [
+        "The Deployment’s 120-second deadline was automatically reduced to 30 seconds",
+        "The client stopped waiting; inspect Deployment conditions to determine controller progress status",
+        "The controller has definitely rolled back the image",
+        "All application Pods were deleted after exactly 30 seconds"
+      ],
+      "answerIndex": 1,
+      "explanation": "The kubectl waiting timeout and Deployment progress deadline are separate controls. A client timeout does not itself change the Deployment specification or prove ProgressDeadlineExceeded.",
+      "exampleId": "kubernetes-068-example"
+    },
+    {
+      "id": "kubernetes-069",
+      "topic": "Interview lab · Surge capacity",
+      "question": "What changes if the new surge Pod cannot fit on any eligible node because of CPU requests, before image pulling begins?",
+      "options": [
+        "It must immediately show ErrImagePull even without a node assignment",
+        "The scheduler automatically lowers its CPU request to fit",
+        "It stays unscheduled with scheduling events; diagnose capacity and placement before image-pull behavior",
+        "maxSurge creates another node with enough CPU"
+      ],
+      "answerIndex": 2,
+      "explanation": "Surge permits an extra Pod count, not additional node capacity. With insufficient requested capacity the new Pod can remain Pending without a node, so the image-pull failure stage has not yet been reached.",
+      "exampleId": "kubernetes-069-example"
+    },
+    {
+      "id": "kubernetes-070",
+      "topic": "Interview lab · Available does not mean updated",
+      "question": "During the broken-image rollout, Deployment Available=True is reported while two old ready replicas still serve traffic. Does this prove the new release is healthy?",
+      "options": [
+        "Yes; Available=True guarantees every Pod uses the newest image",
+        "Yes; the condition verifies every image tag exists in the registry",
+        "No; Available=True always indicates that no replicas are running",
+        "No; the availability condition can be satisfied by old replicas, so also inspect updated replicas and rollout progress"
+      ],
+      "answerIndex": 3,
+      "explanation": "Availability is not revision identity. Compare desired, updated, ready and available counts, the new ReplicaSet, and rollout conditions before declaring the new revision successful.",
+      "exampleId": "kubernetes-070-example"
+    },
+    {
+      "id": "kubernetes-071",
+      "topic": "Interview lab · Service traffic during rollout",
+      "question": "A request through Service rollout-lab succeeds while the new revision cannot pull its image. Which explanation fits the lab?",
+      "options": [
+        "Ready old replicas still match the Service selector and can handle requests",
+        "The Service runs a cached copy of the container image",
+        "A successful Service response proves the failing new Pod answered",
+        "Services automatically repair missing image tags"
+      ],
+      "answerIndex": 0,
+      "explanation": "A Service routes to selected endpoints; it is not a revision-success check. Old ready replicas can continue handling traffic while new Pods are not ready. A port-forward connection also is not an exhaustive test of all replicas.",
+      "exampleId": "kubernetes-071-example"
+    },
+    {
+      "id": "kubernetes-072",
+      "topic": "Interview lab · Verify a rollout repair",
+      "question": "After restoring the working image, which evidence best demonstrates recovery of the intended rollout?",
+      "options": [
+        "A successful set image command alone",
+        "A completed rollout with the intended image on the updated replicas and ready Service endpoints",
+        "The continued existence of at least one old running Pod",
+        "Deleting only the warning events from the namespace"
+      ],
+      "answerIndex": 1,
+      "explanation": "A write accepted by the API is not proof of recovery. Verify updated workload state and readiness, then check selected endpoints; deleting symptoms or retaining old availability does not establish that the intended version is running.",
+      "exampleId": "kubernetes-072-example"
+    },
+    {
+      "id": "kubernetes-073",
+      "topic": "Interview lab · Container names in an image update",
+      "question": "In this command, what does web identify?",
+      "options": [
+        "The ServiceAccount that performs registry authentication",
+        "The namespace to which the image is copied",
+        "The container name inside the Deployment’s Pod template",
+        "The Helm repository containing the image"
+      ],
+      "answerIndex": 2,
+      "explanation": "set image uses container-name=image pairs. web selects the Pod-template container to update; rollout-lab is the Deployment and interview-lab is the namespace.",
+      "exampleId": "kubernetes-073-example",
+      "code": "kubectl set image deployment/rollout-lab web=nginx:stable-alpine -n interview-lab",
+      "language": "shell"
+    },
+    {
+      "id": "kubernetes-074",
+      "topic": "Interview lab · Control-plane taints in a lab",
+      "question": "Before starting, the only node has an unrelated control-plane NoSchedule taint. What is the appropriate approach?",
+      "options": [
+        "Remove every taint from every node to ensure the exercise passes",
+        "Ignore the node taint because the lab creates a separate namespace",
+        "Increase maxSurge to override the control-plane taint",
+        "Use a suitable lab worker or a cluster deliberately configured for workloads; do not remove unrelated taints blindly"
+      ],
+      "answerIndex": 3,
+      "explanation": "A separate namespace does not bypass node placement constraints. Establish an appropriate disposable workload target and permissions before introducing the lab’s own scoped taint.",
+      "exampleId": "kubernetes-074-example"
     }
   ],
   "snippetsUrl": "../assets/snippets/library.json"

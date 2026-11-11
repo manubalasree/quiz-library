@@ -72,3 +72,9 @@ The library check enforces at least 50 questions and 10 snippets per bank, uniqu
 
 
 NetApp and VMware are organized as fundamentals-to-troubleshooting refreshes. See [the storage and virtualization study path](STORAGE-VIRTUALIZATION-STUDY.md) for the learning sequence and key distinctions to rehearse aloud.
+
+## Answer-reference assets
+
+Kubernetes and Terraform now have one linked answer example per question (100 total). Source YAML, HCL, and shell files live under [`assets/snippets`](assets/snippets/README.md), with a separately runnable QA suite and a generated JSON bundle for the app. The examples show after answering; existing question code remains the exercise shown before answering.
+
+After editing an example: `npm run snippets:build`, `npm test`, `npm run validate`, and `npm run snippets:qa`. See the asset README for required validators and the scope of each check.

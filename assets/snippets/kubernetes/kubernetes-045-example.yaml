@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: LimitRange
+metadata: {name: container-resources, namespace: demo}
+spec:
+  limits:
+    - type: Container
+      default: {memory: 256Mi}
+      defaultRequest: {memory: 128Mi}
+      min: {memory: 64Mi}
+      max: {memory: 512Mi}

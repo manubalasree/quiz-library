@@ -1,0 +1,15 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata: {name: report-demo}
+spec:
+  schedule: "*/5 * * * *"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: report
+              image: busybox:1.37
+              command: [sh, -c, 'echo report complete']

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata: {name: readonly-demo}
+spec:
+  containers:
+    - name: app
+      image: busybox:1.37
+      command: [sh, -c, 'echo hello > /tmp/message; sleep 3600']
+      securityContext:
+        readOnlyRootFilesystem: true
+      volumeMounts:
+        - {name: scratch, mountPath: /tmp}
+  volumes:
+    - name: scratch
+      emptyDir: {}

@@ -1,0 +1,1005 @@
+{
+  "version": 1,
+  "snippets": [
+    {
+      "id": "kubernetes-001-example",
+      "topic": "kubernetes",
+      "title": "Three replicas, maintained by a controller",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-001-example.yaml",
+      "description": "Deleting one Pod does not change replicas: 3. The Deployment’s ReplicaSet creates a new Pod to restore that count.",
+      "source": "https://kubernetes.io/docs/concepts/workloads/controllers/deployment/",
+      "code": "apiVersion: apps/v1\nkind: Deployment\nmetadata:\n  name: web\nspec:\n  replicas: 3\n  selector:\n    matchLabels: {app: web}\n  template:\n    metadata:\n      labels: {app: web}\n    spec:\n      containers:\n        - name: web\n          image: nginx:1.28\n"
+    },
+    {
+      "id": "kubernetes-002-example",
+      "topic": "kubernetes",
+      "title": "Internal Service",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-002-example.yaml",
+      "description": "With type omitted, the Service defaults to ClusterIP. It selects app=web Pods in its own namespace.",
+      "source": "https://kubernetes.io/docs/concepts/services-networking/service/",
+      "code": "apiVersion: v1\nkind: Service\nmetadata:\n  name: web\nspec:\n  selector: {app: web}\n  ports:\n    - port: 80\n      targetPort: 8080\n"
+    },
+    {
+      "id": "kubernetes-003-example",
+      "topic": "kubernetes",
+      "title": "Inspect a crash loop",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-003-example.sh",
+      "description": "Replace the example Pod and namespace. Events and the previous container log help reveal the cause; CrashLoopBackOff describes retry backoff, not the cause itself.",
+      "source": "https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/",
+      "code": "kubectl describe pod web-abc -n demo\nkubectl logs web-abc -n demo -c web --previous\n"
+    },
+    {
+      "id": "kubernetes-004-example",
+      "topic": "kubernetes",
+      "title": "Read the terminated container’s log",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-004-example.sh",
+      "description": "--previous targets the prior terminated instance of container web, if its log is still available.",
+      "source": "https://kubernetes.io/docs/reference/kubectl/generated/kubectl_logs/",
+      "code": "kubectl logs web-abc -n demo -c web --previous\n"
+    },
+    {
+      "id": "kubernetes-005-example",
+      "topic": "kubernetes",
+      "title": "Readiness controls traffic",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-005-example.yaml",
+      "description": "Three consecutive failed readiness checks mark this container unready. Readiness failure alone does not restart it.",
+      "source": "https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/",
+      "code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: readiness-demo\n  labels: {app: web}\nspec:\n  containers:\n    - name: web\n      image: nginx:1.28\n      readinessProbe:\n        httpGet: {path: /, port: 80}\n        periodSeconds: 5\n        failureThreshold: 3\n"
+    },
+    {
+      "id": "kubernetes-006-example",
+      "topic": "kubernetes",
+      "title": "Scheduling uses requests",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-006-example.yaml",
+      "description": "This Pod needs two CPUs of schedulable requested capacity on one eligible node; capacity spread across nodes cannot satisfy one Pod.",
+      "source": "https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/",
+      "code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: cpu-demo\nspec:\n  containers:\n    - name: web\n      image: nginx:1.28\n      resources:\n        requests: {cpu: \"2\", memory: 128Mi}\n        limits: {cpu: \"2\", memory: 256Mi}\n"
+    },
+    {
+      "id": "kubernetes-007-example",
+      "topic": "kubernetes",
+      "title": "Stable identities and one PVC per replica",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-007-example.yaml",
+      "description": "The StatefulSet creates db-0 and db-1, each with its own data PVC. The headless Service supplies network identity; provisioning requires suitable storage.",
+      "source": "https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/",
+      "code": "apiVersion: v1\nkind: Service\nmetadata: {name: db}\nspec:\n  clusterIP: None\n  selector: {app: db}\n  ports: [{port: 80}]\n---\napiVersion: apps/v1\nkind: StatefulSet\nmetadata: {name: db}\nspec:\n  serviceName: db\n  replicas: 2\n  selector:\n    matchLabels: {app: db}\n  template:\n    metadata:\n      labels: {app: db}\n    spec:\n      containers:\n        - name: demo\n          image: nginx:1.28\n          volumeMounts: [{name: data, mountPath: /data}]\n  volumeClaimTemplates:\n    - metadata: {name: data}\n      spec:\n        accessModes: [ReadWriteOnce]\n        resources:\n          requests: {storage: 1Gi}\n"
+    },
+    {
+      "id": "kubernetes-008-example",
+      "topic": "kubernetes",
+      "title": "Trace a Service selector",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-008-example.sh",
+      "description": "Compare the actual Service selector to Pod labels first, then inspect EndpointSlices and readiness. Names and namespace are examples.",
+      "source": "https://kubernetes.io/docs/concepts/services-networking/service/",
+      "code": "kubectl get service web -n demo -o yaml\nkubectl get pods -n demo -l app=web --show-labels\nkubectl get endpointslices -n demo -l kubernetes.io/service-name=web\n"
+    },
+    {
+      "id": "kubernetes-009-example",
+      "topic": "kubernetes",
+      "title": "A ClusterRole bound in one namespace",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-009-example.yaml",
+      "description": "The ClusterRole is reusable, but this RoleBinding grants its namespaced Pod permissions only in demo. The demo namespace and app ServiceAccount must exist.",
+      "source": "https://kubernetes.io/docs/reference/access-authn-authz/rbac/",
+      "code": "apiVersion: rbac.authorization.k8s.io/v1\nkind: ClusterRole\nmetadata: {name: pod-reader}\nrules:\n  - apiGroups: [\"\"]\n    resources: [pods]\n    verbs: [get, list]\n---\napiVersion: rbac.authorization.k8s.io/v1\nkind: RoleBinding\nmetadata: {name: readers, namespace: demo}\nsubjects:\n  - kind: ServiceAccount\n    name: app\n    namespace: demo\nroleRef:\n  apiGroup: rbac.authorization.k8s.io\n  kind: ClusterRole\n  name: pod-reader\n"
+    },
+    {
+      "id": "kubernetes-010-example",
+      "topic": "kubernetes",
+      "title": "Encoding is not encryption",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-010-example.yaml",
+      "description": "ZGVtbw== is only base64 for the dummy string demo. Anyone who can read the Secret can decode it; encryption at rest and access controls are separate concerns.",
+      "source": "https://kubernetes.io/docs/concepts/configuration/secret/",
+      "code": "apiVersion: v1\nkind: Secret\nmetadata: {name: demo-only}\ntype: Opaque\ndata:\n  username: ZGVtbw==\n"
+    },
+    {
+      "id": "kubernetes-011-example",
+      "topic": "kubernetes",
+      "title": "Give startup time before other probes",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-011-example.yaml",
+      "description": "Startup gets about 300 seconds before its failure threshold. Liveness and readiness do not start until the startup probe succeeds.",
+      "source": "https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/",
+      "code": "apiVersion: v1\nkind: Pod\nmetadata: {name: startup-demo}\nspec:\n  containers:\n    - name: web\n      image: nginx:1.28\n      startupProbe:\n        httpGet: {path: /, port: 80}\n        periodSeconds: 10\n        failureThreshold: 30\n      livenessProbe:\n        httpGet: {path: /, port: 80}\n        periodSeconds: 10\n      readinessProbe:\n        httpGet: {path: /, port: 80}\n        periodSeconds: 5\n"
+    },
+    {
+      "id": "kubernetes-012-example",
+      "topic": "kubernetes",
+      "title": "Liveness can restart a container",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-012-example.yaml",
+      "description": "Once liveness checking is active, three consecutive failures trigger container restart behavior. A readiness probe would affect traffic instead.",
+      "source": "https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/",
+      "code": "apiVersion: v1\nkind: Pod\nmetadata: {name: liveness-demo}\nspec:\n  containers:\n    - name: web\n      image: nginx:1.28\n      livenessProbe:\n        httpGet: {path: /, port: 80}\n        periodSeconds: 10\n        failureThreshold: 3\n"
+    },
+    {
+      "id": "kubernetes-013-example",
+      "topic": "kubernetes",
+      "title": "Millicpu units",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-013-example.yaml",
+      "description": "250m / 1000m = 0.25 CPU requested. The separate CPU limit here is 0.5 CPU.",
+      "source": "https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/",
+      "code": "apiVersion: v1\nkind: Pod\nmetadata: {name: millicpu-demo}\nspec:\n  containers:\n    - name: web\n      image: nginx:1.28\n      resources:\n        requests: {cpu: 250m, memory: 64Mi}\n        limits: {cpu: 500m, memory: 128Mi}\n"
+    },
+    {
+      "id": "kubernetes-014-example",
+      "topic": "kubernetes",
+      "title": "Investigate OOM termination",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-014-example.sh",
+      "description": "Inspect the last termination reason and configured memory limits. top needs a metrics pipeline and shows current usage, which can miss the earlier peak.",
+      "source": "https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/",
+      "code": "kubectl describe pod web-abc -n demo\nkubectl logs web-abc -n demo -c web --previous\nkubectl top pod web-abc -n demo --containers\n"
+    },
+    {
+      "id": "kubernetes-015-example",
+      "topic": "kubernetes",
+      "title": "Compare allocation with actual usage",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-015-example.sh",
+      "description": "Node description shows allocated resource requests. top measures observed usage; a low measurement does not free capacity already committed by requests.",
+      "source": "https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/",
+      "code": "kubectl describe node worker-1\nkubectl top node worker-1\nkubectl describe pod cpu-demo -n demo\n"
+    },
+    {
+      "id": "kubernetes-016-example",
+      "topic": "kubernetes",
+      "title": "Roll out without reducing availability",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-016-example.yaml",
+      "description": "Four desired replicas plus one surge permits five non-terminating Pods during rollout while keeping four available. Terminating Pods can temporarily raise the total observed count.",
+      "source": "https://kubernetes.io/docs/concepts/workloads/controllers/deployment/",
+      "code": "apiVersion: apps/v1\nkind: Deployment\nmetadata: {name: web}\nspec:\n  replicas: 4\n  strategy:\n    type: RollingUpdate\n    rollingUpdate:\n      maxSurge: 1\n      maxUnavailable: 0\n  selector:\n    matchLabels: {app: web}\n  template:\n    metadata:\n      labels: {app: web}\n    spec:\n      containers:\n        - name: web\n          image: nginx:1.28\n"
+    },
+    {
+      "id": "kubernetes-017-example",
+      "topic": "kubernetes",
+      "title": "Investigate image-pull failures",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-017-example.sh",
+      "description": "Events often name a missing tag or denied registry access. Check the referenced credentials and connectivity without printing Secret values.",
+      "source": "https://kubernetes.io/docs/concepts/containers/images/",
+      "code": "kubectl describe pod web-abc -n demo\nkubectl get pod web-abc -n demo -o jsonpath='{.spec.containers[*].image}'\nkubectl get pod web-abc -n demo -o jsonpath='{.spec.imagePullSecrets[*].name}'\n"
+    },
+    {
+      "id": "kubernetes-018-example",
+      "topic": "kubernetes",
+      "title": "Regular init containers run first",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-018-example.yaml",
+      "description": "prepare must exit successfully before web starts. If it exits nonzero, Kubernetes retries it and the application stays blocked.",
+      "source": "https://kubernetes.io/docs/concepts/workloads/pods/init-containers/",
+      "code": "apiVersion: v1\nkind: Pod\nmetadata: {name: init-demo}\nspec:\n  restartPolicy: Always\n  initContainers:\n    - name: prepare\n      image: busybox:1.37\n      command: [sh, -c, 'echo preparing; exit 0']\n  containers:\n    - name: web\n      image: nginx:1.28\n"
+    },
+    {
+      "id": "kubernetes-019-example",
+      "topic": "kubernetes",
+      "title": "One agent on each eligible node",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-019-example.yaml",
+      "description": "A DaemonSet maintains a Pod per eligible node. This toy heartbeat agent demonstrates placement; it does not collect real host logs.",
+      "source": "https://kubernetes.io/docs/concepts/workloads/controllers/daemonset/",
+      "code": "apiVersion: apps/v1\nkind: DaemonSet\nmetadata: {name: node-agent-demo}\nspec:\n  selector:\n    matchLabels: {app: node-agent-demo}\n  template:\n    metadata:\n      labels: {app: node-agent-demo}\n    spec:\n      containers:\n        - name: agent\n          image: busybox:1.37\n          command: [sh, -c, 'while true; do echo heartbeat; sleep 60; done']\n"
+    },
+    {
+      "id": "kubernetes-020-example",
+      "topic": "kubernetes",
+      "title": "Run a task to completion",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-020-example.yaml",
+      "description": "The Job tracks successful completion and limits failed retries with backoffLimit. It is not intended to keep a web process running forever.",
+      "source": "https://kubernetes.io/docs/concepts/workloads/controllers/job/",
+      "code": "apiVersion: batch/v1\nkind: Job\nmetadata: {name: report-demo}\nspec:\n  backoffLimit: 3\n  template:\n    spec:\n      restartPolicy: Never\n      containers:\n        - name: report\n          image: busybox:1.37\n          command: [sh, -c, 'echo report complete']\n"
+    },
+    {
+      "id": "kubernetes-021-example",
+      "topic": "kubernetes",
+      "title": "Avoid overlap within one CronJob",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-021-example.yaml",
+      "description": "If a previous Job from this CronJob is still running at the next five-minute schedule, Forbid skips the overlapping start.",
+      "source": "https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/",
+      "code": "apiVersion: batch/v1\nkind: CronJob\nmetadata: {name: report-demo}\nspec:\n  schedule: \"*/5 * * * *\"\n  concurrencyPolicy: Forbid\n  jobTemplate:\n    spec:\n      template:\n        spec:\n          restartPolicy: Never\n          containers:\n            - name: report\n              image: busybox:1.37\n              command: [sh, -c, 'echo report complete']\n"
+    },
+    {
+      "id": "kubernetes-022-example",
+      "topic": "kubernetes",
+      "title": "Service port versus target port",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-022-example.yaml",
+      "description": "Clients use Service port 80; selected Pods receive traffic on 8080. The application must actually listen on that destination port.",
+      "source": "https://kubernetes.io/docs/concepts/services-networking/service/",
+      "code": "apiVersion: v1\nkind: Service\nmetadata: {name: web}\nspec:\n  selector: {app: web}\n  ports:\n    - port: 80\n      targetPort: 8080\n"
+    },
+    {
+      "id": "kubernetes-023-example",
+      "topic": "kubernetes",
+      "title": "Check ready endpoints",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-023-example.sh",
+      "description": "Compare selectors, readiness conditions, and EndpointSlice ready flags. publishNotReadyAddresses is an explicit Service exception to normal readiness filtering.",
+      "source": "https://kubernetes.io/docs/concepts/services-networking/service/",
+      "code": "kubectl get pods -n demo -l app=web\nkubectl describe pod web-abc -n demo\nkubectl get endpointslices -n demo -l kubernetes.io/service-name=web -o yaml\n"
+    },
+    {
+      "id": "kubernetes-024-example",
+      "topic": "kubernetes",
+      "title": "Cross-namespace DNS",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-024-example.sh",
+      "description": "api is the Service, backend is its namespace, and cluster.local is the assumed cluster domain. Replace the domain if your cluster uses another suffix.",
+      "source": "https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/",
+      "code": "# Run in an existing diagnostic Pod with nslookup installed.\nkubectl exec dns-tools -n frontend -- nslookup api.backend.svc.cluster.local\n"
+    },
+    {
+      "id": "kubernetes-025-example",
+      "topic": "kubernetes",
+      "title": "Ingress needs a controller",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-025-example.yaml",
+      "description": "A controller for the nginx class must already be installed, and Service web must exist. This object alone does not deploy a controller or provision DNS.",
+      "source": "https://kubernetes.io/docs/concepts/services-networking/ingress/",
+      "code": "apiVersion: networking.k8s.io/v1\nkind: Ingress\nmetadata: {name: web}\nspec:\n  ingressClassName: nginx\n  rules:\n    - host: web.example.com\n      http:\n        paths:\n          - path: /\n            pathType: Prefix\n            backend:\n              service:\n                name: web\n                port: {number: 80}\n"
+    },
+    {
+      "id": "kubernetes-026-example",
+      "topic": "kubernetes",
+      "title": "NetworkPolicy permissions add together",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-026-example.yaml",
+      "description": "With NetworkPolicy enforcement enabled, both policies select app=web. Together they allow inbound TCP on 80 and 443 from all sources; one does not override the other.",
+      "source": "https://kubernetes.io/docs/concepts/services-networking/network-policies/",
+      "code": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata: {name: allow-http}\nspec:\n  podSelector:\n    matchLabels: {app: web}\n  policyTypes: [Ingress]\n  ingress:\n    - ports: [{protocol: TCP, port: 80}]\n---\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata: {name: allow-https}\nspec:\n  podSelector:\n    matchLabels: {app: web}\n  policyTypes: [Ingress]\n  ingress:\n    - ports: [{protocol: TCP, port: 443}]\n"
+    },
+    {
+      "id": "kubernetes-027-example",
+      "topic": "kubernetes",
+      "title": "Allow DNS through restricted egress",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-027-example.yaml",
+      "description": "This selects DNS Pods in kube-system with the assumed kube-dns label, allowing TCP and UDP 53. Verify your DNS labels and CNI behavior; NodeLocal DNS may need a different destination rule.",
+      "source": "https://kubernetes.io/docs/concepts/services-networking/network-policies/",
+      "code": "apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata: {name: dns-egress}\nspec:\n  podSelector:\n    matchLabels: {app: web}\n  policyTypes: [Egress]\n  egress:\n    - to:\n        - namespaceSelector:\n            matchLabels:\n              kubernetes.io/metadata.name: kube-system\n          podSelector:\n            matchLabels: {k8s-app: kube-dns}\n      ports:\n        - {protocol: UDP, port: 53}\n        - {protocol: TCP, port: 53}\n"
+    },
+    {
+      "id": "kubernetes-028-example",
+      "topic": "kubernetes",
+      "title": "ConfigMap environment snapshot",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-028-example.yaml",
+      "description": "MODE is populated when the container starts. Updating the ConfigMap does not change the environment in this running process; replace or restart the container.",
+      "source": "https://kubernetes.io/docs/concepts/configuration/configmap/",
+      "code": "apiVersion: v1\nkind: ConfigMap\nmetadata: {name: app-settings}\ndata: {MODE: practice}\n---\napiVersion: v1\nkind: Pod\nmetadata: {name: env-demo}\nspec:\n  containers:\n    - name: app\n      image: busybox:1.37\n      command: [sh, -c, 'echo \"$MODE\"; sleep 3600']\n      envFrom:\n        - configMapRef: {name: app-settings}\n"
+    },
+    {
+      "id": "kubernetes-029-example",
+      "topic": "kubernetes",
+      "title": "subPath does not receive ConfigMap updates",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-029-example.yaml",
+      "description": "Mounting the individual key with subPath prevents automatic updates to that mount. A normal ConfigMap volume has different projection behavior.",
+      "source": "https://kubernetes.io/docs/concepts/configuration/configmap/",
+      "code": "apiVersion: v1\nkind: ConfigMap\nmetadata: {name: app-settings}\ndata: {app.conf: 'mode=practice'}\n---\napiVersion: v1\nkind: Pod\nmetadata: {name: subpath-demo}\nspec:\n  containers:\n    - name: app\n      image: busybox:1.37\n      command: [sh, -c, 'cat /etc/app.conf; sleep 3600']\n      volumeMounts:\n        - name: config\n          mountPath: /etc/app.conf\n          subPath: app.conf\n  volumes:\n    - name: config\n      configMap: {name: app-settings}\n"
+    },
+    {
+      "id": "kubernetes-030-example",
+      "topic": "kubernetes",
+      "title": "Investigate a Pending claim",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-030-example.sh",
+      "description": "PVC events identify missing storage classes, provisioning failures, or incompatible volume requirements. Some StorageClasses intentionally wait for a consumer before binding.",
+      "source": "https://kubernetes.io/docs/concepts/storage/persistent-volumes/",
+      "code": "kubectl describe pvc data -n demo\nkubectl get storageclass\nkubectl get pv\n"
+    },
+    {
+      "id": "kubernetes-031-example",
+      "topic": "kubernetes",
+      "title": "ReadWriteOnce is node-scoped",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-031-example.yaml",
+      "description": "RWO means read-write on one node. Several Pods on that same node can share it if the driver and workload permit; it is not a single-Pod guarantee. A suitable default StorageClass or matching PV is needed.",
+      "source": "https://kubernetes.io/docs/concepts/storage/persistent-volumes/",
+      "code": "apiVersion: v1\nkind: PersistentVolumeClaim\nmetadata: {name: data}\nspec:\n  accessModes: [ReadWriteOnce]\n  resources:\n    requests: {storage: 1Gi}\n"
+    },
+    {
+      "id": "kubernetes-032-example",
+      "topic": "kubernetes",
+      "title": "Retain preserves storage for manual handling",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-032-example.yaml",
+      "description": "After claim deletion, Retain leaves reclamation to an administrator. hostPath is only a single-node teaching example, not a portable production storage design.",
+      "source": "https://kubernetes.io/docs/concepts/storage/persistent-volumes/",
+      "code": "apiVersion: v1\nkind: PersistentVolume\nmetadata: {name: retained-demo}\nspec:\n  capacity: {storage: 1Gi}\n  accessModes: [ReadWriteOnce]\n  persistentVolumeReclaimPolicy: Retain\n  storageClassName: manual\n  hostPath:\n    path: /var/lib/quiz-demo\n"
+    },
+    {
+      "id": "kubernetes-033-example",
+      "topic": "kubernetes",
+      "title": "Toleration removes one scheduling barrier",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-033-example.yaml",
+      "description": "This tolerates dedicated=batch:NoSchedule. It neither forces placement on such nodes nor overrides other resource and affinity constraints.",
+      "source": "https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/",
+      "code": "apiVersion: v1\nkind: Pod\nmetadata: {name: toleration-demo}\nspec:\n  tolerations:\n    - key: dedicated\n      operator: Equal\n      value: batch\n      effect: NoSchedule\n  containers:\n    - name: worker\n      image: busybox:1.37\n      command: [sleep, '3600']\n"
+    },
+    {
+      "id": "kubernetes-034-example",
+      "topic": "kubernetes",
+      "title": "Require a node label",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-034-example.yaml",
+      "description": "Only nodes labeled disktype=ssd match. If none also satisfy the remaining constraints, this Pod stays Pending.",
+      "source": "https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/",
+      "code": "apiVersion: v1\nkind: Pod\nmetadata: {name: ssd-demo}\nspec:\n  nodeSelector: {disktype: ssd}\n  containers:\n    - name: web\n      image: nginx:1.28\n"
+    },
+    {
+      "id": "kubernetes-035-example",
+      "topic": "kubernetes",
+      "title": "Separate replicas across nodes",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-035-example.yaml",
+      "description": "Required anti-affinity prevents matching replicas in the same namespace from sharing a hostname domain. Fewer than three eligible nodes can leave replicas unscheduled.",
+      "source": "https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/",
+      "code": "apiVersion: apps/v1\nkind: Deployment\nmetadata: {name: web}\nspec:\n  replicas: 3\n  selector:\n    matchLabels: {app: web}\n  template:\n    metadata:\n      labels: {app: web}\n    spec:\n      affinity:\n        podAntiAffinity:\n          requiredDuringSchedulingIgnoredDuringExecution:\n            - labelSelector:\n                matchLabels: {app: web}\n              topologyKey: kubernetes.io/hostname\n      containers:\n        - name: web\n          image: nginx:1.28\n"
+    },
+    {
+      "id": "kubernetes-036-example",
+      "topic": "kubernetes",
+      "title": "Cordon versus drain",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-036-example.sh",
+      "description": "Cordon blocks ordinary new scheduling; drain also attempts eviction. Drain may stop for PDBs, unmanaged Pods, or local data; inspect blockers rather than forcing past them.",
+      "source": "https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/",
+      "code": "# Maintenance example: these commands change node availability.\nkubectl cordon worker-1\nkubectl drain worker-1 --ignore-daemonsets\n# After maintenance:\nkubectl uncordon worker-1\n"
+    },
+    {
+      "id": "kubernetes-037-example",
+      "topic": "kubernetes",
+      "title": "Keep two replicas available",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-037-example.yaml",
+      "description": "With three healthy matching replicas, one voluntary eviction is normally allowed. This budget does not guarantee protection against node failure or every direct deletion.",
+      "source": "https://kubernetes.io/docs/tasks/run-application/configure-pdb/",
+      "code": "apiVersion: policy/v1\nkind: PodDisruptionBudget\nmetadata: {name: web-budget}\nspec:\n  minAvailable: 2\n  selector:\n    matchLabels: {app: web}\n"
+    },
+    {
+      "id": "kubernetes-038-example",
+      "topic": "kubernetes",
+      "title": "get and list are different verbs",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-038-example.yaml",
+      "description": "When bound, this grants reading a named Pod, not listing the collection. kubectl get pods performs a list request; adding list would grant that operation.",
+      "source": "https://kubernetes.io/docs/reference/access-authn-authz/rbac/",
+      "code": "apiVersion: rbac.authorization.k8s.io/v1\nkind: Role\nmetadata: {name: named-pod-reader, namespace: demo}\nrules:\n  - apiGroups: [\"\"]\n    resources: [pods]\n    verbs: [get]\n"
+    },
+    {
+      "id": "kubernetes-039-example",
+      "topic": "kubernetes",
+      "title": "Choose the workload identity",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-039-example.yaml",
+      "description": "Assuming namespace demo exists, this Pod uses demo/app. A mounted token authenticates as that ServiceAccount; separate RBAC grants determine what it can do.",
+      "source": "https://kubernetes.io/docs/concepts/security/service-accounts/",
+      "code": "apiVersion: v1\nkind: ServiceAccount\nmetadata: {name: app, namespace: demo}\n---\napiVersion: v1\nkind: Pod\nmetadata: {name: identity-demo, namespace: demo}\nspec:\n  serviceAccountName: app\n  containers:\n    - name: app\n      image: busybox:1.37\n      command: [sleep, '3600']\n"
+    },
+    {
+      "id": "kubernetes-040-example",
+      "topic": "kubernetes",
+      "title": "Enforce a numeric non-root user",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-040-example.yaml",
+      "description": "runAsNonRoot enforces the non-root condition, and runAsUser selects UID 1000. The image and writable paths must support that UID.",
+      "source": "https://kubernetes.io/docs/tasks/configure-pod-container/security-context/",
+      "code": "apiVersion: v1\nkind: Pod\nmetadata: {name: nonroot-demo}\nspec:\n  securityContext:\n    runAsNonRoot: true\n    runAsUser: 1000\n  containers:\n    - name: app\n      image: busybox:1.37\n      command: [sleep, '3600']\n"
+    },
+    {
+      "id": "kubernetes-041-example",
+      "topic": "kubernetes",
+      "title": "A writable exception to a read-only root",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-041-example.yaml",
+      "description": "The image root filesystem is read-only, but /tmp is a separate writable emptyDir. That data is temporary and tied to the Pod’s lifetime.",
+      "source": "https://kubernetes.io/docs/tasks/configure-pod-container/security-context/",
+      "code": "apiVersion: v1\nkind: Pod\nmetadata: {name: readonly-demo}\nspec:\n  containers:\n    - name: app\n      image: busybox:1.37\n      command: [sh, -c, 'echo hello > /tmp/message; sleep 3600']\n      securityContext:\n        readOnlyRootFilesystem: true\n      volumeMounts:\n        - {name: scratch, mountPath: /tmp}\n  volumes:\n    - name: scratch\n      emptyDir: {}\n"
+    },
+    {
+      "id": "kubernetes-042-example",
+      "topic": "kubernetes",
+      "title": "Allow time for graceful shutdown",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-042-example.yaml",
+      "description": "The kubelet gives the container a termination window. If processes remain after the grace period, they can be forcibly killed; the application still needs proper shutdown handling.",
+      "source": "https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/",
+      "code": "apiVersion: v1\nkind: Pod\nmetadata: {name: shutdown-demo}\nspec:\n  terminationGracePeriodSeconds: 30\n  containers:\n    - name: web\n      image: nginx:1.28\n"
+    },
+    {
+      "id": "kubernetes-043-example",
+      "topic": "kubernetes",
+      "title": "HPA utilization uses CPU requests",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-043-example.yaml",
+      "description": "For a container using 200m with a 500m request, utilization is 40%. This target uses average request-relative utilization; it requires the target workload, CPU requests, and metrics support.",
+      "source": "https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/",
+      "code": "apiVersion: autoscaling/v2\nkind: HorizontalPodAutoscaler\nmetadata: {name: web}\nspec:\n  scaleTargetRef: {apiVersion: apps/v1, kind: Deployment, name: web}\n  minReplicas: 2\n  maxReplicas: 6\n  metrics:\n    - type: Resource\n      resource:\n        name: cpu\n        target:\n          type: Utilization\n          averageUtilization: 60\n"
+    },
+    {
+      "id": "kubernetes-044-example",
+      "topic": "kubernetes",
+      "title": "An aggregate namespace resource budget",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-044-example.yaml",
+      "description": "The quota bounds totals in demo, not each individual container. New admissions exceeding a hard limit are rejected; creating the quota does not resize existing containers.",
+      "source": "https://kubernetes.io/docs/concepts/policy/resource-quotas/",
+      "code": "apiVersion: v1\nkind: ResourceQuota\nmetadata: {name: compute-budget, namespace: demo}\nspec:\n  hard:\n    requests.cpu: \"4\"\n    requests.memory: 8Gi\n    limits.cpu: \"8\"\n    limits.memory: 16Gi\n"
+    },
+    {
+      "id": "kubernetes-045-example",
+      "topic": "kubernetes",
+      "title": "Default requests and limits at admission",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-045-example.yaml",
+      "description": "A newly admitted container omitting memory settings gets a 128Mi request and 256Mi limit. Minimum and maximum constraints bound its allowed memory settings. Running containers are unchanged; namespace demo must exist.",
+      "source": "https://kubernetes.io/docs/concepts/policy/limit-range/",
+      "code": "apiVersion: v1\nkind: LimitRange\nmetadata: {name: container-resources, namespace: demo}\nspec:\n  limits:\n    - type: Container\n      default: {memory: 256Mi}\n      defaultRequest: {memory: 128Mi}\n      min: {memory: 64Mi}\n      max: {memory: 512Mi}\n"
+    },
+    {
+      "id": "kubernetes-046-example",
+      "topic": "kubernetes",
+      "title": "Add diagnostic tools without rebuilding",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-046-example.sh",
+      "description": "An ephemeral container supplies tools alongside the application. Admission policy, permissions, and container-runtime support determine which debugging features are available.",
+      "source": "https://kubernetes.io/docs/tasks/debug/debug-application/debug-running-pod/",
+      "code": "# Changes the Pod by adding an ephemeral debug container.\nkubectl debug web-abc -n demo -it --image=busybox:1.37 --target=web\n"
+    },
+    {
+      "id": "kubernetes-047-example",
+      "topic": "kubernetes",
+      "title": "Choose a container for exec",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-047-example.sh",
+      "description": "-c api chooses the container; everything after -- is the command inside it. This example assumes cat is installed in that image.",
+      "source": "https://kubernetes.io/docs/reference/kubectl/generated/kubectl_exec/",
+      "code": "kubectl exec web-abc -n demo -c api -- cat /etc/hostname\n"
+    },
+    {
+      "id": "kubernetes-048-example",
+      "topic": "kubernetes",
+      "title": "Selectors combine equality requirements",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-048-example.sh",
+      "description": "The comma means AND: a selected Pod must have both app=web and tier=frontend in demo.",
+      "source": "https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/",
+      "code": "kubectl get pods -n demo -l app=web,tier=frontend\n"
+    },
+    {
+      "id": "kubernetes-049-example",
+      "topic": "kubernetes",
+      "title": "Inspect history before rollback",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-049-example.sh",
+      "description": "Rollback uses retained Deployment Pod-template history. It does not restore a database or undo separately changed ConfigMaps.",
+      "source": "https://kubernetes.io/docs/concepts/workloads/controllers/deployment/",
+      "code": "kubectl rollout history deployment/web -n demo\n# Changes the Pod template to a retained previous revision:\nkubectl rollout undo deployment/web -n demo\nkubectl rollout status deployment/web -n demo\n"
+    },
+    {
+      "id": "kubernetes-050-example",
+      "topic": "kubernetes",
+      "title": "Keep unrelated selectors distinct",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-050-example.yaml",
+      "description": "Use distinct identifying labels for unrelated controllers and keep each template consistent with its selector. Do not create another unrelated controller selecting the same label set.",
+      "source": "https://kubernetes.io/docs/concepts/workloads/controllers/deployment/",
+      "code": "apiVersion: apps/v1\nkind: Deployment\nmetadata: {name: web}\nspec:\n  selector:\n    matchLabels: {app: web, component: frontend}\n  template:\n    metadata:\n      labels: {app: web, component: frontend}\n    spec:\n      containers:\n        - name: web\n          image: nginx:1.28\n"
+    },
+    {
+      "id": "terraform-001-example",
+      "topic": "terraform",
+      "title": "Initialize before validating",
+      "language": "shell",
+      "file": "terraform/terraform-001-example.sh",
+      "description": "init prepares providers, modules, and the selected backend. validate then checks structure; neither command is an apply. Run only in the intended configuration directory.",
+      "source": "https://developer.hashicorp.com/terraform/cli/commands/init",
+      "code": "terraform init\nterraform validate\n"
+    },
+    {
+      "id": "terraform-002-example",
+      "topic": "terraform",
+      "title": "Check formatting without edits",
+      "language": "shell",
+      "file": "terraform/terraform-002-example.sh",
+      "description": "A nonzero exit status reports formatting differences. This checks formatting, not credentials or remote infrastructure.",
+      "source": "https://developer.hashicorp.com/terraform/cli/commands/fmt",
+      "code": "terraform fmt -check -diff\n"
+    },
+    {
+      "id": "terraform-003-example",
+      "topic": "terraform",
+      "title": "Validate without contacting a backend",
+      "language": "shell",
+      "file": "terraform/terraform-003-example.sh",
+      "description": "This prepares dependencies without initializing a remote backend. validate checks syntax and internal consistency, not a live infrastructure plan.",
+      "source": "https://developer.hashicorp.com/terraform/cli/commands/validate",
+      "code": "terraform init -backend=false\nterraform validate\n"
+    },
+    {
+      "id": "terraform-004-example",
+      "topic": "terraform",
+      "title": "Preview managed-resource changes",
+      "language": "shell",
+      "file": "terraform/terraform-004-example.sh",
+      "description": "Plan proposes operations and can read remote objects through providers. It does not carry out the proposed managed-resource changes.",
+      "source": "https://developer.hashicorp.com/terraform/cli/commands/plan",
+      "code": "terraform plan\n"
+    },
+    {
+      "id": "terraform-005-example",
+      "topic": "terraform",
+      "title": "Review and apply the same saved plan",
+      "language": "shell",
+      "file": "terraform/terraform-005-example.sh",
+      "description": "Review the saved plan before apply. Treat the plan file as sensitive because it can include state and input values.",
+      "source": "https://developer.hashicorp.com/terraform/cli/commands/apply",
+      "code": "terraform plan -out=reviewed.tfplan\nterraform show reviewed.tfplan\n# Applying this file performs the reviewed infrastructure changes.\nterraform apply reviewed.tfplan\n"
+    },
+    {
+      "id": "terraform-006-example",
+      "topic": "terraform",
+      "title": "Inspect state bindings",
+      "language": "shell",
+      "file": "terraform/terraform-006-example.sh",
+      "description": "State addresses map configuration instances to tracked objects. state show can expose sensitive attributes; use these commands only with the intended state and access.",
+      "source": "https://developer.hashicorp.com/terraform/cli/commands/state",
+      "code": "terraform state list\nterraform state show 'aws_instance.web'\n"
+    },
+    {
+      "id": "terraform-007-example",
+      "topic": "terraform",
+      "title": "Sensitive does not mean absent from state",
+      "language": "hcl",
+      "file": "terraform/terraform-007-example.tf",
+      "description": "The variable is marked sensitive, but using it as a normal persisted resource input can still put it in state. The dummy value demonstrates display marking, not secure secret storage.",
+      "source": "https://developer.hashicorp.com/terraform/language/manage-sensitive-data",
+      "code": "variable \"demo_token\" {\n  type      = string\n  sensitive = true\n  default   = \"dummy-not-a-real-token\"\n}\nresource \"terraform_data\" \"demo\" {\n  input = var.demo_token\n}\n"
+    },
+    {
+      "id": "terraform-008-example",
+      "topic": "terraform",
+      "title": "Redact a normal output display",
+      "language": "hcl",
+      "file": "terraform/terraform-008-example.tf",
+      "description": "Ordinary output display is redacted. Explicit raw or JSON output can reveal it, and sensitive marking does not by itself remove it from state.",
+      "source": "https://developer.hashicorp.com/terraform/language/values/outputs",
+      "code": "variable \"demo_token\" {\n  type      = string\n  sensitive = true\n  default   = \"dummy-not-a-real-token\"\n}\noutput \"token\" {\n  value     = var.demo_token\n  sensitive = true\n}\n"
+    },
+    {
+      "id": "terraform-009-example",
+      "topic": "terraform",
+      "title": "Remote state locking configuration",
+      "language": "hcl",
+      "file": "terraform/terraform-009-example.tf",
+      "description": "This S3 backend opts into a lockfile. The bucket must already exist and access policies must permit state and lock operations; backend support and permissions control actual locking.",
+      "source": "https://developer.hashicorp.com/terraform/language/backend/s3",
+      "code": "terraform {\n  backend \"s3\" {\n    bucket       = \"replace-with-your-state-bucket\"\n    key          = \"practice/terraform.tfstate\"\n    region       = \"us-east-1\"\n    use_lockfile = true\n    encrypt      = true\n  }\n}\n"
+    },
+    {
+      "id": "terraform-010-example",
+      "topic": "terraform",
+      "title": "Wait for a lock rather than bypass it",
+      "language": "shell",
+      "file": "terraform/terraform-010-example.sh",
+      "description": "This allows time to acquire the existing state lock. Coordinate with the teammate holding it rather than using -lock=false.",
+      "source": "https://developer.hashicorp.com/terraform/cli/commands/plan",
+      "code": "terraform plan -lock-timeout=5m\n"
+    },
+    {
+      "id": "terraform-011-example",
+      "topic": "terraform",
+      "title": "Select a separate workspace state",
+      "language": "shell",
+      "file": "terraform/terraform-011-example.sh",
+      "description": "Select an existing dev workspace to use its state. CLI workspaces share the configuration and are not a security-isolation boundary.",
+      "source": "https://developer.hashicorp.com/terraform/cli/workspaces",
+      "code": "terraform workspace list\nterraform workspace select dev\n"
+    },
+    {
+      "id": "terraform-012-example",
+      "topic": "terraform",
+      "title": "Provider constraints choose acceptable versions",
+      "language": "hcl",
+      "file": "terraform/terraform-012-example.tf",
+      "description": "~> 6.21.0 permits versions from 6.21.0 up to, but not including, 6.22.0. The dependency lock file records the exact selected version.",
+      "source": "https://developer.hashicorp.com/terraform/language/providers/requirements",
+      "code": "terraform {\n  required_providers {\n    aws = {\n      source  = \"hashicorp/aws\"\n      version = \"~> 6.21.0\"\n    }\n  }\n}\n"
+    },
+    {
+      "id": "terraform-013-example",
+      "topic": "terraform",
+      "title": "Share the dependency lock file",
+      "language": "shell",
+      "file": "terraform/terraform-013-example.sh",
+      "description": "Commit the root configuration’s lock file along with its provider constraints. The file records providers, not infrastructure state or remote module version locks.",
+      "source": "https://developer.hashicorp.com/terraform/language/files/dependency-lock",
+      "code": "terraform init\n# Inspect and commit the provider selections and checksums.\ngit diff -- .terraform.lock.hcl\ngit add .terraform.lock.hcl\n"
+    },
+    {
+      "id": "terraform-014-example",
+      "topic": "terraform",
+      "title": "Constrain the Terraform CLI",
+      "language": "hcl",
+      "file": "terraform/terraform-014-example.tf",
+      "description": "The comma combines constraints: a Terraform CLI at least 1.5.0 and below 2.0.0 is required. This says nothing about provider versions.",
+      "source": "https://developer.hashicorp.com/terraform/language/terraform",
+      "code": "terraform {\n  required_version = \">= 1.5.0, < 2.0.0\"\n}\n"
+    },
+    {
+      "id": "terraform-015-example",
+      "topic": "terraform",
+      "title": "Call a local module",
+      "language": "hcl",
+      "file": "terraform/terraform-015-example.tf",
+      "description": "./modules/network is a directory relative to this calling module. The companion teaching fixture exports a dummy subnet_id; it does not create a cloud subnet.",
+      "source": "https://developer.hashicorp.com/terraform/language/modules/sources",
+      "code": "module \"network\" {\n  source = \"./modules/network\"\n}\noutput \"example\" {\n  value = module.network.subnet_id\n}\n"
+    },
+    {
+      "id": "terraform-016-example",
+      "topic": "terraform",
+      "title": "Read a child module’s output",
+      "language": "hcl",
+      "file": "terraform/terraform-016-example.tf",
+      "description": "The caller consumes the declared subnet_id output through module.network.subnet_id. It does not reach directly into the child’s internal resources.",
+      "source": "https://developer.hashicorp.com/terraform/language/values/outputs",
+      "code": "module \"network\" {\n  source = \"./modules/network\"\n}\noutput \"example\" {\n  value = module.network.subnet_id\n}\n"
+    },
+    {
+      "id": "terraform-017-example",
+      "topic": "terraform",
+      "title": "Name a reusable expression",
+      "language": "hcl",
+      "file": "terraform/terraform-017-example.tf",
+      "description": "local.app_name evaluates to quiz-dev with the default input. A local is a named expression, not a mutable variable.",
+      "source": "https://developer.hashicorp.com/terraform/language/values/locals",
+      "code": "variable \"environment\" {\n  type    = string\n  default = \"dev\"\n}\nlocals {\n  app_name = \"quiz-${var.environment}\"\n}\noutput \"example\" {\n  value = local.app_name\n}\n"
+    },
+    {
+      "id": "terraform-018-example",
+      "topic": "terraform",
+      "title": "Reject non-positive replica counts",
+      "language": "hcl",
+      "file": "terraform/terraform-018-example.tf",
+      "description": "Zero and negative numbers fail this condition. It only enforces positivity; it does not by itself require an integer.",
+      "source": "https://developer.hashicorp.com/terraform/language/values/variables",
+      "code": "variable \"replicas\" {\n  type    = number\n  default = 3\n  validation {\n    condition     = var.replicas > 0\n    error_message = \"replicas must be greater than zero.\"\n  }\n}\noutput \"example\" {\n  value = var.replicas\n}\n"
+    },
+    {
+      "id": "terraform-019-example",
+      "topic": "terraform",
+      "title": "count creates zero-based instances",
+      "language": "hcl",
+      "file": "terraform/terraform-019-example.tf",
+      "description": "The addresses are terraform_data.worker[0], [1], and [2]. The built-in terraform_data resource needs no external provider plugin.",
+      "source": "https://developer.hashicorp.com/terraform/language/meta-arguments/count",
+      "code": "resource \"terraform_data\" \"worker\" {\n  count = 3\n  input = \"worker-${count.index}\"\n}\noutput \"example\" {\n  value = [for worker in terraform_data.worker : worker.input]\n}\n"
+    },
+    {
+      "id": "terraform-020-example",
+      "topic": "terraform",
+      "title": "A set removes duplicate instance keys",
+      "language": "hcl",
+      "file": "terraform/terraform-020-example.tf",
+      "description": "The set has just api and worker, so Terraform creates two instances keyed by those strings. Set order is not an instance identity.",
+      "source": "https://developer.hashicorp.com/terraform/language/meta-arguments/for_each",
+      "code": "resource \"terraform_data\" \"service\" {\n  for_each = toset([\"api\", \"worker\", \"api\"])\n  input    = each.key\n}\noutput \"example\" {\n  value = sort(keys(terraform_data.service))\n}\n"
+    },
+    {
+      "id": "terraform-021-example",
+      "topic": "terraform",
+      "title": "Map keys and values",
+      "language": "hcl",
+      "file": "terraform/terraform-021-example.tf",
+      "description": "For the prod instance, each.key is prod and each.value is 3. The numeric value is separate from the stable string instance key.",
+      "source": "https://developer.hashicorp.com/terraform/language/meta-arguments/for_each",
+      "code": "resource \"terraform_data\" \"environment\" {\n  for_each = { dev = 1, prod = 3 }\n  input    = each.value\n}\noutput \"example\" {\n  value = terraform_data.environment[\"prod\"].input\n}\n"
+    },
+    {
+      "id": "terraform-022-example",
+      "topic": "terraform",
+      "title": "Keep instance keys known during planning",
+      "language": "hcl",
+      "file": "terraform/terraform-022-example.tf",
+      "description": "api is a known configuration key even though the new source ID is unknown until apply. Putting that unknown ID in the key set instead would prevent Terraform from planning instance identities.",
+      "source": "https://developer.hashicorp.com/terraform/language/meta-arguments/for_each",
+      "code": "resource \"terraform_data\" \"source\" {\n  input = \"example\"\n}\nresource \"terraform_data\" \"consumer\" {\n  for_each = { api = terraform_data.source.id }\n  input    = each.value\n}\n"
+    },
+    {
+      "id": "terraform-023-example",
+      "topic": "terraform",
+      "title": "Choose one expansion mechanism",
+      "language": "hcl",
+      "file": "terraform/terraform-023-example.tf",
+      "description": "This block uses for_each only. count and for_each are mutually exclusive on the same resource block.",
+      "source": "https://developer.hashicorp.com/terraform/language/meta-arguments/for_each",
+      "code": "resource \"terraform_data\" \"service\" {\n  for_each = toset([\"api\", \"worker\"])\n  input    = each.key\n  # Do not also add count to this block.\n}\n"
+    },
+    {
+      "id": "terraform-024-example",
+      "topic": "terraform",
+      "title": "A reference creates an implicit dependency",
+      "language": "hcl",
+      "file": "terraform/terraform-024-example.tf",
+      "description": "The subnet_id reference makes web depend on app. The VPC and AMI IDs are dummy examples and must be replaced with compatible objects before any real plan or apply.",
+      "source": "https://developer.hashicorp.com/terraform/language/expressions/references",
+      "code": "resource \"aws_subnet\" \"app\" {\n  vpc_id     = \"vpc-0123456789abcdef0\"\n  cidr_block = \"10.0.1.0/24\"\n}\nresource \"aws_instance\" \"web\" {\n  ami           = \"ami-0123456789abcdef0\"\n  instance_type = \"t3.micro\"\n  subnet_id     = aws_subnet.app.id\n}\n"
+    },
+    {
+      "id": "terraform-025-example",
+      "topic": "terraform",
+      "title": "Declare a hidden behavioral dependency",
+      "language": "hcl",
+      "file": "terraform/terraform-025-example.tf",
+      "description": "This toy marker illustrates explicit ordering when no argument reference expresses the dependency. In real infrastructure, use depends_on only for a real hidden dependency, not as a substitute for ordinary references.",
+      "source": "https://developer.hashicorp.com/terraform/language/meta-arguments/depends_on",
+      "code": "resource \"terraform_data\" \"service_ready\" {\n  input = \"readiness-marker\"\n}\nresource \"terraform_data\" \"consumer\" {\n  input      = \"no attribute reference to the marker\"\n  depends_on = [terraform_data.service_ready]\n}\n"
+    },
+    {
+      "id": "terraform-026-example",
+      "topic": "terraform",
+      "title": "Create a replacement first",
+      "language": "hcl",
+      "file": "terraform/terraform-026-example.tf",
+      "description": "When triggers_replace changes on an existing instance, replacement is requested with create-before-destroy ordering. Real provider resources may still hit naming, capacity, or coexistence constraints.",
+      "source": "https://developer.hashicorp.com/terraform/language/meta-arguments/lifecycle",
+      "code": "resource \"terraform_data\" \"release\" {\n  input            = \"v2\"\n  triggers_replace = [\"v2\"]\n  lifecycle {\n    create_before_destroy = true\n  }\n}\n"
+    },
+    {
+      "id": "terraform-027-example",
+      "topic": "terraform",
+      "title": "A configuration-based destruction guard",
+      "language": "hcl",
+      "file": "terraform/terraform-027-example.tf",
+      "description": "While this lifecycle rule is present, a plan that destroys this instance is rejected. Removing the whole resource block removes this configuration-based protection too.",
+      "source": "https://developer.hashicorp.com/terraform/language/meta-arguments/lifecycle",
+      "code": "resource \"terraform_data\" \"important\" {\n  input = \"keep-me\"\n  lifecycle {\n    prevent_destroy = true\n  }\n}\n"
+    },
+    {
+      "id": "terraform-028-example",
+      "topic": "terraform",
+      "title": "Ignore an attribute during updates",
+      "language": "hcl",
+      "file": "terraform/terraform-028-example.tf",
+      "description": "input is still used at creation. Afterward, differences in that attribute are ignored for update planning; this can also conceal drift.",
+      "source": "https://developer.hashicorp.com/terraform/language/meta-arguments/lifecycle",
+      "code": "resource \"terraform_data\" \"shared\" {\n  input = { owner = \"external-controller\" }\n  lifecycle {\n    ignore_changes = [input]\n  }\n}\n"
+    },
+    {
+      "id": "terraform-029-example",
+      "topic": "terraform",
+      "title": "Record a resource-address rename",
+      "language": "hcl",
+      "file": "terraform/terraform-029-example.tf",
+      "description": "If state already tracks terraform_data.web, the moved block explains its new address. It avoids treating a pure rename as an unrelated delete and create.",
+      "source": "https://developer.hashicorp.com/terraform/language/modules/develop/refactoring",
+      "code": "resource \"terraform_data\" \"frontend\" {\n  input = \"web\"\n}\nmoved {\n  from = terraform_data.web\n  to   = terraform_data.frontend\n}\n"
+    },
+    {
+      "id": "terraform-030-example",
+      "topic": "terraform",
+      "title": "Import an existing object into state",
+      "language": "shell",
+      "file": "terraform/terraform-030-example.sh",
+      "description": "The import command records a binding; it does not write all the desired resource configuration for you. Replace the example bucket name and review the full plan afterward.",
+      "source": "https://developer.hashicorp.com/terraform/cli/commands/import",
+      "code": "# Requires a matching aws_s3_bucket.logs resource configuration.\nterraform import aws_s3_bucket.logs existing-demo-logs-bucket\nterraform plan\n"
+    },
+    {
+      "id": "terraform-031-example",
+      "topic": "terraform",
+      "title": "Declare an import in configuration",
+      "language": "hcl",
+      "file": "terraform/terraform-031-example.tf",
+      "description": "This declares the existing bucket to bind to aws_s3_bucket.logs during apply. The name is an example; credentials and a real matching bucket are required for an actual import.",
+      "source": "https://developer.hashicorp.com/terraform/language/import",
+      "code": "resource \"aws_s3_bucket\" \"logs\" {\n  bucket = \"existing-demo-logs-bucket\"\n}\nimport {\n  to = aws_s3_bucket.logs\n  id = \"existing-demo-logs-bucket\"\n}\n"
+    },
+    {
+      "id": "terraform-032-example",
+      "topic": "terraform",
+      "title": "Remove a binding, leave the remote object",
+      "language": "shell",
+      "file": "terraform/terraform-032-example.sh",
+      "description": "state rm forgets the binding. If the resource block remains, the next normal plan can propose creating a replacement object, so review configuration and state together.",
+      "source": "https://developer.hashicorp.com/terraform/cli/commands/state/rm",
+      "code": "# Changes state; does not delete the remote bucket.\nterraform state rm aws_s3_bucket.logs\nterraform plan\n"
+    },
+    {
+      "id": "terraform-033-example",
+      "topic": "terraform",
+      "title": "Review observed drift separately",
+      "language": "shell",
+      "file": "terraform/terraform-033-example.sh",
+      "description": "The saved refresh-only plan reconciles state with observed changes rather than proposing ordinary configuration-driven resource updates. Applying still changes state and outputs.",
+      "source": "https://developer.hashicorp.com/terraform/cli/commands/plan",
+      "code": "terraform plan -refresh-only -out=refresh.tfplan\nterraform show refresh.tfplan\n# Records the reviewed observed state and output changes.\nterraform apply refresh.tfplan\n"
+    },
+    {
+      "id": "terraform-034-example",
+      "topic": "terraform",
+      "title": "Targeted recovery followed by a full plan",
+      "language": "shell",
+      "file": "terraform/terraform-034-example.sh",
+      "description": "-target narrows the graph and can leave other changes outside the result. The subsequent full plan exposes work omitted by the targeted plan.",
+      "source": "https://developer.hashicorp.com/terraform/cli/commands/plan",
+      "code": "# Exceptional troubleshooting scope; replace the example address.\nterraform plan -target=aws_instance.web\n# Review the complete configuration again afterward.\nterraform plan\n"
+    },
+    {
+      "id": "terraform-035-example",
+      "topic": "terraform",
+      "title": "Request replacement in a plan",
+      "language": "shell",
+      "file": "terraform/terraform-035-example.sh",
+      "description": "The example address is explicitly marked for replacement in the proposal. This does not apply the replacement; review its dependency and disruption impact first.",
+      "source": "https://developer.hashicorp.com/terraform/cli/commands/plan",
+      "code": "terraform plan -replace=aws_instance.web\n"
+    },
+    {
+      "id": "terraform-036-example",
+      "topic": "terraform",
+      "title": "Read an existing object with a data source",
+      "language": "hcl",
+      "file": "terraform/terraform-036-example.tf",
+      "description": "The data block reads an AMI matching these filters in the configured account and region; it does not create the image. A real plan fails if no suitable owned image matches.",
+      "source": "https://developer.hashicorp.com/terraform/language/data-sources",
+      "code": "data \"aws_ami\" \"app\" {\n  most_recent = true\n  owners      = [\"self\"]\n  filter {\n    name   = \"tag:Application\"\n    values = [\"quiz-demo\"]\n  }\n}\noutput \"image_id\" {\n  value = data.aws_ami.app.id\n}\n"
+    },
+    {
+      "id": "terraform-037-example",
+      "topic": "terraform",
+      "title": "Generate repeated nested blocks",
+      "language": "hcl",
+      "file": "terraform/terraform-037-example.tf",
+      "description": "dynamic emits two ingress blocks, one for each port. The example VPC ID is a placeholder; dynamic cannot generate arbitrary top-level resource or lifecycle blocks.",
+      "source": "https://developer.hashicorp.com/terraform/language/expressions/dynamic-blocks",
+      "code": "resource \"aws_security_group\" \"web\" {\n  name   = \"quiz-demo-web\"\n  vpc_id = \"vpc-0123456789abcdef0\"\n  dynamic \"ingress\" {\n    for_each = [80, 443]\n    content {\n      from_port   = ingress.value\n      to_port     = ingress.value\n      protocol    = \"tcp\"\n      cidr_blocks = [\"10.0.0.0/16\"]\n    }\n  }\n}\n"
+    },
+    {
+      "id": "terraform-038-example",
+      "topic": "terraform",
+      "title": "Transform a list with a for expression",
+      "language": "hcl",
+      "file": "terraform/terraform-038-example.tf",
+      "description": "The result is [\"API\", \"WORKER\"]. This transforms values; it does not create resource instances.",
+      "source": "https://developer.hashicorp.com/terraform/language/expressions/for",
+      "code": "output \"example\" {\n  value = [for name in [\"api\", \"worker\"] : upper(name)]\n}\n"
+    },
+    {
+      "id": "terraform-039-example",
+      "topic": "terraform",
+      "title": "Select the false branch",
+      "language": "hcl",
+      "file": "terraform/terraform-039-example.tf",
+      "description": "With enabled=false, the result is 0. Both branches are numbers, so their types are compatible.",
+      "source": "https://developer.hashicorp.com/terraform/language/expressions/conditionals",
+      "code": "variable \"enabled\" {\n  type    = bool\n  default = false\n}\noutput \"example\" {\n  value = var.enabled ? 1 : 0\n}\n"
+    },
+    {
+      "id": "terraform-040-example",
+      "topic": "terraform",
+      "title": "Use a fallback for an absent map key",
+      "language": "hcl",
+      "file": "terraform/terraform-040-example.tf",
+      "description": "test is absent, so lookup returns the fallback 1. It does not mutate the map or add a test key.",
+      "source": "https://developer.hashicorp.com/terraform/language/functions/lookup",
+      "code": "variable \"env\" {\n  type    = string\n  default = \"test\"\n}\noutput \"example\" {\n  value = lookup({ dev = 1, prod = 3 }, var.env, 1)\n}\n"
+    },
+    {
+      "id": "terraform-041-example",
+      "topic": "terraform",
+      "title": "Handle a missing decoded attribute",
+      "language": "hcl",
+      "file": "terraform/terraform-041-example.tf",
+      "description": "The decoded object has no retries attribute, so try returns 3. try handles dynamic evaluation errors, not malformed HCL or undeclared identifiers.",
+      "source": "https://developer.hashicorp.com/terraform/language/functions/try",
+      "code": "locals {\n  settings = jsondecode(\"{}\")\n}\noutput \"example\" {\n  value = try(local.settings.retries, 3)\n}\n"
+    },
+    {
+      "id": "terraform-042-example",
+      "topic": "terraform",
+      "title": "null represents absence",
+      "language": "hcl",
+      "file": "terraform/terraform-042-example.tf",
+      "description": "This accepts an absent description and reports not supplied. In many provider arguments, null acts as omission; whether that is allowed and which default applies depend on the argument schema.",
+      "source": "https://developer.hashicorp.com/terraform/language/expressions/types",
+      "code": "variable \"description\" {\n  type     = string\n  default  = null\n  nullable = true\n}\noutput \"example\" {\n  value = var.description == null ? \"not supplied\" : var.description\n}\n"
+    },
+    {
+      "id": "terraform-043-example",
+      "topic": "terraform",
+      "title": "Flatten directly nested sequences",
+      "language": "hcl",
+      "file": "terraform/terraform-043-example.tf",
+      "description": "The result is [\"a\", \"b\", \"c\"]. flatten removes directly nested list layers, not every collection hidden inside an object or map.",
+      "source": "https://developer.hashicorp.com/terraform/language/functions/flatten",
+      "code": "output \"example\" {\n  value = flatten([[\"a\"], [\"b\", \"c\"]])\n}\n"
+    },
+    {
+      "id": "terraform-044-example",
+      "topic": "terraform",
+      "title": "Later merge arguments win",
+      "language": "hcl",
+      "file": "terraform/terraform-044-example.tf",
+      "description": "The result keeps env=dev and sets team=platform because the later map wins for duplicate keys. This is a shallow merge.",
+      "source": "https://developer.hashicorp.com/terraform/language/functions/merge",
+      "code": "output \"example\" {\n  value = merge(\n    { team = \"app\", env = \"dev\" },\n    { team = \"platform\" }\n  )\n}\n"
+    },
+    {
+      "id": "terraform-045-example",
+      "topic": "terraform",
+      "title": "Select a numbered subnet",
+      "language": "hcl",
+      "file": "terraform/terraform-045-example.tf",
+      "description": "Adding eight prefix bits produces /24 subnets. Zero-based netnum 2 picks 10.0.2.0/24, the third subnet.",
+      "source": "https://developer.hashicorp.com/terraform/language/functions/cidrsubnet",
+      "code": "output \"example\" {\n  value = cidrsubnet(\"10.0.0.0/16\", 8, 2)\n}\n"
+    },
+    {
+      "id": "terraform-046-example",
+      "topic": "terraform",
+      "title": "Iterate a map of resource instances",
+      "language": "hcl",
+      "file": "terraform/terraform-046-example.tf",
+      "description": "for_each produces a map. The for expression iterates its values to collect IDs; the AMI is a dummy and the resulting IDs are unknown until real creation.",
+      "source": "https://developer.hashicorp.com/terraform/language/expressions/for",
+      "code": "resource \"aws_instance\" \"web\" {\n  for_each      = toset([\"api\", \"worker\"])\n  ami           = \"ami-0123456789abcdef0\"\n  instance_type = \"t3.micro\"\n}\noutput \"instance_ids\" {\n  value = [for item in aws_instance.web : item.id]\n}\n"
+    },
+    {
+      "id": "terraform-047-example",
+      "topic": "terraform",
+      "title": "Wire a provider alias into a child",
+      "language": "hcl",
+      "file": "terraform/terraform-047-example.tf",
+      "description": "The child module’s aws slot receives the caller’s west configuration. The companion child fixture declares the provider requirement; this is separate from ordinary module input variables.",
+      "source": "https://developer.hashicorp.com/terraform/language/modules/develop/providers",
+      "code": "provider \"aws\" {\n  alias  = \"west\"\n  region = \"us-west-2\"\n}\nmodule \"network\" {\n  source    = \"./modules/aws-info\"\n  providers = { aws = aws.west }\n}\n"
+    },
+    {
+      "id": "terraform-048-example",
+      "topic": "terraform",
+      "title": "Keep dependencies one-way",
+      "language": "hcl",
+      "file": "terraform/terraform-048-example.tf",
+      "description": "This corrected graph has app depend on network. Making network also depend on app would form a cycle; moving blocks between files cannot solve it.",
+      "source": "https://developer.hashicorp.com/terraform/language/expressions/references",
+      "code": "resource \"terraform_data\" \"network\" {\n  input = \"network-config\"\n}\nresource \"terraform_data\" \"app\" {\n  input = terraform_data.network.output\n}\n"
+    },
+    {
+      "id": "terraform-049-example",
+      "topic": "terraform",
+      "title": "Concurrency does not replace the graph",
+      "language": "shell",
+      "file": "terraform/terraform-049-example.sh",
+      "description": "Terraform still respects dependencies with one worker. Resources are not executed in file order simply because concurrency is limited.",
+      "source": "https://developer.hashicorp.com/terraform/cli/commands/plan",
+      "code": "terraform plan -parallelism=1\n"
+    },
+    {
+      "id": "terraform-050-example",
+      "topic": "terraform",
+      "title": "Use partial backend configuration",
+      "language": "shell",
+      "file": "terraform/terraform-050-example.sh",
+      "description": "Backend settings are supplied during initialization, before ordinary variable evaluation. Replace the bucket name; avoid putting credentials in backend arguments or committed files.",
+      "source": "https://developer.hashicorp.com/terraform/language/backend",
+      "code": "# backend.tf must declare: terraform { backend \"s3\" {} }\nterraform init   -backend-config=\"bucket=replace-with-your-state-bucket\"   -backend-config=\"key=practice/terraform.tfstate\"   -backend-config=\"region=us-east-1\"   -backend-config=\"use_lockfile=true\"\n"
+    }
+  ]
+}

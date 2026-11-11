@@ -1,0 +1,14 @@
+{
+  "name": "virtmicro-quiz-library",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test",
+    "validate": "node scripts/validate.mjs && node scripts/snippets.mjs --check",
+    "snippets:build": "node scripts/snippets.mjs --build",
+    "snippets:check": "node scripts/snippets.mjs --check",
+    "snippets:qa": "node scripts/snippets.mjs --qa"
+  },
+  "engines": {"node": ">=22"},
+  "devDependencies": {"yaml": "2.9.1"}
+}

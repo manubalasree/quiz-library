@@ -4,10 +4,12 @@ export function validateQuiz(data) {
       !Array.isArray(data.questions) || data.questions.length === 0) {
     throw new Error('Expected a version 1 quiz with a title and at least one question.');
   }
+  if (data.snippetsUrl !== undefined && !nonempty(data.snippetsUrl)) throw new Error('Invalid snippet library URL.');
   const ids = new Set();
   for (const [index, q] of data.questions.entries()) {
     if (!q || !nonempty(q.id) || ids.has(q.id) || !nonempty(q.topic) ||
         !nonempty(q.question) || !nonempty(q.explanation) ||
+        (q.exampleId !== undefined && (!nonempty(q.exampleId) || !nonempty(data.snippetsUrl))) ||
         (q.code !== undefined && !nonempty(q.code)) ||
         (q.language !== undefined && (!nonempty(q.language) || !nonempty(q.code))) ||
         !Array.isArray(q.options) || q.options.length !== 4 ||

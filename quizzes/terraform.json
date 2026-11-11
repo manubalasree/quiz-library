@@ -13,7 +13,8 @@
       ],
       "answerIndex": 0,
       "explanation": "init prepares the directory and installs required components. It is not a substitute for reviewing a plan or applying changes.",
-      "id": "terraform-001"
+      "id": "terraform-001",
+      "exampleId": "terraform-001-example"
     },
     {
       "topic": "Formatting",
@@ -26,7 +27,8 @@
       ],
       "answerIndex": 2,
       "explanation": "fmt -check reports whether formatting changes are needed. It does not validate provider credentials or the feasibility of infrastructure changes.",
-      "id": "terraform-002"
+      "id": "terraform-002",
+      "exampleId": "terraform-002-example"
     },
     {
       "topic": "Validation",
@@ -39,7 +41,8 @@
       ],
       "answerIndex": 1,
       "explanation": "validate checks configuration structure after required initialization. A plan adds context such as variable values, state, and provider interactions.",
-      "id": "terraform-003"
+      "id": "terraform-003",
+      "exampleId": "terraform-003-example"
     },
     {
       "topic": "Planning",
@@ -52,7 +55,8 @@
       ],
       "answerIndex": 1,
       "explanation": "Planning calculates proposed changes and can refresh observations. It does not normally execute the managed-resource create, update, or destroy actions it proposes.",
-      "id": "terraform-004"
+      "id": "terraform-004",
+      "exampleId": "terraform-004-example"
     },
     {
       "topic": "Saved plans",
@@ -67,7 +71,8 @@
       "explanation": "A saved plan records the planned actions and inputs. Treat plan files as sensitive artifacts because they can contain sensitive configuration and state data.",
       "code": "terraform plan -out=reviewed.tfplan\nterraform apply reviewed.tfplan",
       "language": "shell",
-      "id": "terraform-005"
+      "id": "terraform-005",
+      "exampleId": "terraform-005-example"
     },
     {
       "topic": "State",
@@ -80,7 +85,8 @@
       ],
       "answerIndex": 0,
       "explanation": "State records object bindings and metadata used during planning and updates. Losing it can make safe management of existing infrastructure difficult.",
-      "id": "terraform-006"
+      "id": "terraform-006",
+      "exampleId": "terraform-006-example"
     },
     {
       "topic": "Sensitive data",
@@ -93,7 +99,8 @@
       ],
       "answerIndex": 3,
       "explanation": "Sensitive values can still appear in state and saved plans. Protect those artifacts and use applicable ephemeral or write-only mechanisms when supported.",
-      "id": "terraform-007"
+      "id": "terraform-007",
+      "exampleId": "terraform-007-example"
     },
     {
       "topic": "Outputs",
@@ -108,7 +115,8 @@
       "explanation": "Sensitive marking reduces accidental display. Commands that explicitly request raw or JSON output can reveal sensitive values.",
       "code": "output \"password\" {\n  value     = var.password\n  sensitive = true\n}",
       "language": "hcl",
-      "id": "terraform-008"
+      "id": "terraform-008",
+      "exampleId": "terraform-008-example"
     },
     {
       "topic": "Collaboration",
@@ -121,7 +129,8 @@
       ],
       "answerIndex": 3,
       "explanation": "Locking helps prevent concurrent operations from corrupting shared state. Locking availability and behavior depend on the backend.",
-      "id": "terraform-009"
+      "id": "terraform-009",
+      "exampleId": "terraform-009-example"
     },
     {
       "topic": "State locks",
@@ -134,7 +143,8 @@
       ],
       "answerIndex": 0,
       "explanation": "A lock is an important concurrency safeguard. Bypassing it can cause conflicting operations and state inconsistencies.",
-      "id": "terraform-010"
+      "id": "terraform-010",
+      "exampleId": "terraform-010-example"
     },
     {
       "topic": "Workspaces",
@@ -147,7 +157,8 @@
       ],
       "answerIndex": 3,
       "explanation": "Workspaces select separate state instances. They are not, by themselves, a strong security boundary or a replacement for environment-specific access design.",
-      "id": "terraform-011"
+      "id": "terraform-011",
+      "exampleId": "terraform-011-example"
     },
     {
       "topic": "Provider versions",
@@ -160,7 +171,8 @@
       ],
       "answerIndex": 1,
       "explanation": "Provider constraints bound acceptable versions. The dependency lock file records the specific provider selections used by the configuration.",
-      "id": "terraform-012"
+      "id": "terraform-012",
+      "exampleId": "terraform-012-example"
     },
     {
       "topic": "Dependency locks",
@@ -173,7 +185,8 @@
       ],
       "answerIndex": 0,
       "explanation": "The lock file records provider selections and integrity information. It does not replace version constraints or manage infrastructure state.",
-      "id": "terraform-013"
+      "id": "terraform-013",
+      "exampleId": "terraform-013-example"
     },
     {
       "topic": "CLI versions",
@@ -188,7 +201,8 @@
       "explanation": "required_version applies to Terraform itself. Provider version constraints are declared separately.",
       "code": "terraform {\n  required_version = \">= 1.5, < 2.0\"\n}",
       "language": "hcl",
-      "id": "terraform-014"
+      "id": "terraform-014",
+      "exampleId": "terraform-014-example"
     },
     {
       "topic": "Modules",
@@ -203,7 +217,8 @@
       "explanation": "A source beginning with ./ or ../ is a local path. Registry and Git module sources use different address forms.",
       "code": "module \"network\" {\n  source = \"./modules/network\"\n}",
       "language": "hcl",
-      "id": "terraform-015"
+      "id": "terraform-015",
+      "exampleId": "terraform-015-example"
     },
     {
       "topic": "Module interfaces",
@@ -218,7 +233,8 @@
       "explanation": "Child module outputs form the public interface consumed by the caller. Internal child resources are not directly addressed from the parent.",
       "code": "module \"network\" {\n  source = \"./modules/network\"\n}\n# Child module declares output \"subnet_id\"",
       "language": "hcl",
-      "id": "terraform-016"
+      "id": "terraform-016",
+      "exampleId": "terraform-016-example"
     },
     {
       "topic": "Expressions",
@@ -231,7 +247,8 @@
       ],
       "answerIndex": 3,
       "explanation": "locals reduce repeated expressions and improve readability. They are expressions in the configuration, not mutable program variables.",
-      "id": "terraform-017"
+      "id": "terraform-017",
+      "exampleId": "terraform-017-example"
     },
     {
       "topic": "Input validation",
@@ -246,7 +263,8 @@
       "explanation": "Variable validation enforces conditions on caller inputs. The error message explains the expected contract.",
       "code": "variable \"replicas\" {\n  type = number\n  validation {\n    condition     = var.replicas > 0\n    error_message = \"replicas must be positive.\"\n  }\n}",
       "language": "hcl",
-      "id": "terraform-018"
+      "id": "terraform-018",
+      "exampleId": "terraform-018-example"
     },
     {
       "topic": "Count",
@@ -261,7 +279,8 @@
       "explanation": "count indexes are zero-based integers. References to counted instances use those numeric indices.",
       "code": "resource \"terraform_data\" \"worker\" {\n  count = 3\n  input = count.index\n}",
       "language": "hcl",
-      "id": "terraform-019"
+      "id": "terraform-019",
+      "exampleId": "terraform-019-example"
     },
     {
       "topic": "for_each",
@@ -276,7 +295,8 @@
       "explanation": "Converting the list to a set removes duplicates. for_each then creates one instance for each distinct string member.",
       "code": "resource \"terraform_data\" \"service\" {\n  for_each = toset([\"api\", \"api\", \"worker\"])\n  input    = each.key\n}",
       "language": "hcl",
-      "id": "terraform-020"
+      "id": "terraform-020",
+      "exampleId": "terraform-020-example"
     },
     {
       "topic": "for_each",
@@ -291,7 +311,8 @@
       "explanation": "For a map, each.key is the instance key and each.value is the corresponding map value.",
       "code": "resource \"terraform_data\" \"pool\" {\n  for_each = { dev = 1, prod = 3 }\n  input    = each.value\n}",
       "language": "hcl",
-      "id": "terraform-021"
+      "id": "terraform-021",
+      "exampleId": "terraform-021-example"
     },
     {
       "topic": "for_each",
@@ -304,7 +325,8 @@
       ],
       "answerIndex": 2,
       "explanation": "The instance key set must be determined before remote actions. Use known configuration keys even if values inside the corresponding objects are computed.",
-      "id": "terraform-022"
+      "id": "terraform-022",
+      "exampleId": "terraform-022-example"
     },
     {
       "topic": "Meta-arguments",
@@ -317,7 +339,8 @@
       ],
       "answerIndex": 1,
       "explanation": "Choose one instance-expansion mechanism per block. Nested data can be transformed before supplying count or for_each.",
-      "id": "terraform-023"
+      "id": "terraform-023",
+      "exampleId": "terraform-023-example"
     },
     {
       "topic": "Dependencies",
@@ -332,7 +355,8 @@
       "explanation": "Terraform infers dependencies from expression references. Resource declaration order in files is not the execution order.",
       "code": "resource \"aws_instance\" \"app\" {\n  ami           = var.ami_id\n  instance_type = \"t3.micro\"\n  subnet_id     = aws_subnet.app.id\n}",
       "language": "hcl",
-      "id": "terraform-024"
+      "id": "terraform-024",
+      "exampleId": "terraform-024-example"
     },
     {
       "topic": "Dependencies",
@@ -345,7 +369,8 @@
       ],
       "answerIndex": 1,
       "explanation": "Prefer inferred dependencies where possible. Explicit dependencies describe otherwise hidden ordering requirements and can make plans more conservative.",
-      "id": "terraform-025"
+      "id": "terraform-025",
+      "exampleId": "terraform-025-example"
     },
     {
       "topic": "Lifecycle",
@@ -360,7 +385,8 @@
       "explanation": "This changes replacement ordering. Capacity limits and uniqueness constraints can still prevent both objects from existing simultaneously.",
       "code": "lifecycle {\n  create_before_destroy = true\n}",
       "language": "hcl",
-      "id": "terraform-026"
+      "id": "terraform-026",
+      "exampleId": "terraform-026-example"
     },
     {
       "topic": "Lifecycle",
@@ -373,7 +399,8 @@
       ],
       "answerIndex": 3,
       "explanation": "prevent_destroy rejects planned destruction while the configured rule applies. It is not an external deletion guard or a permanent protection retained after removing configuration.",
-      "id": "terraform-027"
+      "id": "terraform-027",
+      "exampleId": "terraform-027-example"
     },
     {
       "topic": "Lifecycle",
@@ -386,7 +413,8 @@
       ],
       "answerIndex": 1,
       "explanation": "The attributes are still considered for creation. ignore_changes can share management responsibility but can also hide drift if used carelessly.",
-      "id": "terraform-028"
+      "id": "terraform-028",
+      "exampleId": "terraform-028-example"
     },
     {
       "topic": "Refactoring",
@@ -401,7 +429,8 @@
       "explanation": "A moved block records a configuration-address refactor. It helps avoid unnecessary recreation caused solely by a renamed address.",
       "code": "moved {\n  from = aws_instance.old\n  to   = aws_instance.web\n}",
       "language": "hcl",
-      "id": "terraform-029"
+      "id": "terraform-029",
+      "exampleId": "terraform-029-example"
     },
     {
       "topic": "Import",
@@ -414,7 +443,8 @@
       ],
       "answerIndex": 2,
       "explanation": "Traditional CLI import binds an existing object to an address. You still need compatible configuration and should inspect the resulting plan.",
-      "id": "terraform-030"
+      "id": "terraform-030",
+      "exampleId": "terraform-030-example"
     },
     {
       "topic": "Import blocks",
@@ -429,7 +459,8 @@
       "explanation": "Configuration-driven import records the intended binding declaratively. Matching resource configuration is required or can be generated through supported planning workflows.",
       "code": "import {\n  to = aws_s3_bucket.logs\n  id = \"example-existing-logs-bucket\"\n}",
       "language": "hcl",
-      "id": "terraform-031"
+      "id": "terraform-031",
+      "exampleId": "terraform-031-example"
     },
     {
       "topic": "State operations",
@@ -442,7 +473,8 @@
       ],
       "answerIndex": 2,
       "explanation": "State removal makes Terraform forget a binding. Leaving matching resource configuration can cause a later plan to propose creating another object.",
-      "id": "terraform-032"
+      "id": "terraform-032",
+      "exampleId": "terraform-032-example"
     },
     {
       "topic": "Drift",
@@ -455,7 +487,8 @@
       ],
       "answerIndex": 0,
       "explanation": "Refresh-only mode is for reviewing and recording observed changes. It differs from a normal plan that seeks to reconcile infrastructure with configuration.",
-      "id": "terraform-033"
+      "id": "terraform-033",
+      "exampleId": "terraform-033-example"
     },
     {
       "topic": "Targeting",
@@ -468,7 +501,8 @@
       ],
       "answerIndex": 2,
       "explanation": "Targeted operations narrow planning scope. A subsequent full plan helps identify remaining changes and restore confidence in the complete configuration.",
-      "id": "terraform-034"
+      "id": "terraform-034",
+      "exampleId": "terraform-034-example"
     },
     {
       "topic": "Replacement",
@@ -483,7 +517,8 @@
       "explanation": "-replace explicitly marks an instance for replacement in the plan. Review dependencies and potential disruption before applying.",
       "code": "terraform plan -replace=aws_instance.web",
       "language": "shell",
-      "id": "terraform-035"
+      "id": "terraform-035",
+      "exampleId": "terraform-035-example"
     },
     {
       "topic": "Data sources",
@@ -496,7 +531,8 @@
       ],
       "answerIndex": 2,
       "explanation": "Data sources query information that configuration can use. They are not the normal mechanism for managing an object’s full lifecycle.",
-      "id": "terraform-036"
+      "id": "terraform-036",
+      "exampleId": "terraform-036-example"
     },
     {
       "topic": "Dynamic blocks",
@@ -509,7 +545,8 @@
       ],
       "answerIndex": 3,
       "explanation": "dynamic generates repeatable nested configuration where supported. It is not a general macro system for every block in the language.",
-      "id": "terraform-037"
+      "id": "terraform-037",
+      "exampleId": "terraform-037-example"
     },
     {
       "topic": "For expressions",
@@ -524,7 +561,8 @@
       "explanation": "The for expression transforms each input element. upper converts each element’s string content to uppercase.",
       "code": "[for name in [\"api\", \"worker\"] : upper(name)]",
       "language": "hcl",
-      "id": "terraform-038"
+      "id": "terraform-038",
+      "exampleId": "terraform-038-example"
     },
     {
       "topic": "Conditionals",
@@ -539,7 +577,8 @@
       "explanation": "A conditional expression selects between its true and false branches. Its branches must have compatible types.",
       "code": "var.enabled ? 3 : 0",
       "language": "hcl",
-      "id": "terraform-039"
+      "id": "terraform-039",
+      "exampleId": "terraform-039-example"
     },
     {
       "topic": "Functions",
@@ -554,7 +593,8 @@
       "explanation": "lookup returns its provided default when the requested map key is absent. It does not insert that key into the map.",
       "code": "lookup({ dev = 1, prod = 3 }, \"env\", 1)",
       "language": "hcl",
-      "id": "terraform-040"
+      "id": "terraform-040",
+      "exampleId": "terraform-040-example"
     },
     {
       "topic": "Functions",
@@ -567,7 +607,8 @@
       ],
       "answerIndex": 1,
       "explanation": "try handles dynamic expression-evaluation errors. It cannot make a statically invalid configuration or malformed syntax valid.",
-      "id": "terraform-041"
+      "id": "terraform-041",
+      "exampleId": "terraform-041-example"
     },
     {
       "topic": "Arguments",
@@ -580,7 +621,8 @@
       ],
       "answerIndex": 1,
       "explanation": "null represents absence in many argument contexts. Whether omission is valid and which defaults apply depend on the argument’s schema.",
-      "id": "terraform-042"
+      "id": "terraform-042",
+      "exampleId": "terraform-042-example"
     },
     {
       "topic": "Collections",
@@ -595,7 +637,8 @@
       "explanation": "flatten recursively removes directly nested list structure. It does not indiscriminately flatten lists hidden inside maps.",
       "code": "flatten([[\"a\", \"b\"], [\"c\"]])",
       "language": "hcl",
-      "id": "terraform-043"
+      "id": "terraform-043",
+      "exampleId": "terraform-043-example"
     },
     {
       "topic": "Collections",
@@ -610,7 +653,8 @@
       "explanation": "When merge arguments share a key, later arguments take precedence for that key.",
       "code": "merge({ team = \"ops\", env = \"dev\" }, { team = \"platform\" })",
       "language": "hcl",
-      "id": "terraform-044"
+      "id": "terraform-044",
+      "exampleId": "terraform-044-example"
     },
     {
       "topic": "Networking functions",
@@ -625,7 +669,8 @@
       "explanation": "Eight additional prefix bits turn /16 into /24. netnum 2 selects the third /24 subnet in that address space.",
       "code": "cidrsubnet(\"10.0.0.0/16\", 8, 2)",
       "language": "hcl",
-      "id": "terraform-045"
+      "id": "terraform-045",
+      "exampleId": "terraform-045-example"
     },
     {
       "topic": "Collection references",
@@ -638,7 +683,8 @@
       ],
       "answerIndex": 1,
       "explanation": "for_each resources are maps of instances. A for expression can iterate their values; a direct list splat is not the same map operation.",
-      "id": "terraform-046"
+      "id": "terraform-046",
+      "exampleId": "terraform-046-example"
     },
     {
       "topic": "Provider aliases",
@@ -651,7 +697,8 @@
       ],
       "answerIndex": 0,
       "explanation": "Provider mappings wire configurations into child modules. They are separate from module source addresses and ordinary input variables.",
-      "id": "terraform-047"
+      "id": "terraform-047",
+      "exampleId": "terraform-047-example"
     },
     {
       "topic": "Dependency graph",
@@ -664,7 +711,8 @@
       ],
       "answerIndex": 0,
       "explanation": "A graph cycle is a logical dependency problem. File ordering and worker concurrency do not remove the cycle.",
-      "id": "terraform-048"
+      "id": "terraform-048",
+      "exampleId": "terraform-048-example"
     },
     {
       "topic": "Execution order",
@@ -677,7 +725,8 @@
       ],
       "answerIndex": 2,
       "explanation": "parallelism limits concurrent operations. It does not replace graph-based dependency evaluation with textual execution order.",
-      "id": "terraform-049"
+      "id": "terraform-049",
+      "exampleId": "terraform-049-example"
     },
     {
       "topic": "Backends",
@@ -692,7 +741,9 @@
       "explanation": "Backend configuration uses a restricted configuration context. Supply supported partial backend settings during initialization rather than ordinary variable references.",
       "code": "terraform {\n  backend \"s3\" {\n    bucket = var.state_bucket\n    key    = \"app.tfstate\"\n    region = \"us-east-1\"\n  }\n}",
       "language": "hcl",
-      "id": "terraform-050"
+      "id": "terraform-050",
+      "exampleId": "terraform-050-example"
     }
-  ]
+  ],
+  "snippetsUrl": "../assets/snippets/library.json"
 }

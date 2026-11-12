@@ -1,11 +1,11 @@
 # Answer-reference snippet library
 
-124 examples: one for each of the 74 Kubernetes and 50 Terraform questions. These examples appear **after answering**, beneath the explanation, and in missed-answer review. Each includes a short reading guide and a link to official documentation.
+148 examples: one for each of the 98 Kubernetes and 50 Terraform questions. These examples appear **after answering**, beneath the explanation, and in missed-answer review. Each includes a short reading guide and a link to official documentation.
 
 ## Source of truth
 
 - `index.json`: stable ID, topic, title, language, source file, reading guide, official reference, and QA assertions.
-- `kubernetes/`: 42 complete YAML manifest examples and 32 shell examples.
+- `kubernetes/`: 54 complete YAML manifest examples and 44 shell examples.
 - `terraform/`: 34 Terraform configuration examples and 16 shell examples.
 - `fixtures/modules/`: small companion modules for local-module and provider-alias examples. They are test context, not infrastructure to deploy.
 - `library.json`: generated browser bundle. Never edit it directly.
@@ -27,11 +27,11 @@ npm run snippets:qa
 The QA command works without running the quiz app or signing in. It:
 
 1. Rejects invalid metadata, duplicate IDs/files, unregistered assets, missing references, cross-topic links, malformed YAML, and stale generated output.
-2. Checks selected teaching invariants, including the LimitRange defaults and bounds.
-3. Validates all 48 Kubernetes objects in 42 YAML assets using kubeconform strict schemas for **Kubernetes 1.34.0**, with no skipped kinds.
+2. Checks selected teaching invariants, including LimitRange defaults, topology keys and spread policy, matching Deployment/Pod selectors, PVC references, and the intentionally absent CPU limit.
+3. Validates all 62 Kubernetes objects in 54 YAML assets using kubeconform strict schemas for **Kubernetes 1.34.0**, with no skipped kinds.
 4. Runs `terraform fmt -check` and `terraform validate` on all 34 isolated Terraform configurations. The six AWS examples and provider-constraint example use the pinned AWS 6.21.0 provider. Dependencies are initialized with `-backend=false` in temporary folders.
 5. Runs **15 Terraform plan-based behavior checks**, including list/map expressions, instance keys, module outputs, CIDR math, and rejection of zero replicas.
-6. Syntax-checks all 48 shell examples with `bash -n` without executing them.
+6. Syntax-checks all 60 shell examples with `bash -n` without executing them.
 
 Terraform checks do not apply resources. No cloud credentials, live backend, or Kubernetes cluster are needed. Network access is required to obtain schemas and provider dependencies. Temporary provider/configuration files are removed afterward.
 

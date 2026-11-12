@@ -1366,6 +1366,291 @@
       "description": "Replace colima with your selected lab node. Check its existing taints first and record which lab-owned change, if any, you introduce.",
       "source": "https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/",
       "qa": {}
+    },
+    {
+      "id": "kubernetes-075-example",
+      "topic": "kubernetes",
+      "title": "ReplicaSet creation failures \u2014 interview reference",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-075-example.sh",
+      "description": "No Pod object means there may be no Pod scheduling event to read. Inspect the ReplicaSet that is trying to create the Pod, and preserve the exact rejection message.",
+      "source": "https://kubernetes.io/docs/tasks/debug/debug-application/debug-pods/",
+      "qa": {}
+    },
+    {
+      "id": "kubernetes-076-example",
+      "topic": "kubernetes",
+      "title": "Pending after assignment \u2014 interview reference",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-076-example.sh",
+      "description": "Read node assignment, conditions, container waiting reasons, and Events together. A single phase label does not establish the failure stage.",
+      "source": "https://kubernetes.io/docs/tasks/debug/debug-application/debug-pods/",
+      "qa": {}
+    },
+    {
+      "id": "kubernetes-077-example",
+      "topic": "kubernetes",
+      "title": "EBS Availability Zone constraints \u2014 interview reference",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-077-example.sh",
+      "description": "Confirm a topology-related scheduling event and compare the actual PV node-affinity terms with node labels. A volume name alone does not establish the diagnosis.",
+      "source": "https://docs.aws.amazon.com/ebs/latest/userguide/ebs-attaching-volume.html",
+      "qa": {}
+    },
+    {
+      "id": "kubernetes-078-example",
+      "topic": "kubernetes",
+      "title": "Trace Pod to disk topology \u2014 interview reference",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-078-example.sh",
+      "description": "Replace data and pv-example with names discovered in the preceding output. Compare actual affinity keys and values, including CSI-specific keys, to real node labels.",
+      "source": "https://kubernetes.io/docs/concepts/storage/persistent-volumes/#node-affinity",
+      "qa": {}
+    },
+    {
+      "id": "kubernetes-079-example",
+      "topic": "kubernetes",
+      "title": "WaitForFirstConsumer limits \u2014 interview reference",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-079-example.yaml",
+      "description": "This example requires an installed and authorized EBS CSI driver on AWS. The binding mode influences new claims; it does not migrate already-bound EBS volumes.",
+      "source": "https://kubernetes.io/docs/concepts/storage/storage-classes/#volume-binding-mode",
+      "qa": {
+        "assertions": {
+          "0.volumeBindingMode": "WaitForFirstConsumer",
+          "0.provisioner": "ebs.csi.aws.com"
+        }
+      }
+    },
+    {
+      "id": "kubernetes-080-example",
+      "topic": "kubernetes",
+      "title": "CPU limits and throttling \u2014 interview reference",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-080-example.yaml",
+      "description": "The deliberate busy loop can demand more CPU, but its CPU limit is 500m. Investigate throttling and latency separately from OOM or application-exit failures; this reference is not executed by QA.",
+      "source": "https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/",
+      "qa": {
+        "assertions": {
+          "0.spec.containers.0.resources.limits.cpu": "500m"
+        }
+      }
+    },
+    {
+      "id": "kubernetes-081-example",
+      "topic": "kubernetes",
+      "title": "Requests without CPU limits \u2014 interview reference",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-081-example.yaml",
+      "description": "This declared container has no CPU limit. Admission policies such as LimitRange may inject one, so inspect the admitted Pod before concluding that no limit applies at runtime.",
+      "source": "https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/",
+      "qa": {}
+    },
+    {
+      "id": "kubernetes-082-example",
+      "topic": "kubernetes",
+      "title": "Direct node assignment \u2014 interview reference",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-082-example.yaml",
+      "description": "Label exactly the intended lab node with lab.example.com/worker=worker-a first. This selector leaves the scheduler responsible for evaluating requests and other placement constraints.",
+      "source": "https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/",
+      "qa": {
+        "assertions": {
+          "0.spec.nodeSelector": {
+            "lab.example.com/worker": "worker-a"
+          }
+        }
+      }
+    },
+    {
+      "id": "kubernetes-083-example",
+      "topic": "kubernetes",
+      "title": "Unavailable required node \u2014 interview reference",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-083-example.yaml",
+      "description": "Only nodes with the required label are candidates. This provides strict placement, not failover to an arbitrary worker; using a unique label deliberately narrows availability.",
+      "source": "https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/",
+      "qa": {}
+    },
+    {
+      "id": "kubernetes-084-example",
+      "topic": "kubernetes",
+      "title": "Strict SSD node placement \u2014 interview reference",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-084-example.yaml",
+      "description": "This hard node-affinity rule requires disktype=ssd at scheduling time. Labels must accurately describe the node; the rule does not provision application storage.",
+      "source": "https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/",
+      "qa": {}
+    },
+    {
+      "id": "kubernetes-085-example",
+      "topic": "kubernetes",
+      "title": "SSD node labels versus persistent storage \u2014 interview reference",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-085-example.yaml",
+      "description": "On AWS with a working EBS CSI driver, this claim requests gp3-backed storage. A consuming Pod must reference app-data in a volume and mount it; node selection is a separate decision.",
+      "source": "https://kubernetes.io/docs/concepts/storage/storage-classes/",
+      "qa": {
+        "assertions": {
+          "0.parameters.type": "gp3",
+          "1.spec.storageClassName": "app-gp3"
+        }
+      }
+    },
+    {
+      "id": "kubernetes-086-example",
+      "topic": "kubernetes",
+      "title": "Production pool security \u2014 interview reference",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-086-example.sh",
+      "description": "Review identities, namespace permissions, admission enforcement, and network/resource controls together. These checks are evidence to gather, not proof that the whole isolation policy is correct.",
+      "source": "https://kubernetes.io/docs/concepts/security/multi-tenancy/",
+      "qa": {}
+    },
+    {
+      "id": "kubernetes-087-example",
+      "topic": "kubernetes",
+      "title": "Release controls versus runtime isolation \u2014 interview reference",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-087-example.sh",
+      "description": "Inspect runtime controls independently of repository settings. Separate clusters/accounts may be chosen for stronger boundaries, but a protected branch alone creates neither design.",
+      "source": "https://kubernetes.io/docs/concepts/security/multi-tenancy/",
+      "qa": {}
+    },
+    {
+      "id": "kubernetes-088-example",
+      "topic": "kubernetes",
+      "title": "Artifact promotion and deployment identity \u2014 interview reference",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-088-example.sh",
+      "description": "The pipeline should promote the reviewed image digest and obtain the appropriate scoped identity for each environment. These read-only checks do not configure OIDC or implement CI approval rules.",
+      "source": "https://kubernetes.io/docs/concepts/security/multi-tenancy/",
+      "qa": {}
+    },
+    {
+      "id": "kubernetes-089-example",
+      "topic": "kubernetes",
+      "title": "Intentional GPU-pool taint \u2014 interview reference",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-089-example.sh",
+      "description": "The unscheduled Pod has no assigned node. Inspect the candidate GPU node and other pools, then choose placement that respects the reservation policy.",
+      "source": "https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/",
+      "qa": {}
+    },
+    {
+      "id": "kubernetes-090-example",
+      "topic": "kubernetes",
+      "title": "Health-related taints \u2014 interview reference",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-090-example.sh",
+      "description": "Replace worker-1 with a candidate named by your investigation. Events summarize scheduler reasons and can expire, so use current conditions and taints as well.",
+      "source": "https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/",
+      "qa": {}
+    },
+    {
+      "id": "kubernetes-091-example",
+      "topic": "kubernetes",
+      "title": "Monitoring pool placement \u2014 interview reference",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-091-example.yaml",
+      "description": "Assumes intended nodes carry workload-pool=monitoring and the same key/value NoSchedule taint. This demo sleeps; it illustrates placement rather than installing a monitoring stack.",
+      "source": "https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/",
+      "qa": {
+        "assertions": {
+          "0.spec.template.spec.nodeSelector": {
+            "workload-pool": "monitoring"
+          },
+          "0.spec.template.spec.tolerations.0.value": "monitoring"
+        }
+      }
+    },
+    {
+      "id": "kubernetes-092-example",
+      "topic": "kubernetes",
+      "title": "Migrate existing non-monitoring workloads \u2014 interview reference",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-092-example.sh",
+      "description": "Drain cordons the node and can stop on constraints. Do not bypass blockers blindly; these reference commands change node availability and are syntax-checked rather than executed by QA.",
+      "source": "https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/",
+      "qa": {}
+    },
+    {
+      "id": "kubernetes-093-example",
+      "topic": "kubernetes",
+      "title": "Drain exceptions \u2014 interview reference",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-093-example.sh",
+      "description": "Inspect ownerReferences and the kubernetes.io/config.mirror annotation to distinguish DaemonSet and static-Pod cases. Other blockers can prevent a drain from completing.",
+      "source": "https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/",
+      "qa": {}
+    },
+    {
+      "id": "kubernetes-094-example",
+      "topic": "kubernetes",
+      "title": "Hostname versus zone topology \u2014 interview reference",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-094-example.yaml",
+      "description": "This constrains spread of matching Pods across eligible hostname domains at scheduling time. It does not automatically relocate already-running replicas.",
+      "source": "https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/",
+      "qa": {
+        "assertions": {
+          "0.spec.template.spec.topologySpreadConstraints.0.topologyKey": "kubernetes.io/hostname"
+        }
+      }
+    },
+    {
+      "id": "kubernetes-095-example",
+      "topic": "kubernetes",
+      "title": "What maxSkew does not guarantee \u2014 interview reference",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-095-example.yaml",
+      "description": "With exactly three eligible domains and no competing constraints, 2/1/1 is compatible with this bound. Eligibility, other matching Pods, and additional constraint settings affect real scheduling.",
+      "source": "https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/",
+      "qa": {
+        "assertions": {
+          "0.spec.replicas": 4,
+          "0.spec.template.spec.topologySpreadConstraints.0.maxSkew": 1
+        }
+      }
+    },
+    {
+      "id": "kubernetes-096-example",
+      "topic": "kubernetes",
+      "title": "Hard versus preferred spread \u2014 interview reference",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-096-example.yaml",
+      "description": "This prefers balancing matching Pods across hostname domains. Choose DoNotSchedule when the skew requirement must block otherwise eligible placement, accepting that Pods can remain Pending.",
+      "source": "https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/",
+      "qa": {
+        "assertions": {
+          "0.spec.topologySpreadConstraints.0.whenUnsatisfiable": "ScheduleAnyway"
+        }
+      }
+    },
+    {
+      "id": "kubernetes-097-example",
+      "topic": "kubernetes",
+      "title": "Existing replica redistribution \u2014 interview reference",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-097-example.sh",
+      "description": "A template edit already starts a Deployment rollout; an extra rollout restart is not inherently required. Verify new Pod placement, and inspect events if strict constraints prevent replacements from scheduling.",
+      "source": "https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/",
+      "qa": {}
+    },
+    {
+      "id": "kubernetes-098-example",
+      "topic": "kubernetes",
+      "title": "Combining zone and node distribution \u2014 interview reference",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-098-example.yaml",
+      "description": "Requires accurate zone and hostname labels on candidate nodes. These rules bound skew over eligible domains; they do not guarantee a particular number of AZs exist or relocate existing zonal volumes.",
+      "source": "https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/",
+      "qa": {
+        "assertions": {
+          "0.spec.template.spec.topologySpreadConstraints.0.topologyKey": "topology.kubernetes.io/zone",
+          "0.spec.template.spec.topologySpreadConstraints.1.topologyKey": "kubernetes.io/hostname"
+        }
+      }
     }
   ]
 }

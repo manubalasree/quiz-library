@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: monitoring-demo}
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {app: monitoring-demo}
+  template:
+    metadata:
+      labels: {app: monitoring-demo}
+    spec:
+      nodeSelector: {workload-pool: monitoring}
+      tolerations:
+        - key: workload-pool
+          operator: Equal
+          value: monitoring
+          effect: NoSchedule
+      containers:
+        - name: demo
+          image: busybox:1.37
+          command: [sleep, '3600']

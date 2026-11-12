@@ -1,0 +1,15 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: pinned-app}
+spec:
+  replicas: 1
+  selector:
+    matchLabels: {app: pinned-app}
+  template:
+    metadata:
+      labels: {app: pinned-app}
+    spec:
+      nodeSelector: {lab.example.com/worker: worker-a}
+      containers:
+        - name: app
+          image: nginx:1.28

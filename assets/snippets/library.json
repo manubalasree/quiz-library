@@ -1240,6 +1240,246 @@
       "description": "Replace colima with your selected lab node. Check its existing taints first and record which lab-owned change, if any, you introduce.",
       "source": "https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/",
       "code": "kubectl get nodes -o wide\nkubectl describe node colima\n# Inspect actual taints and eligibility before running the lab.\n# Do not remove unrelated control-plane or infrastructure taints.\n"
+    },
+    {
+      "id": "kubernetes-075-example",
+      "topic": "kubernetes",
+      "title": "ReplicaSet creation failures — interview reference",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-075-example.sh",
+      "description": "No Pod object means there may be no Pod scheduling event to read. Inspect the ReplicaSet that is trying to create the Pod, and preserve the exact rejection message.",
+      "source": "https://kubernetes.io/docs/tasks/debug/debug-application/debug-pods/",
+      "code": "kubectl describe deployment web -n demo\nkubectl get replicasets -n demo -l app=web\n# Replace this example with the actual current ReplicaSet name.\nkubectl describe replicaset web-example -n demo\n"
+    },
+    {
+      "id": "kubernetes-076-example",
+      "topic": "kubernetes",
+      "title": "Pending after assignment — interview reference",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-076-example.sh",
+      "description": "Read node assignment, conditions, container waiting reasons, and Events together. A single phase label does not establish the failure stage.",
+      "source": "https://kubernetes.io/docs/tasks/debug/debug-application/debug-pods/",
+      "code": "kubectl get pod web-example -n demo -o wide\nkubectl describe pod web-example -n demo\nkubectl get pod web-example -n demo -o jsonpath='{.status.conditions}{\"\\n\"}'\n"
+    },
+    {
+      "id": "kubernetes-077-example",
+      "topic": "kubernetes",
+      "title": "EBS Availability Zone constraints — interview reference",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-077-example.sh",
+      "description": "Confirm a topology-related scheduling event and compare the actual PV node-affinity terms with node labels. A volume name alone does not establish the diagnosis.",
+      "source": "https://docs.aws.amazon.com/ebs/latest/userguide/ebs-attaching-volume.html",
+      "code": "kubectl describe pod web-example -n demo\nkubectl get pvc data -n demo -o yaml\n# Use the actual PV named by the bound PVC.\nkubectl get pv pv-example -o yaml\nkubectl get nodes -L topology.kubernetes.io/zone\n"
+    },
+    {
+      "id": "kubernetes-078-example",
+      "topic": "kubernetes",
+      "title": "Trace Pod to disk topology — interview reference",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-078-example.sh",
+      "description": "Replace data and pv-example with names discovered in the preceding output. Compare actual affinity keys and values, including CSI-specific keys, to real node labels.",
+      "source": "https://kubernetes.io/docs/concepts/storage/persistent-volumes/#node-affinity",
+      "code": "kubectl get pod web-example -n demo -o jsonpath='{.spec.volumes[*].persistentVolumeClaim.claimName}{\"\\n\"}'\nkubectl get pvc data -n demo -o jsonpath='{.spec.volumeName}{\"\\n\"}'\nkubectl get pv pv-example -o jsonpath='{.spec.nodeAffinity}{\"\\n\"}'\nkubectl get nodes --show-labels\n"
+    },
+    {
+      "id": "kubernetes-079-example",
+      "topic": "kubernetes",
+      "title": "WaitForFirstConsumer limits — interview reference",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-079-example.yaml",
+      "description": "This example requires an installed and authorized EBS CSI driver on AWS. The binding mode influences new claims; it does not migrate already-bound EBS volumes.",
+      "source": "https://kubernetes.io/docs/concepts/storage/storage-classes/#volume-binding-mode",
+      "code": "apiVersion: storage.k8s.io/v1\nkind: StorageClass\nmetadata: {name: gp3-wait}\nprovisioner: ebs.csi.aws.com\nparameters: {type: gp3}\nvolumeBindingMode: WaitForFirstConsumer\nallowVolumeExpansion: true\n"
+    },
+    {
+      "id": "kubernetes-080-example",
+      "topic": "kubernetes",
+      "title": "CPU limits and throttling — interview reference",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-080-example.yaml",
+      "description": "The deliberate busy loop can demand more CPU, but its CPU limit is 500m. Investigate throttling and latency separately from OOM or application-exit failures; this reference is not executed by QA.",
+      "source": "https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/",
+      "code": "apiVersion: v1\nkind: Pod\nmetadata: {name: cpu-throttle-demo}\nspec:\n  containers:\n    - name: worker\n      image: busybox:1.37\n      command: [sh, -c, 'while true; do :; done']\n      resources:\n        requests: {cpu: 100m, memory: 16Mi}\n        limits: {cpu: 500m, memory: 32Mi}\n"
+    },
+    {
+      "id": "kubernetes-081-example",
+      "topic": "kubernetes",
+      "title": "Requests without CPU limits — interview reference",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-081-example.yaml",
+      "description": "This declared container has no CPU limit. Admission policies such as LimitRange may inject one, so inspect the admitted Pod before concluding that no limit applies at runtime.",
+      "source": "https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/",
+      "code": "apiVersion: v1\nkind: Pod\nmetadata: {name: cpu-request-demo}\nspec:\n  containers:\n    - name: worker\n      image: busybox:1.37\n      command: [sleep, '3600']\n      resources:\n        requests: {cpu: 100m, memory: 16Mi}\n        limits: {memory: 32Mi}\n"
+    },
+    {
+      "id": "kubernetes-082-example",
+      "topic": "kubernetes",
+      "title": "Direct node assignment — interview reference",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-082-example.yaml",
+      "description": "Label exactly the intended lab node with lab.example.com/worker=worker-a first. This selector leaves the scheduler responsible for evaluating requests and other placement constraints.",
+      "source": "https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/",
+      "code": "apiVersion: v1\nkind: Pod\nmetadata: {name: selected-node-demo}\nspec:\n  nodeSelector: {lab.example.com/worker: worker-a}\n  containers:\n    - name: app\n      image: nginx:1.28\n      resources:\n        requests: {cpu: 100m, memory: 32Mi}\n"
+    },
+    {
+      "id": "kubernetes-083-example",
+      "topic": "kubernetes",
+      "title": "Unavailable required node — interview reference",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-083-example.yaml",
+      "description": "Only nodes with the required label are candidates. This provides strict placement, not failover to an arbitrary worker; using a unique label deliberately narrows availability.",
+      "source": "https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/",
+      "code": "apiVersion: apps/v1\nkind: Deployment\nmetadata: {name: pinned-app}\nspec:\n  replicas: 1\n  selector:\n    matchLabels: {app: pinned-app}\n  template:\n    metadata:\n      labels: {app: pinned-app}\n    spec:\n      nodeSelector: {lab.example.com/worker: worker-a}\n      containers:\n        - name: app\n          image: nginx:1.28\n"
+    },
+    {
+      "id": "kubernetes-084-example",
+      "topic": "kubernetes",
+      "title": "Strict SSD node placement — interview reference",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-084-example.yaml",
+      "description": "This hard node-affinity rule requires disktype=ssd at scheduling time. Labels must accurately describe the node; the rule does not provision application storage.",
+      "source": "https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/",
+      "code": "apiVersion: v1\nkind: Pod\nmetadata: {name: ssd-only-demo}\nspec:\n  affinity:\n    nodeAffinity:\n      requiredDuringSchedulingIgnoredDuringExecution:\n        nodeSelectorTerms:\n          - matchExpressions:\n              - key: disktype\n                operator: In\n                values: [ssd]\n  containers:\n    - name: app\n      image: nginx:1.28\n"
+    },
+    {
+      "id": "kubernetes-085-example",
+      "topic": "kubernetes",
+      "title": "SSD node labels versus persistent storage — interview reference",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-085-example.yaml",
+      "description": "On AWS with a working EBS CSI driver, this claim requests gp3-backed storage. A consuming Pod must reference app-data in a volume and mount it; node selection is a separate decision.",
+      "source": "https://kubernetes.io/docs/concepts/storage/storage-classes/",
+      "code": "apiVersion: storage.k8s.io/v1\nkind: StorageClass\nmetadata: {name: app-gp3}\nprovisioner: ebs.csi.aws.com\nparameters: {type: gp3}\nvolumeBindingMode: WaitForFirstConsumer\n---\napiVersion: v1\nkind: PersistentVolumeClaim\nmetadata: {name: app-data}\nspec:\n  storageClassName: app-gp3\n  accessModes: [ReadWriteOnce]\n  resources:\n    requests: {storage: 1Gi}\n---\napiVersion: v1\nkind: Pod\nmetadata: {name: persistent-data-demo}\nspec:\n  containers:\n    - name: app\n      image: busybox:1.37\n      command: [sleep, '3600']\n      volumeMounts:\n        - name: data\n          mountPath: /data\n  volumes:\n    - name: data\n      persistentVolumeClaim:\n        claimName: app-data\n"
+    },
+    {
+      "id": "kubernetes-086-example",
+      "topic": "kubernetes",
+      "title": "Production pool security — interview reference",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-086-example.sh",
+      "description": "Review identities, namespace permissions, admission enforcement, and network/resource controls together. These checks are evidence to gather, not proof that the whole isolation policy is correct.",
+      "source": "https://kubernetes.io/docs/concepts/security/multi-tenancy/",
+      "code": "kubectl auth can-i patch nodes\nkubectl auth can-i create pods -n production\nkubectl get rolebindings -n production\nkubectl get networkpolicies,resourcequotas -n production\n"
+    },
+    {
+      "id": "kubernetes-087-example",
+      "topic": "kubernetes",
+      "title": "Release controls versus runtime isolation — interview reference",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-087-example.sh",
+      "description": "Inspect runtime controls independently of repository settings. Separate clusters/accounts may be chosen for stronger boundaries, but a protected branch alone creates neither design.",
+      "source": "https://kubernetes.io/docs/concepts/security/multi-tenancy/",
+      "code": "kubectl get namespaces\nkubectl get rolebindings -n production\nkubectl get networkpolicies -n production\nkubectl get resourcequotas -n production\n"
+    },
+    {
+      "id": "kubernetes-088-example",
+      "topic": "kubernetes",
+      "title": "Artifact promotion and deployment identity — interview reference",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-088-example.sh",
+      "description": "The pipeline should promote the reviewed image digest and obtain the appropriate scoped identity for each environment. These read-only checks do not configure OIDC or implement CI approval rules.",
+      "source": "https://kubernetes.io/docs/concepts/security/multi-tenancy/",
+      "code": "# Read-only preflight examples; use distinct, configured deployment identities.\nkubectl --context=dev auth can-i patch deployments -n app\nkubectl --context=production auth can-i patch deployments -n app\nkubectl --context=production get deployment web -n app -o jsonpath='{.spec.template.spec.containers[*].image}{\"\\n\"}'\n"
+    },
+    {
+      "id": "kubernetes-089-example",
+      "topic": "kubernetes",
+      "title": "Intentional GPU-pool taint — interview reference",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-089-example.sh",
+      "description": "The unscheduled Pod has no assigned node. Inspect the candidate GPU node and other pools, then choose placement that respects the reservation policy.",
+      "source": "https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/",
+      "code": "kubectl describe pod web-example -n demo\nkubectl get nodes -L workload-pool\nkubectl describe node gpu-worker-1\n"
+    },
+    {
+      "id": "kubernetes-090-example",
+      "topic": "kubernetes",
+      "title": "Health-related taints — interview reference",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-090-example.sh",
+      "description": "Replace worker-1 with a candidate named by your investigation. Events summarize scheduler reasons and can expire, so use current conditions and taints as well.",
+      "source": "https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/",
+      "code": "kubectl describe pod web-example -n demo\nkubectl describe node worker-1\nkubectl get node worker-1 -o jsonpath='{.status.conditions}{\"\\n\"}'\n"
+    },
+    {
+      "id": "kubernetes-091-example",
+      "topic": "kubernetes",
+      "title": "Monitoring pool placement — interview reference",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-091-example.yaml",
+      "description": "Assumes intended nodes carry workload-pool=monitoring and the same key/value NoSchedule taint. This demo sleeps; it illustrates placement rather than installing a monitoring stack.",
+      "source": "https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/",
+      "code": "apiVersion: apps/v1\nkind: Deployment\nmetadata: {name: monitoring-demo}\nspec:\n  replicas: 1\n  selector:\n    matchLabels: {app: monitoring-demo}\n  template:\n    metadata:\n      labels: {app: monitoring-demo}\n    spec:\n      nodeSelector: {workload-pool: monitoring}\n      tolerations:\n        - key: workload-pool\n          operator: Equal\n          value: monitoring\n          effect: NoSchedule\n      containers:\n        - name: demo\n          image: busybox:1.37\n          command: [sleep, '3600']\n"
+    },
+    {
+      "id": "kubernetes-092-example",
+      "topic": "kubernetes",
+      "title": "Migrate existing non-monitoring workloads — interview reference",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-092-example.sh",
+      "description": "Drain cordons the node and can stop on constraints. Do not bypass blockers blindly; these reference commands change node availability and are syntax-checked rather than executed by QA.",
+      "source": "https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/",
+      "code": "# Maintenance example: first verify capacity, policies, and disruption budgets.\nkubectl get pdb -A\nkubectl drain monitoring-1 --ignore-daemonsets --timeout=5m\n# Verify replacement workload health and placement before returning the node.\nkubectl get pods -A -o wide\nkubectl uncordon monitoring-1\n"
+    },
+    {
+      "id": "kubernetes-093-example",
+      "topic": "kubernetes",
+      "title": "Drain exceptions — interview reference",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-093-example.sh",
+      "description": "Inspect ownerReferences and the kubernetes.io/config.mirror annotation to distinguish DaemonSet and static-Pod cases. Other blockers can prevent a drain from completing.",
+      "source": "https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/",
+      "code": "kubectl get pods -A -o wide --field-selector spec.nodeName=monitoring-1\n# Inspect the remaining Pod type instead of assuming drain must remove it.\nkubectl get pod remaining-pod -n kube-system -o yaml\n"
+    },
+    {
+      "id": "kubernetes-094-example",
+      "topic": "kubernetes",
+      "title": "Hostname versus zone topology — interview reference",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-094-example.yaml",
+      "description": "This constrains spread of matching Pods across eligible hostname domains at scheduling time. It does not automatically relocate already-running replicas.",
+      "source": "https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/",
+      "code": "apiVersion: apps/v1\nkind: Deployment\nmetadata: {name: node-spread-demo}\nspec:\n  replicas: 3\n  selector:\n    matchLabels: {app: node-spread-demo}\n  template:\n    metadata:\n      labels: {app: node-spread-demo}\n    spec:\n      topologySpreadConstraints:\n        - maxSkew: 1\n          topologyKey: kubernetes.io/hostname\n          whenUnsatisfiable: DoNotSchedule\n          labelSelector:\n            matchLabels: {app: node-spread-demo}\n      containers:\n        - name: app\n          image: nginx:1.28\n"
+    },
+    {
+      "id": "kubernetes-095-example",
+      "topic": "kubernetes",
+      "title": "What maxSkew does not guarantee — interview reference",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-095-example.yaml",
+      "description": "With exactly three eligible domains and no competing constraints, 2/1/1 is compatible with this bound. Eligibility, other matching Pods, and additional constraint settings affect real scheduling.",
+      "source": "https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/",
+      "code": "apiVersion: apps/v1\nkind: Deployment\nmetadata: {name: four-replica-spread}\nspec:\n  replicas: 4\n  selector:\n    matchLabels: {app: four-replica-spread}\n  template:\n    metadata:\n      labels: {app: four-replica-spread}\n    spec:\n      topologySpreadConstraints:\n        - maxSkew: 1\n          topologyKey: kubernetes.io/hostname\n          whenUnsatisfiable: DoNotSchedule\n          labelSelector:\n            matchLabels: {app: four-replica-spread}\n      containers:\n        - name: app\n          image: nginx:1.28\n"
+    },
+    {
+      "id": "kubernetes-096-example",
+      "topic": "kubernetes",
+      "title": "Hard versus preferred spread — interview reference",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-096-example.yaml",
+      "description": "This prefers balancing matching Pods across hostname domains. Choose DoNotSchedule when the skew requirement must block otherwise eligible placement, accepting that Pods can remain Pending.",
+      "source": "https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/",
+      "code": "apiVersion: v1\nkind: Pod\nmetadata:\n  name: preferred-spread\n  labels: {app: preferred-spread}\nspec:\n  topologySpreadConstraints:\n    - maxSkew: 1\n      topologyKey: kubernetes.io/hostname\n      whenUnsatisfiable: ScheduleAnyway\n      labelSelector:\n        matchLabels: {app: preferred-spread}\n  containers:\n    - name: app\n      image: nginx:1.28\n"
+    },
+    {
+      "id": "kubernetes-097-example",
+      "topic": "kubernetes",
+      "title": "Existing replica redistribution — interview reference",
+      "language": "shell",
+      "file": "kubernetes/kubernetes-097-example.sh",
+      "description": "A template edit already starts a Deployment rollout; an extra rollout restart is not inherently required. Verify new Pod placement, and inspect events if strict constraints prevent replacements from scheduling.",
+      "source": "https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/",
+      "code": "# After a reviewed Deployment Pod-template change:\nkubectl rollout status deployment/node-spread-demo --timeout=180s\nkubectl get pods -l app=node-spread-demo -o wide\nkubectl describe deployment node-spread-demo\n"
+    },
+    {
+      "id": "kubernetes-098-example",
+      "topic": "kubernetes",
+      "title": "Combining zone and node distribution — interview reference",
+      "language": "yaml",
+      "file": "kubernetes/kubernetes-098-example.yaml",
+      "description": "Requires accurate zone and hostname labels on candidate nodes. These rules bound skew over eligible domains; they do not guarantee a particular number of AZs exist or relocate existing zonal volumes.",
+      "source": "https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/",
+      "code": "apiVersion: apps/v1\nkind: Deployment\nmetadata: {name: layered-spread-demo}\nspec:\n  replicas: 3\n  selector:\n    matchLabels: {app: layered-spread-demo}\n  template:\n    metadata:\n      labels: {app: layered-spread-demo}\n    spec:\n      topologySpreadConstraints:\n        - maxSkew: 1\n          topologyKey: topology.kubernetes.io/zone\n          whenUnsatisfiable: DoNotSchedule\n          labelSelector:\n            matchLabels: {app: layered-spread-demo}\n        - maxSkew: 1\n          topologyKey: kubernetes.io/hostname\n          whenUnsatisfiable: DoNotSchedule\n          labelSelector:\n            matchLabels: {app: layered-spread-demo}\n      containers:\n        - name: app\n          image: nginx:1.28\n"
     }
   ]
 }

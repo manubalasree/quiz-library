@@ -55,7 +55,7 @@ This repository is public so browsers can load it without credentials. It contai
 
 ## Current coverage
 
-Kubernetes contains 74 questions; NetApp ONTAP and VMware vSphere each contain 70; Linux, Git, Ansible, and Terraform each contain 50 (414 total). The banks mix fundamentals, troubleshooting, and code-reading exercises. Answer positions are balanced across A–D. Explanations describe why the selected answer is correct and call out relevant limitations.
+Kubernetes contains 98 questions; NetApp ONTAP and VMware vSphere each contain 70; Linux, Git, Ansible, and Terraform each contain 50 (438 total). The banks mix fundamentals, troubleshooting, and code-reading exercises. Answer positions are balanced across A–D. Explanations describe why the selected answer is correct and call out relevant limitations.
 
 For a snippet question, add optional `code` and `language` fields alongside `question`:
 
@@ -75,8 +75,10 @@ NetApp and VMware are organized as fundamentals-to-troubleshooting refreshes. Se
 
 ## Answer-reference assets
 
-Kubernetes and Terraform now have one linked answer example per question (124 total). Source YAML, HCL, and shell files live under [`assets/snippets`](assets/snippets/README.md), with a separately runnable QA suite and a generated JSON bundle for the app. The examples show after answering; existing question code remains the exercise shown before answering.
+Kubernetes and Terraform now have one linked answer example per question (148 total). Source YAML, HCL, and shell files live under [`assets/snippets`](assets/snippets/README.md), with a separately runnable QA suite and a generated JSON bundle for the app. The examples show after answering; existing question code remains the exercise shown before answering.
 
 After editing an example: `npm run snippets:build`, `npm test`, `npm run validate`, and `npm run snippets:qa`. See the asset README for required validators and the scope of each check.
 
 Kubernetes questions 051–074 adapt the standalone interview lab into scenario MCQs on admission/scheduling, taints, failed image rollouts, evidence-based recovery, and scoped cleanup. See [INTERVIEW-LAB-QUESTIONS.md](INTERVIEW-LAB-QUESTIONS.md).
+
+Interview questions 1–9 and their discussion corrections are reconciled with existing coverage in [INTERVIEW-HANDOFF-01-09.md](INTERVIEW-HANDOFF-01-09.md). Questions 075–098 add missing scenarios without duplicating the existing 74 items.

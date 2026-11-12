@@ -14,7 +14,7 @@ export function validateMetadata(index) {
     if(!item||!['id','topic','title','file','description','source'].every(k=>typeof item[k]==='string'&&item[k].trim())||ids.has(item.id)||files.has(item.file))throw new Error('Missing or duplicate snippet metadata');
     if(!['kubernetes','terraform'].includes(item.topic)||!['yaml','hcl','shell'].includes(item.language)||!item.qa||typeof item.qa!=='object')throw new Error(`Invalid snippet ${item.id}`);
     const source=new URL(item.source);
-    if(source.protocol!=='https:'||source.username||source.password||!['kubernetes.io','developer.hashicorp.com'].includes(source.hostname))throw new Error('Use an official HTTPS reference');
+    if(source.protocol!=='https:'||source.username||source.password||!['kubernetes.io','developer.hashicorp.com','docs.aws.amazon.com'].includes(source.hostname))throw new Error('Use an official HTTPS reference');
     if(item.file!==`${item.topic}/${item.id}.${{yaml:'yaml',hcl:'tf',shell:'sh'}[item.language]}`)throw new Error('Snippet filename must match its ID and language');
     ids.add(item.id);files.add(item.file);
   }

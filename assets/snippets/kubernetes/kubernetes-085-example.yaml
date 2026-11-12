@@ -1,0 +1,31 @@
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata: {name: app-gp3}
+provisioner: ebs.csi.aws.com
+parameters: {type: gp3}
+volumeBindingMode: WaitForFirstConsumer
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata: {name: app-data}
+spec:
+  storageClassName: app-gp3
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests: {storage: 1Gi}
+---
+apiVersion: v1
+kind: Pod
+metadata: {name: persistent-data-demo}
+spec:
+  containers:
+    - name: app
+      image: busybox:1.37
+      command: [sleep, '3600']
+      volumeMounts:
+        - name: data
+          mountPath: /data
+  volumes:
+    - name: data
+      persistentVolumeClaim:
+        claimName: app-data

@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: four-replica-spread}
+spec:
+  replicas: 4
+  selector:
+    matchLabels: {app: four-replica-spread}
+  template:
+    metadata:
+      labels: {app: four-replica-spread}
+    spec:
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels: {app: four-replica-spread}
+      containers:
+        - name: app
+          image: nginx:1.28

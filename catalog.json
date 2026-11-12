@@ -5,7 +5,7 @@
     {
       "id": "kubernetes",
       "title": "Kubernetes",
-      "description": "74 questions on Kubernetes fundamentals, manifests, and interview-lab scheduling, taints, and rollout scenarios.",
+      "description": "98 questions on Kubernetes fundamentals, troubleshooting, EBS topology, isolation, and scheduling scenarios.",
       "url": "quizzes/kubernetes.json"
     },
     {

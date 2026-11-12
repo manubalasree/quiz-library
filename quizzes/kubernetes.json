@@ -1069,6 +1069,346 @@
       "answerIndex": 3,
       "explanation": "A separate namespace does not bypass node placement constraints. Establish an appropriate disposable workload target and permissions before introducing the lab’s own scoped taint.",
       "exampleId": "kubernetes-074-example"
+    },
+    {
+      "id": "kubernetes-075",
+      "topic": "Interview refresher · ReplicaSet creation failures",
+      "question": "A Deployment has created a ReplicaSet, but that ReplicaSet has no Pods. Which evidence should you inspect next?",
+      "options": [
+        "ReplicaSet Events for FailedCreate and the admission or permission error",
+        "Application logs from a nonexistent Pod",
+        "Only node CPU utilization, assuming scheduling already happened",
+        "The Service ClusterIP, assuming it creates missing Pods"
+      ],
+      "answerIndex": 0,
+      "explanation": "Follow Deployment to ReplicaSet to Pod. If Pod creation is rejected, ReplicaSet Events can expose quota, admission, or ServiceAccount errors before the scheduler has any Pod to place.",
+      "exampleId": "kubernetes-075-example"
+    },
+    {
+      "id": "kubernetes-076",
+      "topic": "Interview refresher · Pending after assignment",
+      "question": "A Pending Pod already has spec.nodeName set and PodScheduled=True. What should you investigate before calling it an unschedulable Pod?",
+      "options": [
+        "Only missing node selectors, because every Pending Pod is unscheduled",
+        "Container startup, image pulls, volume setup, and other post-assignment events",
+        "A successful Deployment rollback, because Pending proves a failed rollout",
+        "Namespace deletion, because Pending cannot occur after node assignment"
+      ],
+      "answerIndex": 1,
+      "explanation": "Pending includes time after scheduling while containers are being prepared. Node assignment and the scheduling condition distinguish placement from subsequent image, mount, or initialization work.",
+      "exampleId": "kubernetes-076-example"
+    },
+    {
+      "id": "kubernetes-077",
+      "topic": "Interview refresher · EBS Availability Zone constraints",
+      "question": "A Pod uses an existing EBS volume in AZ-a. All otherwise suitable spare nodes are in AZ-b. Why can it remain Pending despite spare CPU?",
+      "options": [
+        "An EBS volume can attach across AZs only when its Pod is owned by a Deployment",
+        "A CPU limit automatically copies the EBS volume to the selected node",
+        "EBS attachment is limited to the volume’s AZ, and PV topology can exclude the spare nodes",
+        "Every Pending Pod requires a new StatefulSet before any volume can attach"
+      ],
+      "answerIndex": 2,
+      "explanation": "An EBS volume must attach to an EC2 instance in the same Availability Zone. Volume topology constraints apply to any workload using that volume; spare compute in another AZ is not enough.",
+      "exampleId": "kubernetes-077-example"
+    },
+    {
+      "id": "kubernetes-078",
+      "topic": "Interview refresher · Trace Pod to disk topology",
+      "question": "A scheduler event reports a volume node affinity conflict. Which inspection path best tests that diagnosis?",
+      "options": [
+        "Pod name → Service port → container log directory → node uptime",
+        "Deployment replicas → HPA target → ConfigMap keys → Pod restart count",
+        "Namespace name → StorageClass name alone, without inspecting the bound PV",
+        "Pod claimName → PVC volumeName → PV nodeAffinity → candidate-node labels"
+      ],
+      "answerIndex": 3,
+      "explanation": "Trace the claim referenced by the Pod to its actual bound PV, then compare all required affinity terms against nodes. CSI drivers can use driver-specific topology keys, so inspect those keys instead of assuming every PV uses the standard zone label.",
+      "exampleId": "kubernetes-078-example"
+    },
+    {
+      "id": "kubernetes-079",
+      "topic": "Interview refresher · WaitForFirstConsumer limits",
+      "question": "What does WaitForFirstConsumer help with, and what does it not do?",
+      "options": [
+        "It coordinates new volume binding/provisioning with Pod placement; it does not move an existing zonal disk",
+        "It relocates every bound disk into the zone with the most idle CPU",
+        "It removes PV node affinity after the first Pod mounts the volume",
+        "It permits every storage driver to attach one disk from any Availability Zone"
+      ],
+      "answerIndex": 0,
+      "explanation": "Delayed binding allows supported provisioners and binding workflows to account for the consuming Pod’s placement requirements. It does not relocate an existing disk or make incompatible constraints satisfiable.",
+      "exampleId": "kubernetes-079-example"
+    },
+    {
+      "id": "kubernetes-080",
+      "topic": "Interview refresher · CPU limits and throttling",
+      "question": "A running container repeatedly reaches its CPU limit but stays alive. Which behavior is normally expected?",
+      "options": [
+        "The kernel must OOM-kill it because CPU limits are memory limits",
+        "CPU consumption is throttled rather than the container being killed solely for reaching that CPU limit",
+        "The scheduler immediately migrates the running container to another node",
+        "Its CPU request is automatically increased to its measured usage"
+      ],
+      "answerIndex": 1,
+      "explanation": "CPU requests participate in placement and resource allocation; CPU limits bound consumption through throttling. This differs from memory-limit breaches that can result in OOM termination.",
+      "exampleId": "kubernetes-080-example",
+      "code": "resources:\n  requests: {cpu: 100m}\n  limits: {cpu: 500m}",
+      "language": "yaml"
+    },
+    {
+      "id": "kubernetes-081",
+      "topic": "Interview refresher · Requests without CPU limits",
+      "question": "A container requests 100m CPU and has no CPU limit. With spare node capacity, can its actual CPU usage exceed 100m?",
+      "options": [
+        "No; a request always acts as an exact hard CPU ceiling",
+        "Yes; exceeding the request automatically provisions more node CPUs",
+        "Yes; the request is not a usage ceiling, and competing demand can later create contention",
+        "No; Kubernetes immediately deletes any container using more than its request"
+      ],
+      "answerIndex": 2,
+      "explanation": "A CPU request is not a cap. A container without a CPU limit may use spare CPU above its request; underestimated requests can permit overpacking, and simultaneous demand does not create extra physical CPU.",
+      "exampleId": "kubernetes-081-example"
+    },
+    {
+      "id": "kubernetes-082",
+      "topic": "Interview refresher · Direct node assignment",
+      "question": "Why should you not use spec.nodeName as a shortcut for the interview’s normal resource-aware scheduling design?",
+      "options": [
+        "It tells the scheduler to evaluate all nodes more thoroughly than usual",
+        "It creates a ResourceQuota for the selected node",
+        "It causes the scheduler to combine CPU capacity from other nodes",
+        "It bypasses the normal scheduler’s placement decision, so it is not equivalent to required node affinity"
+      ],
+      "answerIndex": 3,
+      "explanation": "nodeName preassigns the Pod and bypasses the normal scheduler. Kubelet admission and runtime constraints still matter, but scheduler-based placement checks are not obtained by directly assigning a node.",
+      "exampleId": "kubernetes-082-example"
+    },
+    {
+      "id": "kubernetes-083",
+      "topic": "Interview refresher · Unavailable required node",
+      "question": "A Deployment requires a label present on exactly one worker. That worker becomes unavailable and a replacement Pod is created. What can happen to that replacement?",
+      "options": [
+        "It remains Pending if no eligible node satisfies the required label and other constraints",
+        "It automatically ignores the required placement rule after one failed attempt",
+        "Its toleration moves it to any unlabeled node automatically",
+        "The failed original Pod simply changes identity into the replacement"
+      ],
+      "answerIndex": 0,
+      "explanation": "Required placement restricts replacement Pods as well as the initial ones. Failure detection, eviction, and creation of a distinct replacement are separate lifecycle steps; the replacement may remain unscheduled.",
+      "exampleId": "kubernetes-083-example"
+    },
+    {
+      "id": "kubernetes-084",
+      "topic": "Interview refresher · Strict SSD node placement",
+      "question": "An application must run only on SSD-labeled nodes. Why is preferredDuringSchedulingIgnoredDuringExecution insufficient on its own?",
+      "options": [
+        "It provisions SSD volumes automatically on all matching nodes",
+        "It expresses a preference and can allow placement on a nonmatching node; use a hard selector or required affinity",
+        "It blocks every Pod whose PVC is not ReadWriteOnce",
+        "It has stronger exclusion semantics than required node affinity"
+      ],
+      "answerIndex": 1,
+      "explanation": "An “only” requirement needs a hard placement constraint. Preferred affinity can be outweighed or fall back to other candidates; a nodeSelector or required node affinity makes matching mandatory.",
+      "exampleId": "kubernetes-084-example"
+    },
+    {
+      "id": "kubernetes-085",
+      "topic": "Interview refresher · SSD node labels versus persistent storage",
+      "question": "A Pod selects disktype=ssd nodes but also needs SSD-backed persistent data storage. What is still required?",
+      "options": [
+        "Nothing; nodeSelector creates and mounts an EBS gp3 volume automatically",
+        "A CPU limit equal to the node’s disk capacity",
+        "An appropriate StorageClass/PVC and a volume mount; the node label alone supplies no persistent volume",
+        "A Service of type LoadBalancer to convert the node disk into a PVC"
+      ],
+      "answerIndex": 2,
+      "explanation": "Node placement and persistent storage provisioning are separate requirements. A label can select SSD-equipped nodes, while an appropriate storage provisioner, claim, and mount provide the application’s persistent data storage.",
+      "exampleId": "kubernetes-085-example"
+    },
+    {
+      "id": "kubernetes-086",
+      "topic": "Interview refresher · Production pool security",
+      "question": "A production node pool has a NoSchedule taint. A developer can submit any toleration and modify node labels. Does that taint alone enforce a production security boundary?",
+      "options": [
+        "Yes; NoSchedule is an unchangeable authentication boundary",
+        "Yes; Kubernetes forbids users from ever declaring matching tolerations",
+        "No; the only possible valid design is to forbid all shared clusters",
+        "No; enforce authorization and admission controls as part of a broader isolation design"
+      ],
+      "answerIndex": 3,
+      "explanation": "Taints and labels are scheduling controls, not complete security isolation. Restrict who may change nodes or request privileged placement, and combine controls appropriate to the threat model; deliberately shared clusters are possible trade-offs.",
+      "exampleId": "kubernetes-086-example"
+    },
+    {
+      "id": "kubernetes-087",
+      "topic": "Interview refresher · Release controls versus runtime isolation",
+      "question": "A team protects its production Git branch but runs development and production workloads in one cluster. What does the branch rule fail to provide by itself?",
+      "options": [
+        "Runtime isolation such as workload authorization, network boundaries, and placement enforcement",
+        "Any reduction in accidental unreviewed production changes",
+        "A restriction on merging changes into that branch",
+        "A place to require CI tests before merging"
+      ],
+      "answerIndex": 0,
+      "explanation": "Repository protections govern release workflow. They do not automatically enforce Kubernetes RBAC, network policy, namespace quotas, or admission controls. Shared-cluster runtime isolation must be designed separately.",
+      "exampleId": "kubernetes-087-example"
+    },
+    {
+      "id": "kubernetes-088",
+      "topic": "Interview refresher · Artifact promotion and deployment identity",
+      "question": "The team chooses separate prod/dev clusters and accounts. Which release workflow best supports that choice?",
+      "options": [
+        "Rebuild an unreviewed image for production and reuse one permanent admin credential everywhere",
+        "Build once, test and review it, promote the same immutable artifact, and use scoped short-lived deployment identities",
+        "Treat a matching node label as a substitute for tests, review, and account permissions",
+        "Grant development Pods unrestricted production credentials so promotions are simpler"
+      ],
+      "answerIndex": 1,
+      "explanation": "This implements the stated preference with separate runtime boundaries, controlled artifact promotion, and narrowly scoped identities such as OIDC-backed roles. It is an architectural choice, not a claim that all shared-cluster designs are invalid.",
+      "exampleId": "kubernetes-088-example"
+    },
+    {
+      "id": "kubernetes-089",
+      "topic": "Interview refresher · Intentional GPU-pool taint",
+      "question": "A general web Pod is blocked by an intentional GPU-pool NoSchedule taint. What is the best first response?",
+      "options": [
+        "Add every possible toleration to all web Pods",
+        "Remove the GPU-pool taint before checking its purpose",
+        "Confirm it does not belong on that pool and provide eligible general-purpose capacity rather than blindly tolerating the taint",
+        "Set nodeName to bypass all ordinary placement decisions"
+      ],
+      "answerIndex": 2,
+      "explanation": "Determine why the taint exists and whether the workload belongs there. Reserved capacity should not be consumed by bypassing its placement policy just to clear Pending; general workloads may need other eligible capacity.",
+      "exampleId": "kubernetes-089-example"
+    },
+    {
+      "id": "kubernetes-090",
+      "topic": "Interview refresher · Health-related taints",
+      "question": "Events mention a node health-related taint. What should guide the next action?",
+      "options": [
+        "Always remove the taint because it can have no relationship to actual node health",
+        "Add wildcard tolerations to every workload as the standard repair",
+        "Assume the Pod’s application logs prove the health condition is resolved",
+        "Investigate the underlying node condition and workload suitability before adding a toleration"
+      ],
+      "answerIndex": 3,
+      "explanation": "Some taints reflect real node conditions. Bypassing them can place work on an unhealthy node; inspect conditions and the reason for the taint, then repair the condition or use appropriate capacity.",
+      "exampleId": "kubernetes-090-example"
+    },
+    {
+      "id": "kubernetes-091",
+      "topic": "Interview refresher · Monitoring pool placement",
+      "question": "Monitoring Pods must use monitoring nodes, and ordinary Pods should be kept off that pool. Which scheduling design expresses both directions?",
+      "options": [
+        "A monitoring taint plus authorized matching tolerations, combined with required monitoring-node placement",
+        "Only a toleration on monitoring Pods, with no node-selection rule",
+        "Only a Service label named monitoring, with no node labels or taints",
+        "Only a preferred affinity that permits placement anywhere"
+      ],
+      "answerIndex": 0,
+      "explanation": "The taint repels Pods without a matching toleration; required placement keeps monitoring Pods on the intended nodes. Restrict who may request that toleration, and assess system workloads with broad tolerations separately.",
+      "exampleId": "kubernetes-091-example"
+    },
+    {
+      "id": "kubernetes-092",
+      "topic": "Interview refresher · Migrate existing non-monitoring workloads",
+      "question": "After adding a monitoring NoSchedule taint, non-monitoring Pods are still running on those nodes. What is a sound migration approach?",
+      "options": [
+        "Wait for NoSchedule to evict every existing Pod automatically",
+        "Check replacement capacity and constraints, configure intended placement, evict in a controlled way, verify recovery, then uncordon any drained nodes",
+        "Force-delete all Pods and ignore disruption budgets",
+        "Delete the namespace holding monitoring Pods to remove the node’s old workloads"
+      ],
+      "answerIndex": 1,
+      "explanation": "NoSchedule does not move existing Pods. Migration requires deliberate eviction or recreation with correct placement and sufficient capacity, respecting disruption and storage constraints; targeted eviction may be preferable to a full drain.",
+      "exampleId": "kubernetes-092-example"
+    },
+    {
+      "id": "kubernetes-093",
+      "topic": "Interview refresher · Drain exceptions",
+      "question": "After a normal kubectl drain --ignore-daemonsets, why might some Pods still be visible on the node?",
+      "options": [
+        "Drain guarantees all Pods are deleted, so any remaining object proves the API is corrupt",
+        "Drain changes remaining Pods into Services",
+        "DaemonSet Pods remain, and static-Pod mirror objects are not removed through normal drain",
+        "Every remaining Pod must be a new Deployment replica created by uncordon"
+      ],
+      "answerIndex": 2,
+      "explanation": "Drain handles eligible workload eviction and cordons the node. It does not remove DaemonSet-managed Pods with --ignore-daemonsets, and mirror Pods representing static Pods are not removed through the normal drain path.",
+      "exampleId": "kubernetes-093-example"
+    },
+    {
+      "id": "kubernetes-094",
+      "topic": "Interview refresher · Hostname versus zone topology",
+      "question": "You want topology spread across individual worker nodes rather than only across Availability Zones. Which topology key expresses that?",
+      "options": [
+        "topology.kubernetes.io/zone",
+        "metadata.namespace",
+        "spec.containers.image",
+        "kubernetes.io/hostname"
+      ],
+      "answerIndex": 3,
+      "explanation": "A hostname label represents the node-level topology domain; the zone key represents an AZ-level domain that can contain several nodes. The constraint’s selector must match the application Pods.",
+      "exampleId": "kubernetes-094-example"
+    },
+    {
+      "id": "kubernetes-095",
+      "topic": "Interview refresher · What maxSkew does not guarantee",
+      "question": "Assume three eligible hostname domains, four matching replicas, and no other constraints. Does maxSkew: 1 with DoNotSchedule forbid a 2/1/1 distribution?",
+      "options": [
+        "No; 2/1/1 has a maximum difference of one and does not violate that spread bound",
+        "Yes; maxSkew: 1 always means at most one replica per node",
+        "Yes; a fourth replica must always create another node",
+        "No; DoNotSchedule ignores all skew calculations"
+      ],
+      "answerIndex": 0,
+      "explanation": "Spread constrains imbalance across eligible topology domains; it is not a universal one-Pod-per-node rule. With the stated assumptions, two replicas on one domain and one on each other domain have skew one.",
+      "exampleId": "kubernetes-095-example",
+      "code": "replicas: 4\n# Three eligible hostname domains; no other matching Pods or constraints.\ntopologySpreadConstraints:\n  - maxSkew: 1\n    topologyKey: kubernetes.io/hostname\n    whenUnsatisfiable: DoNotSchedule",
+      "language": "yaml"
+    },
+    {
+      "id": "kubernetes-096",
+      "topic": "Interview refresher · Hard versus preferred spread",
+      "question": "What changes when a topology spread constraint uses ScheduleAnyway instead of DoNotSchedule?",
+      "options": [
+        "It becomes a stronger guarantee that every Pod gets its own node",
+        "Spread becomes a scoring preference rather than a hard skew-based scheduling block",
+        "It immediately evicts all currently imbalanced Pods",
+        "It disables all other placement and resource constraints"
+      ],
+      "answerIndex": 1,
+      "explanation": "ScheduleAnyway lets the scheduler consider placements even when they do not satisfy the configured skew bound, while preferring a better spread. It does not override unrelated hard constraints.",
+      "exampleId": "kubernetes-096-example"
+    },
+    {
+      "id": "kubernetes-097",
+      "topic": "Interview refresher · Existing replica redistribution",
+      "question": "You add topology spread rules to a Deployment template whose existing replicas share one node. Is adding the rule itself a scheduler-driven rebalance of those running Pods?",
+      "options": [
+        "Yes; the scheduler live-migrates every existing container to another node",
+        "Yes; maxSkew changes the nodeName field of each running Pod immediately",
+        "No; scheduling rules do not relocate running Pods, although the template change can trigger a rollout that creates replacements under the new rules",
+        "No; topology spread can apply only to standalone Pods, never Deployments"
+      ],
+      "answerIndex": 2,
+      "explanation": "The scheduler places new Pods rather than moving running ones. A Deployment Pod-template edit normally starts a rollout, and new replacements are evaluated with the rules; plan disruption, capacity, and verification rather than assuming immediate rebalance.",
+      "exampleId": "kubernetes-097-example"
+    },
+    {
+      "id": "kubernetes-098",
+      "topic": "Interview refresher · Combining zone and node distribution",
+      "question": "Why might you configure both zone-level and hostname-level spread constraints for one application?",
+      "options": [
+        "Selecting one zone automatically selects exactly one worker node",
+        "Hostname and zone labels always contain the same values",
+        "Combining them creates cross-AZ attachment support for any existing EBS disk",
+        "A zone can contain several nodes; the two constraints express separate AZ-level and node-level distribution goals"
+      ],
+      "answerIndex": 3,
+      "explanation": "Zone and hostname are different topology levels. Multiple spread constraints can be applied together, and eligible placements must satisfy all hard constraints; resources and volume topology must also fit.",
+      "exampleId": "kubernetes-098-example"
     }
   ],
   "snippetsUrl": "../assets/snippets/library.json"

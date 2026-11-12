@@ -9,6 +9,7 @@ export function validateQuiz(data) {
   for (const [index, q] of data.questions.entries()) {
     if (!q || !nonempty(q.id) || ids.has(q.id) || !nonempty(q.topic) ||
         !nonempty(q.question) || !nonempty(q.explanation) ||
+        (q.focus !== undefined && !['fundamentals','scenarios'].includes(q.focus)) ||
         (q.exampleId !== undefined && (!nonempty(q.exampleId) || !nonempty(data.snippetsUrl))) ||
         (q.code !== undefined && !nonempty(q.code)) ||
         (q.language !== undefined && (!nonempty(q.language) || !nonempty(q.code))) ||

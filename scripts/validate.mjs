@@ -13,6 +13,7 @@ for (const entry of catalog.quizzes) {
   const answers = [0, 0, 0, 0];
   let snippets = 0;
   for (const q of quiz.questions) {
+    if (!['fundamentals','scenarios'].includes(q.focus)) throw new Error(`${entry.title}: missing or invalid focus for ${q.id}`);
     const prompt = q.question.trim().toLowerCase().replace(/\s+/g, ' ');
     if (prompts.has(prompt)) throw new Error(`${entry.title}: duplicate question ${q.id}`);
     prompts.add(prompt);

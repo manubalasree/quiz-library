@@ -13,7 +13,8 @@
         "The group can read and execute"
       ],
       "answerIndex": 2,
-      "explanation": "6 grants read (4) plus write (2) to the owner. Both zeroes remove permissions for the group and others."
+      "explanation": "6 grants read (4) plus write (2) to the owner. Both zeroes remove permissions for the group and others.",
+      "focus": "fundamentals"
     },
     {
       "id": "linux-002",
@@ -26,7 +27,8 @@
         "SIGHUP"
       ],
       "answerIndex": 1,
-      "explanation": "kill sends SIGTERM by default. A process can handle this signal to shut down gracefully, unlike SIGKILL."
+      "explanation": "kill sends SIGTERM by default. A process can handle this signal to shut down gracefully, unlike SIGKILL.",
+      "focus": "fundamentals"
     },
     {
       "id": "linux-003",
@@ -39,7 +41,8 @@
         "All output streams to a log file"
       ],
       "answerIndex": 0,
-      "explanation": "A normal pipe connects standard output to standard input. Standard error remains separate unless explicitly redirected."
+      "explanation": "A normal pipe connects standard output to standard input. Standard error remains separate unless explicitly redirected.",
+      "focus": "fundamentals"
     },
     {
       "topic": "Shell quoting",
@@ -54,7 +57,8 @@
       "explanation": "Single quotes prevent parameter expansion. Double quotes would allow the variable to expand while preserving the resulting text as one argument.",
       "code": "name=Ada\nprintf '%s\\n' '$name'",
       "language": "shell",
-      "id": "linux-004"
+      "id": "linux-004",
+      "focus": "scenarios"
     },
     {
       "topic": "Shell quoting",
@@ -67,7 +71,8 @@
       ],
       "answerIndex": 0,
       "explanation": "Quoting keeps an expanded pathname as one argument. Unquoted expansion can split it into words or interpret wildcard characters.",
-      "id": "linux-005"
+      "id": "linux-005",
+      "focus": "fundamentals"
     },
     {
       "topic": "Shell arguments",
@@ -80,7 +85,8 @@
       ],
       "answerIndex": 2,
       "explanation": "Quoted \"$@\" expands each positional argument separately. Quoted \"$*\" joins them into one word using the first IFS character.",
-      "id": "linux-006"
+      "id": "linux-006",
+      "focus": "fundamentals"
     },
     {
       "topic": "Pipelines",
@@ -95,7 +101,8 @@
       "explanation": "With pipefail, a pipeline returns the status of its rightmost failing command, or zero if none fail.",
       "code": "set -o pipefail\nfalse | true",
       "language": "shell",
-      "id": "linux-007"
+      "id": "linux-007",
+      "focus": "scenarios"
     },
     {
       "topic": "Redirections",
@@ -110,7 +117,8 @@
       "explanation": "Redirections are processed left to right. stderr is duplicated from the original stdout before stdout is redirected.",
       "code": "command 2>&1 >out.log",
       "language": "shell",
-      "id": "linux-008"
+      "id": "linux-008",
+      "focus": "scenarios"
     },
     {
       "topic": "Redirections",
@@ -123,7 +131,8 @@
       ],
       "answerIndex": 1,
       "explanation": "The >> operator opens the destination for appending. A single > normally truncates an existing regular file.",
-      "id": "linux-009"
+      "id": "linux-009",
+      "focus": "fundamentals"
     },
     {
       "topic": "Redirections",
@@ -138,7 +147,8 @@
       "explanation": "File descriptor 2 is stderr. Redirecting it to /dev/null leaves stdout unchanged.",
       "code": "command 2>/dev/null",
       "language": "shell",
-      "id": "linux-010"
+      "id": "linux-010",
+      "focus": "scenarios"
     },
     {
       "topic": "Permissions",
@@ -151,7 +161,8 @@
       ],
       "answerIndex": 3,
       "explanation": "Directory execute permission permits pathname traversal. Listing entries requires directory read permission; file access also depends on other applicable checks.",
-      "id": "linux-011"
+      "id": "linux-011",
+      "focus": "fundamentals"
     },
     {
       "topic": "Permissions",
@@ -164,7 +175,8 @@
       ],
       "answerIndex": 1,
       "explanation": "Unlinking changes the directory entry. Permission to modify a file’s contents is distinct from permission to remove its name from a directory.",
-      "id": "linux-012"
+      "id": "linux-012",
+      "focus": "fundamentals"
     },
     {
       "topic": "Permissions",
@@ -177,7 +189,8 @@
       ],
       "answerIndex": 3,
       "explanation": "In a sticky directory, removal and renaming are restricted to appropriately privileged users, the file owner, or the directory owner.",
-      "id": "linux-013"
+      "id": "linux-013",
+      "focus": "fundamentals"
     },
     {
       "topic": "Permissions",
@@ -190,7 +203,8 @@
       ],
       "answerIndex": 3,
       "explanation": "The umask removes permission bits from the requested mode. It does not add execute bits to a regular file requested with 0666.",
-      "id": "linux-014"
+      "id": "linux-014",
+      "focus": "scenarios"
     },
     {
       "topic": "Permissions",
@@ -203,7 +217,8 @@
       ],
       "answerIndex": 2,
       "explanation": "Setgid directories support shared group ownership for new entries. Access permissions remain governed by modes, ACLs, and the creating process.",
-      "id": "linux-015"
+      "id": "linux-015",
+      "focus": "fundamentals"
     },
     {
       "topic": "Filesystems",
@@ -216,7 +231,8 @@
       ],
       "answerIndex": 3,
       "explanation": "Hard links refer to the same inode. Storage is reclaimed only when no links and no relevant open references remain.",
-      "id": "linux-016"
+      "id": "linux-016",
+      "focus": "scenarios"
     },
     {
       "topic": "Filesystems",
@@ -229,7 +245,8 @@
       ],
       "answerIndex": 0,
       "explanation": "A symbolic link resolves a pathname and may dangle if its target disappears. Hard links bind another name to the same filesystem object.",
-      "id": "linux-017"
+      "id": "linux-017",
+      "focus": "fundamentals"
     },
     {
       "topic": "Disk troubleshooting",
@@ -242,7 +259,8 @@
       ],
       "answerIndex": 3,
       "explanation": "Unlinked but open files still occupy storage until their open references are released. Tools such as lsof can help identify them.",
-      "id": "linux-018"
+      "id": "linux-018",
+      "focus": "scenarios"
     },
     {
       "topic": "Disk troubleshooting",
@@ -255,7 +273,8 @@
       ],
       "answerIndex": 2,
       "explanation": "Filesystems can exhaust inodes before exhausting data blocks. Byte-capacity and inode-capacity checks diagnose different limits.",
-      "id": "linux-019"
+      "id": "linux-019",
+      "focus": "scenarios"
     },
     {
       "topic": "Safe filename handling",
@@ -270,7 +289,8 @@
       "explanation": "NUL separators preserve pathname boundaries. This handles unusual filenames but is not a universal defense against filesystem races.",
       "code": "find /data -type f -print0 | xargs -0 -r sha256sum",
       "language": "shell",
-      "id": "linux-020"
+      "id": "linux-020",
+      "focus": "scenarios"
     },
     {
       "topic": "Text tools",
@@ -283,7 +303,8 @@
       ],
       "answerIndex": 2,
       "explanation": "GNU grep normally returns zero for a selected match, one for no match, and two for an error. Scripts should distinguish absence from execution failure.",
-      "id": "linux-021"
+      "id": "linux-021",
+      "focus": "fundamentals"
     },
     {
       "topic": "Text tools",
@@ -298,7 +319,8 @@
       "explanation": "uniq only combines adjacent equal lines. Sorting is a common way to group identical lines before counting them.",
       "code": "sort names.txt | uniq -c",
       "language": "shell",
-      "id": "linux-022"
+      "id": "linux-022",
+      "focus": "scenarios"
     },
     {
       "topic": "Text tools",
@@ -313,7 +335,8 @@
       "explanation": "-F selects the field separator and $1 references the first field.",
       "code": "awk -F: '{print $1}' /etc/passwd",
       "language": "shell",
-      "id": "linux-023"
+      "id": "linux-023",
+      "focus": "scenarios"
     },
     {
       "topic": "Text tools",
@@ -328,7 +351,8 @@
       "explanation": "Without an in-place editing option or explicit output handling, sed writes its transformed stream to stdout.",
       "code": "sed 's/old/new/g' config.txt",
       "language": "shell",
-      "id": "linux-024"
+      "id": "linux-024",
+      "focus": "scenarios"
     },
     {
       "topic": "Archives",
@@ -341,7 +365,8 @@
       ],
       "answerIndex": 0,
       "explanation": "c creates an archive, z uses gzip, and f selects the archive filename. Extraction would use x instead of c.",
-      "id": "linux-025"
+      "id": "linux-025",
+      "focus": "fundamentals"
     },
     {
       "topic": "systemd",
@@ -354,7 +379,8 @@
       ],
       "answerIndex": 1,
       "explanation": "Enabling and starting a unit are separate operations. Use --now when you intend to enable and start together.",
-      "id": "linux-026"
+      "id": "linux-026",
+      "focus": "fundamentals"
     },
     {
       "topic": "systemd",
@@ -367,7 +393,8 @@
       ],
       "answerIndex": 2,
       "explanation": "daemon-reload reloads unit configuration and dependencies. A service reload requests application-specific reload behavior instead.",
-      "id": "linux-027"
+      "id": "linux-027",
+      "focus": "fundamentals"
     },
     {
       "topic": "systemd logs",
@@ -382,7 +409,8 @@
       "explanation": "-u filters by unit and -b restricts output to the selected boot, the current boot by default.",
       "code": "journalctl -u app.service -b",
       "language": "shell",
-      "id": "linux-028"
+      "id": "linux-028",
+      "focus": "scenarios"
     },
     {
       "topic": "Processes",
@@ -395,7 +423,8 @@
       ],
       "answerIndex": 2,
       "explanation": "These entries link to open file descriptions such as files, pipes, and sockets. Access depends on permissions and process visibility restrictions.",
-      "id": "linux-029"
+      "id": "linux-029",
+      "focus": "fundamentals"
     },
     {
       "topic": "Processes",
@@ -408,7 +437,8 @@
       ],
       "answerIndex": 0,
       "explanation": "A zombie retains minimal process-table information until reaped. Sending it SIGKILL does not make it exit again.",
-      "id": "linux-030"
+      "id": "linux-030",
+      "focus": "fundamentals"
     },
     {
       "topic": "Processes",
@@ -421,7 +451,8 @@
       ],
       "answerIndex": 1,
       "explanation": "D commonly indicates an uninterruptible kernel wait. Investigate the underlying I/O or kernel wait rather than assuming CPU contention.",
-      "id": "linux-031"
+      "id": "linux-031",
+      "focus": "fundamentals"
     },
     {
       "topic": "Scheduling",
@@ -434,7 +465,8 @@
       ],
       "answerIndex": 1,
       "explanation": "Niceness influences fair-scheduler priority. It is not a memory limit or a guarantee of a particular CPU percentage.",
-      "id": "linux-032"
+      "id": "linux-032",
+      "focus": "fundamentals"
     },
     {
       "topic": "Signals",
@@ -447,7 +479,8 @@
       ],
       "answerIndex": 3,
       "explanation": "Signal zero performs permission and existence checks. Failure may reflect insufficient permission rather than absence alone.",
-      "id": "linux-033"
+      "id": "linux-033",
+      "focus": "fundamentals"
     },
     {
       "topic": "Sessions",
@@ -460,7 +493,8 @@
       ],
       "answerIndex": 1,
       "explanation": "nohup addresses hangup-signal handling and may redirect terminal output. Use & separately to run a shell job in the background.",
-      "id": "linux-034"
+      "id": "linux-034",
+      "focus": "fundamentals"
     },
     {
       "topic": "Environment",
@@ -475,7 +509,8 @@
       "explanation": "Shell variables are not automatically environment variables. export makes a variable available in subsequently launched child processes.",
       "code": "LAB_VALUE=hello\nbash -c 'printf \"%s\\n\" \"$LAB_VALUE\"'",
       "language": "shell",
-      "id": "linux-035"
+      "id": "linux-035",
+      "focus": "scenarios"
     },
     {
       "topic": "Environment",
@@ -488,7 +523,8 @@
       ],
       "answerIndex": 0,
       "explanation": "source or . executes commands in the current shell context. A normal child process cannot directly modify its parent shell’s environment.",
-      "id": "linux-036"
+      "id": "linux-036",
+      "focus": "fundamentals"
     },
     {
       "topic": "Shell expansion",
@@ -501,7 +537,8 @@
       ],
       "answerIndex": 0,
       "explanation": "$(...) replaces itself with command output after removing trailing newlines. Quoting the expansion still matters for argument boundaries.",
-      "id": "linux-037"
+      "id": "linux-037",
+      "focus": "fundamentals"
     },
     {
       "topic": "Shell expansion",
@@ -516,7 +553,8 @@
       "explanation": "The :- parameter expansion supplies a default when the parameter is unset or null. It does not assign that default to the variable.",
       "code": "unset port\nprintf \"%s\\n\" \"${port:-8080}\"",
       "language": "shell",
-      "id": "linux-038"
+      "id": "linux-038",
+      "focus": "scenarios"
     },
     {
       "topic": "Shell control flow",
@@ -531,7 +569,8 @@
       "explanation": "&& executes its right-hand command only after a successful left-hand command. It is not equivalent to a finally block.",
       "code": "build && cleanup",
       "language": "shell",
-      "id": "linux-039"
+      "id": "linux-039",
+      "focus": "scenarios"
     },
     {
       "topic": "Shell options",
@@ -544,7 +583,8 @@
       ],
       "answerIndex": 0,
       "explanation": "nounset helps catch missing variables. It is distinct from errexit and has exceptions for certain special parameters and expansion forms.",
-      "id": "linux-040"
+      "id": "linux-040",
+      "focus": "fundamentals"
     },
     {
       "topic": "Scheduled jobs",
@@ -557,7 +597,8 @@
       ],
       "answerIndex": 1,
       "explanation": "Scheduled jobs often have a limited environment. Set required paths explicitly or use suitable absolute executable paths.",
-      "id": "linux-041"
+      "id": "linux-041",
+      "focus": "scenarios"
     },
     {
       "topic": "Networking",
@@ -572,7 +613,8 @@
       "explanation": "ss reports socket information; -l selects listening sockets, -t selects TCP, and -n disables name resolution.",
       "code": "ss -ltn",
       "language": "shell",
-      "id": "linux-042"
+      "id": "linux-042",
+      "focus": "scenarios"
     },
     {
       "topic": "Networking",
@@ -585,7 +627,8 @@
       ],
       "answerIndex": 3,
       "explanation": "ip route get asks the kernel to resolve a route lookup. It helps distinguish routing decisions from DNS resolution problems.",
-      "id": "linux-043"
+      "id": "linux-043",
+      "focus": "fundamentals"
     },
     {
       "topic": "Name resolution",
@@ -598,7 +641,8 @@
       ],
       "answerIndex": 2,
       "explanation": "The system resolver may consult sources such as files and DNS according to name-service configuration. A direct DNS query does not reproduce every NSS lookup path.",
-      "id": "linux-044"
+      "id": "linux-044",
+      "focus": "fundamentals"
     },
     {
       "topic": "HTTP troubleshooting",
@@ -611,7 +655,8 @@
       ],
       "answerIndex": 1,
       "explanation": "--fail makes HTTP error responses produce a failure status. Transport success and application-level HTTP success are different concepts.",
-      "id": "linux-045"
+      "id": "linux-045",
+      "focus": "scenarios"
     },
     {
       "topic": "TLS troubleshooting",
@@ -624,7 +669,8 @@
       ],
       "answerIndex": 3,
       "explanation": "-k skips certificate verification, weakening server identity checks. It does not disable encryption and is not the correct fix for a trust-chain problem.",
-      "id": "linux-046"
+      "id": "linux-046",
+      "focus": "fundamentals"
     },
     {
       "topic": "SSH",
@@ -637,7 +683,8 @@
       ],
       "answerIndex": 2,
       "explanation": "OpenSSH protects private keys from unsafe file permissions. Owner-only access such as mode 600 is appropriate for a typical private key file.",
-      "id": "linux-047"
+      "id": "linux-047",
+      "focus": "scenarios"
     },
     {
       "topic": "File descriptors",
@@ -650,7 +697,8 @@
       ],
       "answerIndex": 3,
       "explanation": "Open files include sockets and pipes as well as regular files. A descriptor leak can exhaust the per-process open-file limit.",
-      "id": "linux-048"
+      "id": "linux-048",
+      "focus": "scenarios"
     },
     {
       "topic": "Filesystems",
@@ -663,7 +711,8 @@
       ],
       "answerIndex": 1,
       "explanation": "Filesystem mount state can prevent writes independently of permission bits. Some filesystems remount read-only after serious errors.",
-      "id": "linux-049"
+      "id": "linux-049",
+      "focus": "scenarios"
     },
     {
       "topic": "Shell tests",
@@ -678,7 +727,8 @@
       "explanation": "The test command’s -eq operator compares integers. String equality uses a different operator and does not perform numeric comparison.",
       "code": "n=10\n[ \"$n\" -eq 10 ] && printf \"match\\n\"",
       "language": "shell",
-      "id": "linux-050"
+      "id": "linux-050",
+      "focus": "scenarios"
     }
   ]
 }

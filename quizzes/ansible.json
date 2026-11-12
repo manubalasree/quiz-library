@@ -15,7 +15,8 @@
       "explanation": "Inventory group headings assign the following hosts to that group until another heading begins.",
       "code": "[web]\napp1\napp2\n[database]\ndb1",
       "language": "ini",
-      "id": "ansible-001"
+      "id": "ansible-001",
+      "focus": "scenarios"
     },
     {
       "topic": "Inventory",
@@ -28,7 +29,8 @@
       ],
       "answerIndex": 2,
       "explanation": "all includes every inventory host. ungrouped contains hosts that belong to no other group apart from all.",
-      "id": "ansible-002"
+      "id": "ansible-002",
+      "focus": "fundamentals"
     },
     {
       "topic": "Host patterns",
@@ -43,7 +45,8 @@
       "explanation": "The & intersection operator limits the selection to hosts in both groups. Quoting prevents the shell from interpreting special characters.",
       "code": "ansible 'web:&production' -m ansible.builtin.ping",
       "language": "shell",
-      "id": "ansible-003"
+      "id": "ansible-003",
+      "focus": "scenarios"
     },
     {
       "topic": "Connectivity",
@@ -56,7 +59,8 @@
       ],
       "answerIndex": 3,
       "explanation": "The Ansible ping module is not network ICMP ping. It exercises the Ansible connection and remote module execution path.",
-      "id": "ansible-004"
+      "id": "ansible-004",
+      "focus": "fundamentals"
     },
     {
       "topic": "Facts",
@@ -69,7 +73,8 @@
       ],
       "answerIndex": 0,
       "explanation": "setup gathers facts such as platform and interfaces. These facts can be referenced through ansible_facts during playbook execution.",
-      "id": "ansible-005"
+      "id": "ansible-005",
+      "focus": "fundamentals"
     },
     {
       "topic": "Facts",
@@ -82,7 +87,8 @@
       ],
       "answerIndex": 0,
       "explanation": "Disabling automatic fact gathering can save time, but facts must come from another deliberate source before tasks rely on them.",
-      "id": "ansible-006"
+      "id": "ansible-006",
+      "focus": "scenarios"
     },
     {
       "topic": "Privilege escalation",
@@ -97,7 +103,8 @@
       "explanation": "become requests privilege escalation. Its success depends on the remote account’s configured authorization and any required credentials.",
       "code": "- hosts: web\n  become: true\n  tasks:\n    - ansible.builtin.package:\n        name: nginx\n        state: present",
       "language": "yaml",
-      "id": "ansible-007"
+      "id": "ansible-007",
+      "focus": "fundamentals"
     },
     {
       "topic": "Idempotency",
@@ -110,7 +117,8 @@
       ],
       "answerIndex": 2,
       "explanation": "Idempotency concerns repeated effects, not simply whether a command runs. Desired-state modules often inspect existing state before changing it.",
-      "id": "ansible-008"
+      "id": "ansible-008",
+      "focus": "fundamentals"
     },
     {
       "topic": "Commands",
@@ -123,7 +131,8 @@
       ],
       "answerIndex": 1,
       "explanation": "command avoids shell interpretation, reducing quoting and injection risks. Use shell only when shell features are actually required.",
-      "id": "ansible-009"
+      "id": "ansible-009",
+      "focus": "fundamentals"
     },
     {
       "topic": "Commands",
@@ -138,7 +147,8 @@
       "explanation": "command passes arguments without shell parsing. Use a suitable module or an explicitly justified shell task for pipelines.",
       "code": "- ansible.builtin.command: printf hello | wc -c",
       "language": "yaml",
-      "id": "ansible-010"
+      "id": "ansible-010",
+      "focus": "scenarios"
     },
     {
       "topic": "Commands",
@@ -153,7 +163,8 @@
       "explanation": "creates is a guard checked before execution. The command or another task must actually create the marker when initialization succeeds.",
       "code": "- ansible.builtin.command: /opt/app/init\n  args:\n    creates: /opt/app/.initialized",
       "language": "yaml",
-      "id": "ansible-011"
+      "id": "ansible-011",
+      "focus": "scenarios"
     },
     {
       "topic": "Handlers",
@@ -168,7 +179,8 @@
       "explanation": "Notifications are driven by changed status. A successful but unchanged task does not normally notify handlers.",
       "code": "- ansible.builtin.template:\n    src: app.conf.j2\n    dest: /etc/app.conf\n  notify: Restart app",
       "language": "yaml",
-      "id": "ansible-012"
+      "id": "ansible-012",
+      "focus": "fundamentals"
     },
     {
       "topic": "Handlers",
@@ -181,7 +193,8 @@
       ],
       "answerIndex": 1,
       "explanation": "Ansible deduplicates handler notifications within a handler execution phase. Handlers run in their defined order rather than notification order.",
-      "id": "ansible-013"
+      "id": "ansible-013",
+      "focus": "scenarios"
     },
     {
       "topic": "Handlers",
@@ -196,7 +209,8 @@
       "explanation": "flush_handlers creates an earlier handler execution point. Later changed tasks may notify the same handlers again.",
       "code": "- ansible.builtin.meta: flush_handlers",
       "language": "yaml",
-      "id": "ansible-014"
+      "id": "ansible-014",
+      "focus": "scenarios"
     },
     {
       "topic": "Files",
@@ -209,7 +223,8 @@
       ],
       "answerIndex": 0,
       "explanation": "template renders Jinja on the controller before transferring content. copy is appropriate for content that does not require template rendering.",
-      "id": "ansible-015"
+      "id": "ansible-015",
+      "focus": "fundamentals"
     },
     {
       "topic": "Permissions",
@@ -224,7 +239,8 @@
       "explanation": "Quoting permission modes avoids YAML numeric-interpretation surprises. The file module then applies the intended octal mode.",
       "code": "- ansible.builtin.file:\n    path: /etc/app.conf\n    mode: \"0640\"",
       "language": "yaml",
-      "id": "ansible-016"
+      "id": "ansible-016",
+      "focus": "fundamentals"
     },
     {
       "topic": "YAML and Jinja",
@@ -239,7 +255,8 @@
       "explanation": "YAML parses the document before Ansible renders expressions. Quoting avoids confusion with YAML mapping syntax.",
       "code": "dest: \"{{ config_directory }}/app.conf\"",
       "language": "yaml",
-      "id": "ansible-017"
+      "id": "ansible-017",
+      "focus": "fundamentals"
     },
     {
       "topic": "Variables",
@@ -252,7 +269,8 @@
       ],
       "answerIndex": 2,
       "explanation": "Extra variables have very high variable precedence. Use them deliberately because they can override values from many other variable sources.",
-      "id": "ansible-018"
+      "id": "ansible-018",
+      "focus": "scenarios"
     },
     {
       "topic": "Jinja filters",
@@ -267,7 +285,8 @@
       "explanation": "The default filter supplies a fallback for undefined values. Treating empty or false values as missing requires the filter’s optional boolean behavior.",
       "code": "port: \"{{ optional_port | default(8080) }}\"",
       "language": "yaml",
-      "id": "ansible-019"
+      "id": "ansible-019",
+      "focus": "scenarios"
     },
     {
       "topic": "Conditionals",
@@ -282,7 +301,8 @@
       "explanation": "Explicit conversion avoids treating a nonempty string as an intended boolean value. Modern conditionals should evaluate to booleans.",
       "code": "- ansible.builtin.debug:\n    msg: Feature enabled\n  when: enabled | bool",
       "language": "yaml",
-      "id": "ansible-020"
+      "id": "ansible-020",
+      "focus": "fundamentals"
     },
     {
       "topic": "Conditionals",
@@ -297,7 +317,8 @@
       "explanation": "A list of when conditions is combined with logical AND. The condition is evaluated for each host executing the task.",
       "code": "when:\n  - ansible_facts[\"os_family\"] == \"Debian\"\n  - deploy_enabled | bool",
       "language": "yaml",
-      "id": "ansible-021"
+      "id": "ansible-021",
+      "focus": "scenarios"
     },
     {
       "topic": "Conditionals",
@@ -312,7 +333,8 @@
       "explanation": "An explicit or expression expresses alternative conditions. A YAML list of separate conditions would instead use AND.",
       "code": "when: (maintenance | bool) or (emergency | bool)",
       "language": "yaml",
-      "id": "ansible-022"
+      "id": "ansible-022",
+      "focus": "scenarios"
     },
     {
       "topic": "Loops",
@@ -327,7 +349,8 @@
       "explanation": "A condition on a looping task is evaluated separately for each item.",
       "code": "- ansible.builtin.debug:\n    var: item\n  loop: [1, 2, 3, 4]\n  when: item > 2",
       "language": "yaml",
-      "id": "ansible-023"
+      "id": "ansible-023",
+      "focus": "scenarios"
     },
     {
       "topic": "Registered results",
@@ -340,7 +363,8 @@
       ],
       "answerIndex": 1,
       "explanation": "A registered looping task returns an aggregate result with a results list. Individual module result fields live inside those entries.",
-      "id": "ansible-024"
+      "id": "ansible-024",
+      "focus": "scenarios"
     },
     {
       "topic": "Changed status",
@@ -355,7 +379,8 @@
       "explanation": "changed_when controls change reporting. It does not alter execution, erase failures, or make a command idempotent by itself.",
       "code": "- ansible.builtin.command: /usr/bin/app --version\n  register: app_version\n  changed_when: false",
       "language": "yaml",
-      "id": "ansible-025"
+      "id": "ansible-025",
+      "focus": "scenarios"
     },
     {
       "topic": "Failure conditions",
@@ -370,7 +395,8 @@
       "explanation": "A failed_when list combines expressions with AND. Use one expression with or if either condition should independently indicate failure.",
       "code": "register: result\nfailed_when:\n  - result.rc != 0\n  - '\"FATAL\" in result.stderr'",
       "language": "yaml",
-      "id": "ansible-026"
+      "id": "ansible-026",
+      "focus": "scenarios"
     },
     {
       "topic": "Retries",
@@ -385,7 +411,8 @@
       "explanation": "until defines the success condition for retrying this task. retries and delay control the retry budget and waiting period.",
       "code": "- ansible.builtin.command: /opt/app/healthcheck\n  register: health\n  until: health.rc == 0\n  retries: 5\n  delay: 2\n  changed_when: false",
       "language": "yaml",
-      "id": "ansible-027"
+      "id": "ansible-027",
+      "focus": "scenarios"
     },
     {
       "topic": "Error handling",
@@ -398,7 +425,8 @@
       ],
       "answerIndex": 3,
       "explanation": "ignore_errors applies to ordinary task failure results, not every possible failure mode. Ansible has separate unreachable-host handling.",
-      "id": "ansible-028"
+      "id": "ansible-028",
+      "focus": "fundamentals"
     },
     {
       "topic": "Blocks",
@@ -411,7 +439,8 @@
       ],
       "answerIndex": 0,
       "explanation": "rescue handles normal block task failures. Invalid task definitions and unreachable hosts are not ordinary rescuable failed results.",
-      "id": "ansible-029"
+      "id": "ansible-029",
+      "focus": "fundamentals"
     },
     {
       "topic": "Blocks",
@@ -424,7 +453,8 @@
       ],
       "answerIndex": 0,
       "explanation": "always is used for actions such as cleanup after block execution. It does not overcome all fatal execution or connectivity problems.",
-      "id": "ansible-030"
+      "id": "ansible-030",
+      "focus": "fundamentals"
     },
     {
       "topic": "Check mode",
@@ -437,7 +467,8 @@
       ],
       "answerIndex": 0,
       "explanation": "Check mode depends on module support and task behavior. Unsupported tasks may be skipped, and registered-result-dependent flows may not simulate fully.",
-      "id": "ansible-031"
+      "id": "ansible-031",
+      "focus": "fundamentals"
     },
     {
       "topic": "Diff mode",
@@ -450,7 +481,8 @@
       ],
       "answerIndex": 2,
       "explanation": "Diff output can reveal file contents. Use appropriate output controls such as diff: false for sensitive tasks.",
-      "id": "ansible-032"
+      "id": "ansible-032",
+      "focus": "fundamentals"
     },
     {
       "topic": "Vault",
@@ -463,7 +495,8 @@
       ],
       "answerIndex": 0,
       "explanation": "Vault protects stored content. Once decrypted for use, secrets still need careful handling in tasks, logs, and application configuration.",
-      "id": "ansible-033"
+      "id": "ansible-033",
+      "focus": "fundamentals"
     },
     {
       "topic": "Secret handling",
@@ -476,7 +509,8 @@
       ],
       "answerIndex": 2,
       "explanation": "no_log suppresses normal task-result logging. Do not expose the same secret through a separate debug task or assume it solves every logging path.",
-      "id": "ansible-034"
+      "id": "ansible-034",
+      "focus": "fundamentals"
     },
     {
       "topic": "Delegation",
@@ -491,7 +525,8 @@
       "explanation": "Delegation changes where the action runs. inventory_hostname still identifies the original host context, though other connection variables can come from the delegated host.",
       "code": "- ansible.builtin.command: /usr/bin/hostname\n  delegate_to: localhost\n  register: delegated_result",
       "language": "yaml",
-      "id": "ansible-035"
+      "id": "ansible-035",
+      "focus": "scenarios"
     },
     {
       "topic": "Execution control",
@@ -504,7 +539,8 @@
       ],
       "answerIndex": 3,
       "explanation": "run_once normally applies to the current host batch. If an operation truly must run once for the entire play, design its condition accordingly.",
-      "id": "ansible-036"
+      "id": "ansible-036",
+      "focus": "scenarios"
     },
     {
       "topic": "Rolling changes",
@@ -517,7 +553,8 @@
       ],
       "answerIndex": 3,
       "explanation": "serial bounds the batch of hosts progressing through the play. It is useful for rolling maintenance and controlled deployments.",
-      "id": "ansible-037"
+      "id": "ansible-037",
+      "focus": "fundamentals"
     },
     {
       "topic": "Concurrency",
@@ -530,7 +567,8 @@
       ],
       "answerIndex": 3,
       "explanation": "throttle can constrain task concurrency below the broader worker or batch limits. It does not set a permanent host count.",
-      "id": "ansible-038"
+      "id": "ansible-038",
+      "focus": "fundamentals"
     },
     {
       "topic": "Strategies",
@@ -543,7 +581,8 @@
       ],
       "answerIndex": 0,
       "explanation": "free lets hosts progress independently within applicable limits. Cross-host synchronization assumptions that fit linear execution may no longer hold.",
-      "id": "ansible-039"
+      "id": "ansible-039",
+      "focus": "fundamentals"
     },
     {
       "topic": "Controller workers",
@@ -556,7 +595,8 @@
       ],
       "answerIndex": 2,
       "explanation": "forks affects parallel host work. serial, throttle, strategy, and target responsiveness can further limit effective concurrency.",
-      "id": "ansible-040"
+      "id": "ansible-040",
+      "focus": "fundamentals"
     },
     {
       "topic": "Task reuse",
@@ -569,7 +609,8 @@
       ],
       "answerIndex": 1,
       "explanation": "Static imports are expanded earlier; dynamic includes are processed during execution. This affects conditionals, loops, and tag handling.",
-      "id": "ansible-041"
+      "id": "ansible-041",
+      "focus": "fundamentals"
     },
     {
       "topic": "Tags",
@@ -582,7 +623,8 @@
       ],
       "answerIndex": 1,
       "explanation": "Dynamic includes need deliberate tag propagation, such as apply tags or tagging the included tasks. Tagging the include alone is not blanket inheritance.",
-      "id": "ansible-042"
+      "id": "ansible-042",
+      "focus": "scenarios"
     },
     {
       "topic": "Roles",
@@ -595,7 +637,8 @@
       ],
       "answerIndex": 1,
       "explanation": "Role defaults have low variable precedence and are designed for customization. Role vars have higher precedence and are harder for callers to override.",
-      "id": "ansible-043"
+      "id": "ansible-043",
+      "focus": "fundamentals"
     },
     {
       "topic": "Handlers",
@@ -608,7 +651,8 @@
       ],
       "answerIndex": 0,
       "explanation": "listen topics decouple notifications from individual handler names. Multiple handlers can listen to the same topic.",
-      "id": "ansible-044"
+      "id": "ansible-044",
+      "focus": "fundamentals"
     },
     {
       "topic": "Collections",
@@ -621,7 +665,8 @@
       ],
       "answerIndex": 3,
       "explanation": "Fully qualified collection names clarify module resolution and reduce collisions with similarly named modules from other collections.",
-      "id": "ansible-045"
+      "id": "ansible-045",
+      "focus": "fundamentals"
     },
     {
       "topic": "Host variables",
@@ -634,7 +679,8 @@
       ],
       "answerIndex": 1,
       "explanation": "hostvars exposes inventory-host variable contexts. Reading gathered facts from another host still requires those facts to be available.",
-      "id": "ansible-046"
+      "id": "ansible-046",
+      "focus": "scenarios"
     },
     {
       "topic": "Task environment",
@@ -649,7 +695,8 @@
       "explanation": "The environment keyword supplies environment variables for task execution. It does not permanently modify the controller or target account’s login configuration.",
       "code": "- ansible.builtin.command: /opt/app/check\n  environment:\n    APP_MODE: staging",
       "language": "yaml",
-      "id": "ansible-047"
+      "id": "ansible-047",
+      "focus": "scenarios"
     },
     {
       "topic": "Asynchronous work",
@@ -664,7 +711,8 @@
       "explanation": "poll zero is fire-and-forget behavior for the launching task. Use the returned job information to inspect or wait for completion separately.",
       "code": "- ansible.builtin.command: /opt/app/long-job\n  async: 600\n  poll: 0\n  register: job",
       "language": "yaml",
-      "id": "ansible-048"
+      "id": "ansible-048",
+      "focus": "fundamentals"
     },
     {
       "topic": "Asynchronous work",
@@ -677,7 +725,8 @@
       ],
       "answerIndex": 1,
       "explanation": "async_status uses the async job ID to retrieve status. A polling loop with until can wait for its finished result.",
-      "id": "ansible-049"
+      "id": "ansible-049",
+      "focus": "fundamentals"
     },
     {
       "topic": "Validation",
@@ -692,7 +741,8 @@
       "explanation": "assert checks preconditions and produces a failure if its expression is false. Validation is distinct from actually provisioning the desired resource.",
       "code": "- ansible.builtin.assert:\n    that:\n      - replicas | int > 0\n    fail_msg: replicas must be positive",
       "language": "yaml",
-      "id": "ansible-050"
+      "id": "ansible-050",
+      "focus": "scenarios"
     }
   ]
 }

@@ -13,7 +13,8 @@
         "A remote branch"
       ],
       "answerIndex": 1,
-      "explanation": "git add copies the selected content into the index. Later edits must be staged again if you want them in the next commit."
+      "explanation": "git add copies the selected content into the index. Later edits must be staged again if you want them in the next commit.",
+      "focus": "fundamentals"
     },
     {
       "id": "git-002",
@@ -26,7 +27,8 @@
         "A new branch named feature and switches to it"
       ],
       "answerIndex": 3,
-      "explanation": "git switch -c creates a new branch at the chosen starting point (HEAD by default), then checks it out."
+      "explanation": "git switch -c creates a new branch at the chosen starting point (HEAD by default), then checks it out.",
+      "focus": "fundamentals"
     },
     {
       "id": "git-003",
@@ -39,7 +41,8 @@
         "Downloads objects and updates remote-tracking references"
       ],
       "answerIndex": 3,
-      "explanation": "git fetch downloads repository data and updates remote-tracking references. It does not normally merge changes into your current branch."
+      "explanation": "git fetch downloads repository data and updates remote-tracking references. It does not normally merge changes into your current branch.",
+      "focus": "fundamentals"
     },
     {
       "topic": "Inspecting changes",
@@ -52,7 +55,8 @@
       ],
       "answerIndex": 1,
       "explanation": "The staged diff previews changes currently prepared for the next commit. A plain git diff normally shows unstaged tracked changes.",
-      "id": "git-004"
+      "id": "git-004",
+      "focus": "fundamentals"
     },
     {
       "topic": "Inspecting changes",
@@ -65,7 +69,8 @@
       ],
       "answerIndex": 0,
       "explanation": "The index is the comparison baseline for a normal working-tree diff. Use --staged to inspect the already-staged part.",
-      "id": "git-005"
+      "id": "git-005",
+      "focus": "scenarios"
     },
     {
       "topic": "Status",
@@ -80,7 +85,8 @@
       "explanation": "In short status, the first column describes the index and the second describes the working tree.",
       "code": "MM app.py",
       "language": "text",
-      "id": "git-006"
+      "id": "git-006",
+      "focus": "scenarios"
     },
     {
       "topic": "Staging",
@@ -93,7 +99,8 @@
       ],
       "answerIndex": 3,
       "explanation": "--staged changes the index rather than discarding the working-tree edit. A normal restore without it targets working-tree content.",
-      "id": "git-007"
+      "id": "git-007",
+      "focus": "fundamentals"
     },
     {
       "topic": "Restoring files",
@@ -108,7 +115,8 @@
       "explanation": "Without --staged or --source, restore normally copies the index version into the working tree for the selected path.",
       "code": "git restore -- settings.ini",
       "language": "shell",
-      "id": "git-008"
+      "id": "git-008",
+      "focus": "scenarios"
     },
     {
       "topic": "Reset",
@@ -121,7 +129,8 @@
       ],
       "answerIndex": 1,
       "explanation": "A soft reset moves the branch reference but preserves staged and working-tree content. The former commit’s changes remain available to recommit.",
-      "id": "git-009"
+      "id": "git-009",
+      "focus": "fundamentals"
     },
     {
       "topic": "Reset",
@@ -134,7 +143,8 @@
       ],
       "answerIndex": 2,
       "explanation": "Mixed is the default reset mode. Resetting to HEAD commonly unstages changes without discarding their working-tree content.",
-      "id": "git-010"
+      "id": "git-010",
+      "focus": "fundamentals"
     },
     {
       "topic": "Reset",
@@ -147,7 +157,8 @@
       ],
       "answerIndex": 1,
       "explanation": "A hard reset aligns the index and tracked working tree with the target commit. Do not rely on reflog to recover edits that were never committed.",
-      "id": "git-011"
+      "id": "git-011",
+      "focus": "fundamentals"
     },
     {
       "topic": "Shared history",
@@ -160,7 +171,8 @@
       ],
       "answerIndex": 0,
       "explanation": "Revert records a new inverse change. It avoids rewriting the shared commits that collaborators may already have based work on.",
-      "id": "git-012"
+      "id": "git-012",
+      "focus": "scenarios"
     },
     {
       "topic": "Merging",
@@ -173,7 +185,8 @@
       ],
       "answerIndex": 3,
       "explanation": "A fast-forward simply moves the branch pointer along existing history. Diverged histories cannot be combined by only moving that pointer.",
-      "id": "git-013"
+      "id": "git-013",
+      "focus": "fundamentals"
     },
     {
       "topic": "Merging",
@@ -188,7 +201,8 @@
       "explanation": "--no-ff preserves an explicit merge boundary. It does not itself squash commits or remove the merged branch.",
       "code": "git merge --no-ff feature",
       "language": "shell",
-      "id": "git-014"
+      "id": "git-014",
+      "focus": "fundamentals"
     },
     {
       "topic": "Rebasing",
@@ -201,7 +215,8 @@
       ],
       "answerIndex": 2,
       "explanation": "A commit ID hashes the commit object, including its parent references. Replaying the same patch on another parent creates a different commit.",
-      "id": "git-015"
+      "id": "git-015",
+      "focus": "fundamentals"
     },
     {
       "topic": "Rebase conflicts",
@@ -214,7 +229,8 @@
       ],
       "answerIndex": 3,
       "explanation": "Staging marks the conflict resolution. --continue lets rebase proceed to the next commit in the replay sequence.",
-      "id": "git-016"
+      "id": "git-016",
+      "focus": "scenarios"
     },
     {
       "topic": "Merge conflicts",
@@ -227,7 +243,8 @@
       ],
       "answerIndex": 3,
       "explanation": "--abort attempts to restore the pre-merge state. Keeping unrelated uncommitted edits out of an operation makes recovery more predictable.",
-      "id": "git-017"
+      "id": "git-017",
+      "focus": "fundamentals"
     },
     {
       "topic": "Conflict markers",
@@ -242,7 +259,8 @@
       "explanation": "In a normal merge conflict, the HEAD region is the current side. Resolve the intended content and remove the markers before staging.",
       "code": "<<<<<<< HEAD\nport = 8080\n=======\nport = 9090\n>>>>>>> feature",
       "language": "text",
-      "id": "git-018"
+      "id": "git-018",
+      "focus": "scenarios"
     },
     {
       "topic": "Stashing",
@@ -255,7 +273,8 @@
       ],
       "answerIndex": 0,
       "explanation": "-u includes untracked files. Ignored files require a different choice, such as --all, and may include local material you should handle carefully.",
-      "id": "git-019"
+      "id": "git-019",
+      "focus": "fundamentals"
     },
     {
       "topic": "Stashing",
@@ -268,7 +287,8 @@
       ],
       "answerIndex": 2,
       "explanation": "pop drops the entry only after successful application. A conflicted application normally leaves the stash available.",
-      "id": "git-020"
+      "id": "git-020",
+      "focus": "scenarios"
     },
     {
       "topic": "Ignore rules",
@@ -281,7 +301,8 @@
       ],
       "answerIndex": 3,
       "explanation": "Ignore rules mainly affect untracked paths. Removing tracking also does not erase historical secrets; exposed credentials require separate remediation.",
-      "id": "git-021"
+      "id": "git-021",
+      "focus": "fundamentals"
     },
     {
       "topic": "Ignore rules",
@@ -296,7 +317,8 @@
       "explanation": "--cached targets the index. Commit the removal and add an appropriate ignore rule if the file should stay local.",
       "code": "git rm --cached local.env",
       "language": "shell",
-      "id": "git-022"
+      "id": "git-022",
+      "focus": "scenarios"
     },
     {
       "topic": "Pulling",
@@ -311,7 +333,8 @@
       "explanation": "--ff-only prevents pull from introducing a merge commit or silently choosing a rebase when histories diverge.",
       "code": "git pull --ff-only",
       "language": "shell",
-      "id": "git-023"
+      "id": "git-023",
+      "focus": "scenarios"
     },
     {
       "topic": "Upstreams",
@@ -326,7 +349,8 @@
       "explanation": "The upstream relationship supports default pull/push behavior and ahead/behind reporting. It is not repository access control.",
       "code": "git push -u origin feature",
       "language": "shell",
-      "id": "git-024"
+      "id": "git-024",
+      "focus": "fundamentals"
     },
     {
       "topic": "Detached HEAD",
@@ -339,7 +363,8 @@
       ],
       "answerIndex": 1,
       "explanation": "A new branch keeps a named reference to the detached work. Otherwise it can become hard to find after switching away and eventually be garbage-collected.",
-      "id": "git-025"
+      "id": "git-025",
+      "focus": "scenarios"
     },
     {
       "topic": "Recovery",
@@ -352,7 +377,8 @@
       ],
       "answerIndex": 2,
       "explanation": "Reflogs record local reference movements. They are local, expire over time, and are not a universal backup of uncommitted file contents.",
-      "id": "git-026"
+      "id": "git-026",
+      "focus": "scenarios"
     },
     {
       "topic": "Cherry-picking",
@@ -365,7 +391,8 @@
       ],
       "answerIndex": 0,
       "explanation": "Cherry-picking selects a change for replay. The resulting commit usually has a different parent and therefore a different ID.",
-      "id": "git-027"
+      "id": "git-027",
+      "focus": "fundamentals"
     },
     {
       "topic": "Reverting merges",
@@ -378,7 +405,8 @@
       ],
       "answerIndex": 0,
       "explanation": "A merge has multiple parents. The mainline selection defines the baseline for interpreting and reversing its changes.",
-      "id": "git-028"
+      "id": "git-028",
+      "focus": "scenarios"
     },
     {
       "topic": "Tags",
@@ -391,7 +419,8 @@
       ],
       "answerIndex": 3,
       "explanation": "Annotated tags carry metadata and can be signed. A lightweight tag is essentially a direct reference; tags do not move with branch development.",
-      "id": "git-029"
+      "id": "git-029",
+      "focus": "fundamentals"
     },
     {
       "topic": "Remote tracking",
@@ -404,7 +433,8 @@
       ],
       "answerIndex": 1,
       "explanation": "Remote-tracking refs reflect the remote as last fetched. They can be stale until network synchronization occurs.",
-      "id": "git-030"
+      "id": "git-030",
+      "focus": "fundamentals"
     },
     {
       "topic": "History ranges",
@@ -419,7 +449,8 @@
       "explanation": "For revision traversal, A..B excludes commits reachable from A and includes those reachable from B.",
       "code": "git log main..feature",
       "language": "shell",
-      "id": "git-031"
+      "id": "git-031",
+      "focus": "scenarios"
     },
     {
       "topic": "Diff ranges",
@@ -432,7 +463,8 @@
       ],
       "answerIndex": 2,
       "explanation": "Three-dot diff is useful for the changes introduced on feature since its common ancestor with main. It differs from three-dot log traversal.",
-      "id": "git-032"
+      "id": "git-032",
+      "focus": "scenarios"
     },
     {
       "topic": "Ancestry",
@@ -445,7 +477,8 @@
       ],
       "answerIndex": 0,
       "explanation": "A merge base is an ancestry relationship used in merge and comparison operations. Criss-cross histories can have more than one best base.",
-      "id": "git-033"
+      "id": "git-033",
+      "focus": "fundamentals"
     },
     {
       "topic": "Debugging",
@@ -458,7 +491,8 @@
       ],
       "answerIndex": 1,
       "explanation": "Bisect searches a good-to-bad commit range using repeated test results. A reliable test and a correct starting range are important.",
-      "id": "git-034"
+      "id": "git-034",
+      "focus": "fundamentals"
     },
     {
       "topic": "Debugging",
@@ -471,7 +505,8 @@
       ],
       "answerIndex": 3,
       "explanation": "Blame attributes line changes to commits. It is an investigation aid, not proof of who caused a bug or who first conceived the code.",
-      "id": "git-035"
+      "id": "git-035",
+      "focus": "fundamentals"
     },
     {
       "topic": "Worktrees",
@@ -484,7 +519,8 @@
       ],
       "answerIndex": 0,
       "explanation": "Linked worktrees enable parallel working directories with separate checkouts. Git normally prevents checking out the same branch in multiple worktrees simultaneously.",
-      "id": "git-036"
+      "id": "git-036",
+      "focus": "fundamentals"
     },
     {
       "topic": "Submodules",
@@ -497,7 +533,8 @@
       ],
       "answerIndex": 1,
       "explanation": "Submodules refer to other repositories at recorded commits. Recursive cloning populates their working directories instead of leaving only the parent checkout.",
-      "id": "git-037"
+      "id": "git-037",
+      "focus": "fundamentals"
     },
     {
       "topic": "Cleaning",
@@ -512,7 +549,8 @@
       "explanation": "-n is a dry run and -d includes untracked directories. Actual clean removal can destroy work that Git has never stored.",
       "code": "git clean -nd",
       "language": "shell",
-      "id": "git-038"
+      "id": "git-038",
+      "focus": "scenarios"
     },
     {
       "topic": "Pushing",
@@ -525,7 +563,8 @@
       ],
       "answerIndex": 2,
       "explanation": "A lease protects against unexpected remote updates. Its default expectation can be affected by fetched remote-tracking refs, so it is not a universal safety guarantee.",
-      "id": "git-039"
+      "id": "git-039",
+      "focus": "fundamentals"
     },
     {
       "topic": "Amending",
@@ -538,7 +577,8 @@
       ],
       "answerIndex": 0,
       "explanation": "Amend creates a replacement for the current tip commit. Collaborators may already depend on the old ID.",
-      "id": "git-040"
+      "id": "git-040",
+      "focus": "fundamentals"
     },
     {
       "topic": "Commits",
@@ -551,7 +591,8 @@
       ],
       "answerIndex": 2,
       "explanation": "A normal commit records the index. Stage subsequent edits if they should also be included.",
-      "id": "git-041"
+      "id": "git-041",
+      "focus": "scenarios"
     },
     {
       "topic": "Path reset",
@@ -566,7 +607,8 @@
       "explanation": "The path form resets index entries. It is different from resetting the branch tip to another commit.",
       "code": "git reset HEAD -- config.yml",
       "language": "shell",
-      "id": "git-042"
+      "id": "git-042",
+      "focus": "scenarios"
     },
     {
       "topic": "Restore source",
@@ -581,7 +623,8 @@
       "explanation": "--source chooses the content source. Without --staged, the destination is normally the working tree for the specified path.",
       "code": "git restore --source=v1.0 -- app.py",
       "language": "shell",
-      "id": "git-043"
+      "id": "git-043",
+      "focus": "scenarios"
     },
     {
       "topic": "Large repositories",
@@ -594,7 +637,8 @@
       ],
       "answerIndex": 0,
       "explanation": "Sparse checkout narrows the working-tree view. It does not by itself remove historical objects or change repository access permissions.",
-      "id": "git-044"
+      "id": "git-044",
+      "focus": "fundamentals"
     },
     {
       "topic": "Revision syntax",
@@ -607,7 +651,8 @@
       ],
       "answerIndex": 0,
       "explanation": "The ~ operator follows first-parent ancestry. ~1 is one first-parent step backward.",
-      "id": "git-045"
+      "id": "git-045",
+      "focus": "fundamentals"
     },
     {
       "topic": "Revision syntax",
@@ -620,7 +665,8 @@
       ],
       "answerIndex": 3,
       "explanation": "^n selects a numbered parent. ~n instead walks first-parent ancestry repeatedly.",
-      "id": "git-046"
+      "id": "git-046",
+      "focus": "fundamentals"
     },
     {
       "topic": "Attributes",
@@ -633,7 +679,8 @@
       ],
       "answerIndex": 2,
       "explanation": "Attributes can describe path-specific content handling. They are distinct from ignore rules and hosting-service branch policies.",
-      "id": "git-047"
+      "id": "git-047",
+      "focus": "fundamentals"
     },
     {
       "topic": "Conflict reuse",
@@ -646,7 +693,8 @@
       ],
       "answerIndex": 0,
       "explanation": "rerere records how conflicts were resolved and can reapply matching resolutions later. Review the result rather than assuming every reused resolution is appropriate.",
-      "id": "git-048"
+      "id": "git-048",
+      "focus": "fundamentals"
     },
     {
       "topic": "Conflict sides",
@@ -659,7 +707,8 @@
       ],
       "answerIndex": 3,
       "explanation": "In a normal merge, ours refers to the current side. Stage the file afterward if that selection is the intended resolution.",
-      "id": "git-049"
+      "id": "git-049",
+      "focus": "scenarios"
     },
     {
       "topic": "Hooks",
@@ -672,7 +721,8 @@
       ],
       "answerIndex": 2,
       "explanation": "The local .git directory is not tracked as project content. Teams can version hook scripts elsewhere and arrange installation explicitly.",
-      "id": "git-050"
+      "id": "git-050",
+      "focus": "fundamentals"
     }
   ]
 }

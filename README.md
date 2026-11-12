@@ -82,3 +82,7 @@ After editing an example: `npm run snippets:build`, `npm test`, `npm run validat
 Kubernetes questions 051–074 adapt the standalone interview lab into scenario MCQs on admission/scheduling, taints, failed image rollouts, evidence-based recovery, and scoped cleanup. See [INTERVIEW-LAB-QUESTIONS.md](INTERVIEW-LAB-QUESTIONS.md).
 
 Interview questions 1–9 and their discussion corrections are reconciled with existing coverage in [INTERVIEW-HANDOFF-01-09.md](INTERVIEW-HANDOFF-01-09.md). Questions 075–098 add missing scenarios without duplicating the existing 74 items.
+
+## Practice focus metadata
+
+Every maintained question has `"focus": "fundamentals"` or `"focus": "scenarios"`. Fundamentals covers concepts, terminology, commands, and basic configuration principles; Scenarios covers applied diagnosis, code/output interpretation, and operational decisions. This is an editorial learning focus, not a difficulty grade or FSRS recall rating. Mixed is an app preference that includes all questions; it is not a stored question tag. Existing prompts, IDs, answers, explanations, and example links are retained. The validator requires explicit focus metadata in this repository. Legacy/external libraries without these tags remain usable in the app’s Mixed mode.

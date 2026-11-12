@@ -13,7 +13,8 @@
       ],
       "answerIndex": 2,
       "explanation": "ONTAP is the storage operating system. Separate its responsibilities from the hypervisor, host operating system, network fabric, and application when explaining an end-to-end storage path.",
-      "id": "netapp-001"
+      "id": "netapp-001",
+      "focus": "fundamentals"
     },
     {
       "topic": "Architecture",
@@ -26,7 +27,8 @@
       ],
       "answerIndex": 1,
       "explanation": "A controller contributes compute, connectivity, and storage ownership to the cluster. A cluster can contain multiple HA pairs; a cluster and an HA pair are not interchangeable terms.",
-      "id": "netapp-002"
+      "id": "netapp-002",
+      "focus": "fundamentals"
     },
     {
       "topic": "Availability",
@@ -39,7 +41,8 @@
       ],
       "answerIndex": 0,
       "explanation": "HA supports storage-controller continuity and planned maintenance. It is not a substitute for backups, independent copies, or application-level recovery.",
-      "id": "netapp-003"
+      "id": "netapp-003",
+      "focus": "fundamentals"
     },
     {
       "topic": "Availability",
@@ -52,7 +55,8 @@
       ],
       "answerIndex": 0,
       "explanation": "The partner can serve storage during a controller outage or maintenance. Before giveback, verify controller health and follow the supported procedure rather than assuming recovery is complete because a node rebooted.",
-      "id": "netapp-004"
+      "id": "netapp-004",
+      "focus": "fundamentals"
     },
     {
       "topic": "Storage layout",
@@ -65,7 +69,8 @@
       ],
       "answerIndex": 2,
       "explanation": "Local tiers organize physical storage into usable capacity. Volumes, SVMs, and LIFs are separate logical layers. Newer platform personalities can use different administration models.",
-      "id": "netapp-005"
+      "id": "netapp-005",
+      "focus": "fundamentals"
     },
     {
       "topic": "Storage layout",
@@ -78,7 +83,8 @@
       ],
       "answerIndex": 0,
       "explanation": "FlexVol volumes hold data and are important units for capacity and protection management. A host-facing LUN or NAS namespace uses this underlying storage organization.",
-      "id": "netapp-006"
+      "id": "netapp-006",
+      "focus": "fundamentals"
     },
     {
       "topic": "Storage virtualization",
@@ -91,7 +97,8 @@
       ],
       "answerIndex": 2,
       "explanation": "SVM means Storage Virtual Machine. It provides a logical boundary for data-serving configuration, including volumes and protocol access. The CLI commonly uses the historical term vserver for SVM-related commands.",
-      "id": "netapp-007"
+      "id": "netapp-007",
+      "focus": "fundamentals"
     },
     {
       "topic": "Networking",
@@ -104,7 +111,8 @@
       ],
       "answerIndex": 0,
       "explanation": "Clients connect through data LIFs rather than directly addressing a volume’s physical disk. LIF behavior, placement, and failover depend on protocol, platform, and configuration.",
-      "id": "netapp-008"
+      "id": "netapp-008",
+      "focus": "fundamentals"
     },
     {
       "topic": "Networking",
@@ -117,7 +125,8 @@
       ],
       "answerIndex": 0,
       "explanation": "Being able to administer a cluster does not prove that a client’s data path is working. Troubleshoot the relevant LIF, protocol, and network rather than treating all connectivity as equivalent.",
-      "id": "netapp-009"
+      "id": "netapp-009",
+      "focus": "fundamentals"
     },
     {
       "topic": "Protocols",
@@ -130,7 +139,8 @@
       ],
       "answerIndex": 2,
       "explanation": "NAS (Network Attached Storage) exposes files through protocols such as NFS and SMB. SAN (Storage Area Network) supplies block access through protocols such as FC and iSCSI; the host supplies a filesystem or another block consumer.",
-      "id": "netapp-010"
+      "id": "netapp-010",
+      "focus": "fundamentals"
     },
     {
       "topic": "NFS",
@@ -143,7 +153,8 @@
       ],
       "answerIndex": 1,
       "explanation": "For an NFS datastore, the hypervisor consumes a file service. Guest virtual disks can reside as files on that datastore without each guest mounting the export.",
-      "id": "netapp-011"
+      "id": "netapp-011",
+      "focus": "scenarios"
     },
     {
       "topic": "SMB",
@@ -156,7 +167,8 @@
       ],
       "answerIndex": 2,
       "explanation": "Effective access depends on the applicable share and filesystem permission model, identity, and group memberships. Network reachability alone does not establish authorization.",
-      "id": "netapp-012"
+      "id": "netapp-012",
+      "focus": "scenarios"
     },
     {
       "topic": "SAN",
@@ -169,7 +181,8 @@
       ],
       "answerIndex": 3,
       "explanation": "The host sees a logical disk-like device and can place a filesystem such as VMFS on it. In conventional ONTAP, LUNs are contained in volumes.",
-      "id": "netapp-013"
+      "id": "netapp-013",
+      "focus": "fundamentals"
     },
     {
       "topic": "iSCSI",
@@ -182,7 +195,8 @@
       ],
       "answerIndex": 1,
       "explanation": "Think through the initiator, IP network, target LIF, session, LUN mapping, and host multipathing. A successful IP ping is only one small part of that path.",
-      "id": "netapp-014"
+      "id": "netapp-014",
+      "focus": "fundamentals"
     },
     {
       "topic": "Fibre Channel",
@@ -195,7 +209,8 @@
       ],
       "answerIndex": 3,
       "explanation": "WWPNs are central to FC zoning and initiator configuration. They are not IP addresses, and verifying one layer does not prove end-to-end LUN access.",
-      "id": "netapp-015"
+      "id": "netapp-015",
+      "focus": "fundamentals"
     },
     {
       "topic": "SAN access",
@@ -208,7 +223,8 @@
       ],
       "answerIndex": 2,
       "explanation": "An igroup identifies SAN initiators such as FC WWPNs or iSCSI initiator names. LUN mapping associates storage with authorized initiators.",
-      "id": "netapp-016"
+      "id": "netapp-016",
+      "focus": "fundamentals"
     },
     {
       "topic": "SAN access",
@@ -221,7 +237,8 @@
       ],
       "answerIndex": 0,
       "explanation": "Fabric zoning controls permitted communication through the FC fabric. ONTAP LUN masking/mapping and host configuration are separate parts of the end-to-end access chain.",
-      "id": "netapp-017"
+      "id": "netapp-017",
+      "focus": "scenarios"
     },
     {
       "topic": "Multipathing",
@@ -234,7 +251,8 @@
       ],
       "answerIndex": 0,
       "explanation": "ALUA means Asymmetric Logical Unit Access. It communicates path characteristics so supported host multipathing can select paths appropriately. Do not assume every NetApp platform has the same symmetric or asymmetric path behavior.",
-      "id": "netapp-018"
+      "id": "netapp-018",
+      "focus": "fundamentals"
     },
     {
       "topic": "Multipathing",
@@ -247,7 +265,8 @@
       ],
       "answerIndex": 1,
       "explanation": "Multipathing supports path availability and, with suitable policies, path use. It does not replace storage redundancy, and surviving-path capacity still matters.",
-      "id": "netapp-019"
+      "id": "netapp-019",
+      "focus": "scenarios"
     },
     {
       "topic": "RAID",
@@ -260,7 +279,8 @@
       ],
       "answerIndex": 0,
       "explanation": "RAID-DP uses double parity. The protection is about disk failures in the RAID group, not arbitrary site loss or logical data corruption.",
-      "id": "netapp-020"
+      "id": "netapp-020",
+      "focus": "fundamentals"
     },
     {
       "topic": "RAID and recovery",
@@ -273,7 +293,8 @@
       ],
       "answerIndex": 1,
       "explanation": "Availability against disk failures and recoverability from data loss are different objectives. Independent recovery copies and tested restores address risks RAID does not.",
-      "id": "netapp-021"
+      "id": "netapp-021",
+      "focus": "fundamentals"
     },
     {
       "topic": "Snapshots",
@@ -286,7 +307,8 @@
       ],
       "answerIndex": 1,
       "explanation": "Snapshot copies preserve a point-in-time view without copying the whole volume at creation. Local snapshots still depend on their underlying storage and protection design.",
-      "id": "netapp-022"
+      "id": "netapp-022",
+      "focus": "fundamentals"
     },
     {
       "topic": "Snapshot capacity",
@@ -299,7 +321,8 @@
       ],
       "answerIndex": 3,
       "explanation": "Blocks needed by snapshots cannot be reclaimed solely because live data no longer references them. Review snapshot retention and actual space accounting before deleting protection data.",
-      "id": "netapp-023"
+      "id": "netapp-023",
+      "focus": "scenarios"
     },
     {
       "topic": "Application consistency",
@@ -312,7 +335,8 @@
       ],
       "answerIndex": 3,
       "explanation": "Storage-level point-in-time capture and application transaction consistency are different layers. Use the application’s supported backup/recovery integration and validate recovery.",
-      "id": "netapp-024"
+      "id": "netapp-024",
+      "focus": "fundamentals"
     },
     {
       "topic": "Replication",
@@ -325,7 +349,8 @@
       ],
       "answerIndex": 2,
       "explanation": "Asynchronous replication supports recovery from another copy but may lag the source. Controller HA supports local service continuity; neither alone proves the full application DR plan.",
-      "id": "netapp-025"
+      "id": "netapp-025",
+      "focus": "fundamentals"
     },
     {
       "topic": "Recovery objectives",
@@ -338,7 +363,8 @@
       ],
       "answerIndex": 1,
       "explanation": "Recovery Point Objective (RPO) asks how much recent data can be lost; Recovery Time Objective (RTO) asks how long restoration can take. Backup frequency, replication lag, dependencies, and restore testing influence whether targets are achievable.",
-      "id": "netapp-026"
+      "id": "netapp-026",
+      "focus": "fundamentals"
     },
     {
       "topic": "Recovery design",
@@ -351,7 +377,8 @@
       ],
       "answerIndex": 2,
       "explanation": "Use a deliberate independent-copy and access-protection design, including appropriate immutability where required and supported. A successful snapshot schedule alone does not demonstrate resilience.",
-      "id": "netapp-027"
+      "id": "netapp-027",
+      "focus": "fundamentals"
     },
     {
       "topic": "Storage efficiency",
@@ -364,7 +391,8 @@
       ],
       "answerIndex": 0,
       "explanation": "Efficiency savings depend on the data and platform features. Capacity planning should use measured results rather than assume a universal reduction ratio.",
-      "id": "netapp-028"
+      "id": "netapp-028",
+      "focus": "fundamentals"
     },
     {
       "topic": "Thin provisioning",
@@ -377,7 +405,8 @@
       ],
       "answerIndex": 2,
       "explanation": "Thin provisioning allocates backing space as needed rather than treating logical allocation as already consumed capacity. Monitor actual usage, growth, retained snapshots, and available physical headroom.",
-      "id": "netapp-029"
+      "id": "netapp-029",
+      "focus": "fundamentals"
     },
     {
       "topic": "Capacity management",
@@ -390,7 +419,8 @@
       ],
       "answerIndex": 1,
       "explanation": "A volume-level growth setting is not an unlimited storage source. Investigate parent capacity, configured maximums, protection requirements, and supported recovery actions.",
-      "id": "netapp-030"
+      "id": "netapp-030",
+      "focus": "scenarios"
     },
     {
       "topic": "Capacity reporting",
@@ -403,7 +433,8 @@
       ],
       "answerIndex": 2,
       "explanation": "Be explicit about the layer and metric: raw, usable, allocated, logical, and physical are different concepts. Compare like-for-like measurements before diagnosing a capacity discrepancy.",
-      "id": "netapp-031"
+      "id": "netapp-031",
+      "focus": "fundamentals"
     },
     {
       "topic": "Performance basics",
@@ -418,7 +449,8 @@
       "explanation": "Performance analysis needs the workload’s operation size, read/write mix, concurrency, and time interval. No single metric alone establishes the bottleneck.",
       "code": "Illustrative workload metrics:\nIOPS:       4000 operations/second\nThroughput: 250 MB/second\nLatency:    3 ms",
       "language": "text",
-      "id": "netapp-032"
+      "id": "netapp-032",
+      "focus": "scenarios"
     },
     {
       "topic": "Shared incidents",
@@ -431,7 +463,8 @@
       ],
       "answerIndex": 0,
       "explanation": "Scope the incident, identify common paths or storage objects, compare healthy workloads, and inspect latency, errors, capacity, and recent changes. Coordinate investigation rather than introduce many unrelated changes.",
-      "id": "netapp-033"
+      "id": "netapp-033",
+      "focus": "scenarios"
     },
     {
       "topic": "Performance controls",
@@ -444,7 +477,8 @@
       ],
       "answerIndex": 1,
       "explanation": "QoS can help contain noisy workloads or manage performance expectations. It does not manufacture capacity or eliminate an underlying bottleneck.",
-      "id": "netapp-034"
+      "id": "netapp-034",
+      "focus": "fundamentals"
     },
     {
       "topic": "NFS troubleshooting",
@@ -459,7 +493,8 @@
       "explanation": "Export policy rules are one authorization layer. Also check the volume’s assigned policy, client identity/address, protocol, junction path, and applicable filesystem permissions.",
       "code": "vserver export-policy rule show -vserver svm1 -policyname nfs_clients",
       "language": "ONTAP CLI",
-      "id": "netapp-035"
+      "id": "netapp-035",
+      "focus": "scenarios"
     },
     {
       "topic": "NAS namespace",
@@ -474,7 +509,8 @@
       "explanation": "A NAS client needs the correct exported namespace path. A volume’s junction path is not the same thing as an initiator mapping for a SAN LUN.",
       "code": "volume show -vserver svm1 -fields junction-path",
       "language": "ONTAP CLI",
-      "id": "netapp-036"
+      "id": "netapp-036",
+      "focus": "scenarios"
     },
     {
       "topic": "NFS identity",
@@ -487,7 +523,8 @@
       ],
       "answerIndex": 2,
       "explanation": "Mount success does not grant every operation. Separate export authorization from the permissions and identity used to access files, including how privileged client users are handled.",
-      "id": "netapp-037"
+      "id": "netapp-037",
+      "focus": "scenarios"
     },
     {
       "topic": "SMB identity",
@@ -500,7 +537,8 @@
       ],
       "answerIndex": 1,
       "explanation": "Check identity-service dependencies as well as the storage and network path. Valid credentials may still fail if domain discovery or time-sensitive authentication is broken.",
-      "id": "netapp-038"
+      "id": "netapp-038",
+      "focus": "scenarios"
     },
     {
       "topic": "SAN troubleshooting",
@@ -513,7 +551,8 @@
       ],
       "answerIndex": 3,
       "explanation": "Trace the actual data path and compare working hosts before changing presentation. Avoid formatting unfamiliar devices or widening access as a diagnostic shortcut.",
-      "id": "netapp-039"
+      "id": "netapp-039",
+      "focus": "scenarios"
     },
     {
       "topic": "Read-only inspection",
@@ -528,7 +567,8 @@
       "explanation": "Start with topology and health when rebuilding context. A cluster status view is one piece of evidence, not proof that every client service is healthy.",
       "code": "cluster show",
       "language": "ONTAP CLI",
-      "id": "netapp-040"
+      "id": "netapp-040",
+      "focus": "scenarios"
     },
     {
       "topic": "Read-only inspection",
@@ -543,7 +583,8 @@
       "explanation": "Read the failover state and any reasons protection or takeover is unavailable before proceeding. Use a supported maintenance runbook and application-aware validation.",
       "code": "storage failover show",
       "language": "ONTAP CLI",
-      "id": "netapp-041"
+      "id": "netapp-041",
+      "focus": "scenarios"
     },
     {
       "topic": "Read-only inspection",
@@ -558,7 +599,8 @@
       "explanation": "Volume inspection helps verify the correct logical object before investigating capacity, state, or access. It does not itself modify the volume.",
       "code": "volume show -vserver svm1 -volume data1",
       "language": "ONTAP CLI",
-      "id": "netapp-042"
+      "id": "netapp-042",
+      "focus": "scenarios"
     },
     {
       "topic": "Read-only inspection",
@@ -573,7 +615,8 @@
       "explanation": "A data-path investigation includes the actual data LIF, not just management reachability. Interpret failover and migration behavior using the relevant protocol and platform documentation.",
       "code": "network interface show -vserver svm1 -lif nfs1 -instance",
       "language": "ONTAP CLI",
-      "id": "netapp-043"
+      "id": "netapp-043",
+      "focus": "scenarios"
     },
     {
       "topic": "Read-only inspection",
@@ -588,7 +631,8 @@
       "explanation": "The existence of a LUN is not enough for SAN visibility; appropriate mapping to the host’s initiator group is also required.",
       "code": "lun mapping show -vserver svm1",
       "language": "ONTAP CLI",
-      "id": "netapp-044"
+      "id": "netapp-044",
+      "focus": "scenarios"
     },
     {
       "topic": "Replication monitoring",
@@ -603,7 +647,8 @@
       "explanation": "Compare observed transfer status and lag with recovery objectives. Scheduling, transport availability, and a usable destination recovery procedure all matter.",
       "code": "snapmirror show",
       "language": "ONTAP CLI",
-      "id": "netapp-045"
+      "id": "netapp-045",
+      "focus": "scenarios"
     },
     {
       "topic": "Snapshot inspection",
@@ -618,7 +663,8 @@
       "explanation": "An inventory shows available point-in-time copies, not their application consistency or a tested restore outcome. Recovery evidence requires an appropriate restore and validation workflow.",
       "code": "volume snapshot show -vserver svm1 -volume data1",
       "language": "ONTAP CLI",
-      "id": "netapp-046"
+      "id": "netapp-046",
+      "focus": "scenarios"
     },
     {
       "topic": "Health monitoring",
@@ -633,7 +679,8 @@
       "explanation": "Health alerts help identify degraded components and dependencies. Correlate alerts, event timing, and client symptoms before selecting a supported recovery action.",
       "code": "system health alert show",
       "language": "ONTAP CLI",
-      "id": "netapp-047"
+      "id": "netapp-047",
+      "focus": "scenarios"
     },
     {
       "topic": "Safe maintenance",
@@ -646,7 +693,8 @@
       ],
       "answerIndex": 1,
       "explanation": "Lasting concepts transfer, but exact procedures and compatibility do not. Review current vendor guidance and the organization’s change and recovery procedures before touching production.",
-      "id": "netapp-048"
+      "id": "netapp-048",
+      "focus": "scenarios"
     },
     {
       "topic": "Recency refresh",
@@ -659,7 +707,8 @@
       ],
       "answerIndex": 3,
       "explanation": "Identify the actual platform personality and ONTAP version first. Familiar concepts remain valuable, but ASA r2 storage availability zones and storage units change parts of the administration workflow.",
-      "id": "netapp-049"
+      "id": "netapp-049",
+      "focus": "scenarios"
     },
     {
       "topic": "Interview scenario",
@@ -672,7 +721,8 @@
       ],
       "answerIndex": 3,
       "explanation": "Restoration is an end-to-end service outcome. Confirm the repaired infrastructure path and application behavior, communicate status, and document the fault and follow-up actions.",
-      "id": "netapp-050"
+      "id": "netapp-050",
+      "focus": "scenarios"
     },
     {
       "id": "netapp-051",
@@ -685,7 +735,8 @@
         "Ensure every storage aggregate has identical disk capacity"
       ],
       "answerIndex": 2,
-      "explanation": "Quorum prevents disconnected groups from independently changing shared cluster state. Otherwise their updates could disagree. It is a cluster-consistency mechanism, distinct from backup or client load balancing."
+      "explanation": "Quorum prevents disconnected groups from independently changing shared cluster state. Otherwise their updates could disagree. It is a cluster-consistency mechanism, distinct from backup or client load balancing.",
+      "focus": "fundamentals"
     },
     {
       "id": "netapp-052",
@@ -698,7 +749,8 @@
         "A replication link between the production and disaster-recovery clusters"
       ],
       "answerIndex": 0,
-      "explanation": "One node receives additional fractional voting weight. This can resolve an equal split of eligible votes; it does not add a physical node, move volumes, or replicate application data."
+      "explanation": "One node receives additional fractional voting weight. This can resolve an equal split of eligible votes; it does not add a physical node, move volumes, or replicate application data.",
+      "focus": "fundamentals"
     },
     {
       "id": "netapp-053",
@@ -713,7 +765,8 @@
       "answerIndex": 3,
       "explanation": "For an otherwise equal split, the group containing epsilon has the extra voting weight. This identifies the quorum side; it does not by itself guarantee access to every volume or replace HA and data-path checks.",
       "code": "Illustrative partition, not command output:\nGroup A: node1 (epsilon), node2\nGroup B: node3, node4\nNo cluster-network communication between A and B",
-      "language": "text"
+      "language": "text",
+      "focus": "scenarios"
     },
     {
       "id": "netapp-054",
@@ -726,7 +779,8 @@
         "No; epsilon identifies the node with the most free storage"
       ],
       "answerIndex": 1,
-      "explanation": "Epsilon contributes voting weight to quorum formation. A ring primary coordinates a replicated database. Do not infer a particular ring primary merely from epsilon placement; inspect the ring status."
+      "explanation": "Epsilon contributes voting weight to quorum formation. A ring primary coordinates a replicated database. Do not infer a particular ring primary merely from epsilon placement; inspect the ring status.",
+      "focus": "fundamentals"
     },
     {
       "id": "netapp-055",
@@ -739,7 +793,8 @@
         "It disables quorum protection whenever either node becomes unreachable"
       ],
       "answerIndex": 2,
-      "explanation": "Two-node cluster HA uses partner monitoring and takeover state to preserve service while avoiding divergent operation. Neither node holds epsilon in this normal configuration. Do not apply a larger-cluster voting example unchanged to it."
+      "explanation": "Two-node cluster HA uses partner monitoring and takeover state to preserve service while avoiding divergent operation. Neither node holds epsilon in this normal configuration. Do not apply a larger-cluster voting example unchanged to it.",
+      "focus": "fundamentals"
     },
     {
       "id": "netapp-056",
@@ -754,7 +809,8 @@
       "answerIndex": 0,
       "explanation": "cluster show provides membership-related health, eligibility and epsilon information. Use it with the maintenance runbook to assess quorum risk; the output does not prove application recovery or authorize ignoring quorum warnings.",
       "code": "cluster show\n\nIllustrative columns:\nNode    Health  Eligibility  Epsilon\nnode1   true    true         true\nnode2   true    true         false\nnode3   true    true         false\nnode4   true    true         false",
-      "language": "text"
+      "language": "text",
+      "focus": "scenarios"
     },
     {
       "id": "netapp-057",
@@ -767,7 +823,8 @@
         "Volume Location Database; information identifying where volumes are located in the cluster"
       ],
       "answerIndex": 3,
-      "explanation": "VLDB is the Volume Location Database. Its location records are cluster metadata used to find volumes. They are not a backup of the user blocks inside those volumes or a database of switch VLANs."
+      "explanation": "VLDB is the Volume Location Database. Its location records are cluster metadata used to find volumes. They are not a backup of the user blocks inside those volumes or a database of switch VLANs.",
+      "focus": "fundamentals"
     },
     {
       "id": "netapp-058",
@@ -782,7 +839,8 @@
       "answerIndex": 1,
       "explanation": "The vldb unit identifies the volume-location database ring. Its status, primary/master and replication information help investigate cluster database health. Inspecting this ring does not read user files or validate all storage paths.",
       "code": "cluster1::*> cluster ring show -node node1 -unitname vldb",
-      "language": "text"
+      "language": "text",
+      "focus": "scenarios"
     },
     {
       "id": "netapp-059",
@@ -795,7 +853,8 @@
         "The destination volume must contain no data because VLDB stores all user blocks"
       ],
       "answerIndex": 2,
-      "explanation": "The event describes a failed VLDB update during move cutover. Access can be affected while location records still reference the source. Check move status and cluster database health; persistent failures warrant NetApp support rather than manual database edits."
+      "explanation": "The event describes a failed VLDB update during move cutover. Access can be affected while location records still reference the source. Check move status and cluster database health; persistent failures warrant NetApp support rather than manual database edits.",
+      "focus": "scenarios"
     },
     {
       "id": "netapp-060",
@@ -808,7 +867,8 @@
         "Treat every local copy as an independent primary and permit writes on all partitions"
       ],
       "answerIndex": 0,
-      "explanation": "An out-of-quorum RDB unit can restrict services and can reflect network partitioning or node-health problems. Gather evidence across affected nodes. Deleting database files or forcing independent primaries can damage consistency; follow the supported recovery workflow."
+      "explanation": "An out-of-quorum RDB unit can restrict services and can reflect network partitioning or node-health problems. Gather evidence across affected nodes. Deleting database files or forcing independent primaries can damage consistency; follow the supported recovery workflow.",
+      "focus": "scenarios"
     },
     {
       "id": "netapp-061",
@@ -821,7 +881,8 @@
         "They serve different purposes: communication within a cluster, partner HA coordination, and communication between peer clusters"
       ],
       "answerIndex": 3,
-      "explanation": "Separate the logical functions when drawing a topology. Some hardware shares physical Ethernet ports for cluster and HA traffic, so verify the platform cabling; that does not make peer-cluster replication or client access the same function."
+      "explanation": "Separate the logical functions when drawing a topology. Some hardware shares physical Ethernet ports for cluster and HA traffic, so verify the platform cabling; that does not make peer-cluster replication or client access the same function.",
+      "focus": "fundamentals"
     },
     {
       "id": "netapp-062",
@@ -834,7 +895,8 @@
         "Immediately move all client traffic onto the failed cluster port"
       ],
       "answerIndex": 1,
-      "explanation": "A surviving redundant path can preserve connectivity, but the cluster now has less fault tolerance. Check cluster interfaces, peer reachability and node health. Management reachability alone does not validate the cluster network."
+      "explanation": "A surviving redundant path can preserve connectivity, but the cluster now has less fault tolerance. Check cluster interfaces, peer reachability and node health. Management reachability alone does not validate the cluster network.",
+      "focus": "scenarios"
     },
     {
       "id": "netapp-063",
@@ -849,7 +911,8 @@
       "answerIndex": 2,
       "explanation": "cluster ping-cluster probes the cluster-interface network and includes RPC checks. It is relevant to internal connectivity incidents; a successful management-IP ping exercises a different path and cannot substitute for it.",
       "code": "cluster1::*> cluster ping-cluster -node node1",
-      "language": "text"
+      "language": "text",
+      "focus": "scenarios"
     },
     {
       "id": "netapp-064",
@@ -862,7 +925,8 @@
         "Only the HA interconnect between a local controller and its partner"
       ],
       "answerIndex": 0,
-      "explanation": "Peer clusters exchange replication traffic through intercluster LIFs. Healthy local cluster links do not prove that the routed peer-cluster path works. Check the actual intercluster service and peering connectivity."
+      "explanation": "Peer clusters exchange replication traffic through intercluster LIFs. Healthy local cluster links do not prove that the routed peer-cluster path works. Check the actual intercluster service and peering connectivity.",
+      "focus": "scenarios"
     },
     {
       "id": "netapp-065",
@@ -875,7 +939,8 @@
         "No; moving the network access point and moving the volume storage are separate operations"
       ],
       "answerIndex": 3,
-      "explanation": "A LIF identifies a network endpoint, while a volume has its own storage placement. NAS namespaces can include volumes on different nodes. After a LIF move, access to a remotely located volume may depend on the cluster interconnect."
+      "explanation": "A LIF identifies a network endpoint, while a volume has its own storage placement. NAS namespaces can include volumes on different nodes. After a LIF move, access to a remotely located volume may depend on the cluster interconnect.",
+      "focus": "fundamentals"
     },
     {
       "id": "netapp-066",
@@ -888,7 +953,8 @@
         "A remote disaster-recovery cluster management port with any available IP address"
       ],
       "answerIndex": 1,
-      "explanation": "A possible target must satisfy the LIF failover configuration and provide the required network connectivity. A physically up port on the wrong VLAN or broadcast domain is not a working replacement path for the client-facing LIF."
+      "explanation": "A possible target must satisfy the LIF failover configuration and provide the required network connectivity. A physically up port on the wrong VLAN or broadcast domain is not a working replacement path for the client-facing LIF.",
+      "focus": "scenarios"
     },
     {
       "id": "netapp-067",
@@ -903,7 +969,8 @@
       "answerIndex": 2,
       "explanation": "Home location and current location are different attributes. A LIF can operate on an allowed alternate port. With auto-revert false, plan any return to its home location according to the network maintenance procedure.",
       "code": "Illustrative properties, not literal CLI output:\nLIF: nfs_data_1\nhome-node: node1   home-port: e0c\ncurr-node: node2   curr-port: e0c\nis-home: false    auto-revert: false\nstatus-admin: up  status-oper: up",
-      "language": "text"
+      "language": "text",
+      "focus": "scenarios"
     },
     {
       "id": "netapp-068",
@@ -916,7 +983,8 @@
         "No; cluster LIFs are actually physical disks and have no network ports"
       ],
       "answerIndex": 0,
-      "explanation": "Cluster, node-management and intercluster LIFs are node-scoped. For a cluster LIF, any supported port migration stays on its node and is executed from that node. Do not assume NAS data-LIF mobility applies to every LIF type."
+      "explanation": "Cluster, node-management and intercluster LIFs are node-scoped. For a cluster LIF, any supported port migration stays on its node and is executed from that node. Do not assume NAS data-LIF mobility applies to every LIF type.",
+      "focus": "fundamentals"
     },
     {
       "id": "netapp-069",
@@ -931,7 +999,8 @@
       "answerIndex": 3,
       "explanation": "Service policies group the services supported on a LIF, such as appropriate data or management services. Reachable IP connectivity alone does not establish service-policy suitability, and a LIF policy does not grant file permissions.",
       "code": "network interface service-policy show -vserver svm_nfs -policy default-data-files",
-      "language": "text"
+      "language": "text",
+      "focus": "scenarios"
     },
     {
       "id": "netapp-070",
@@ -944,7 +1013,8 @@
         "Automatic iSCSI LIF failover eliminates the need for supported host multipathing"
       ],
       "answerIndex": 1,
-      "explanation": "For the specified release, ASA has iSCSI LIF failover support introduced in ONTAP 9.11.1. Its configuration and defaults must still be checked. This is not a timeless claim for all newer AFF releases; host multipathing remains an important SAN design requirement."
+      "explanation": "For the specified release, ASA has iSCSI LIF failover support introduced in ONTAP 9.11.1. Its configuration and defaults must still be checked. This is not a timeless claim for all newer AFF releases; host multipathing remains an important SAN design requirement.",
+      "focus": "scenarios"
     }
   ]
 }

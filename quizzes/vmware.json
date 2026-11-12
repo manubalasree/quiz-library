@@ -13,7 +13,8 @@
       ],
       "answerIndex": 2,
       "explanation": "ESXi is the hypervisor layer. Distinguish it from vCenter management, the guest OS, external storage, and application services when tracing a problem.",
-      "id": "vmware-001"
+      "id": "vmware-001",
+      "focus": "fundamentals"
     },
     {
       "topic": "Architecture",
@@ -26,7 +27,8 @@
       ],
       "answerIndex": 2,
       "explanation": "vCenter manages inventory and cluster operations across hosts. vSphere refers to the broader virtualization platform rather than one running guest VM.",
-      "id": "vmware-002"
+      "id": "vmware-002",
+      "focus": "fundamentals"
     },
     {
       "topic": "Guest integration",
@@ -39,7 +41,8 @@
       ],
       "answerIndex": 1,
       "explanation": "Guest integration supports operations such as guest status, graceful shutdown, and relevant drivers or services. It does not establish application availability or replace backups.",
-      "id": "vmware-003"
+      "id": "vmware-003",
+      "focus": "fundamentals"
     },
     {
       "topic": "CPU fundamentals",
@@ -52,7 +55,8 @@
       ],
       "answerIndex": 0,
       "explanation": "vCPU allocation describes the virtual machine’s CPU configuration. Scheduling, reservations, limits, contention, and host hardware determine its actual resource experience.",
-      "id": "vmware-004"
+      "id": "vmware-004",
+      "focus": "fundamentals"
     },
     {
       "topic": "Storage fundamentals",
@@ -65,7 +69,8 @@
       ],
       "answerIndex": 1,
       "explanation": "Datastores can use different backing technologies, such as VMFS on block devices or NFS file storage. A datastore and an individual guest virtual disk are different layers.",
-      "id": "vmware-005"
+      "id": "vmware-005",
+      "focus": "fundamentals"
     },
     {
       "topic": "VM files",
@@ -80,7 +85,8 @@
       "explanation": "Understand VM configuration and virtual-disk files before investigating storage. Disk descriptors, backing extents, and snapshot chains are related; do not manually delete unfamiliar files.",
       "code": "Illustrative VM directory:\napp01.vmx\napp01.vmdk\napp01-flat.vmdk",
       "language": "text",
-      "id": "vmware-006"
+      "id": "vmware-006",
+      "focus": "scenarios"
     },
     {
       "topic": "Datastores",
@@ -93,7 +99,8 @@
       ],
       "answerIndex": 3,
       "explanation": "VMFS means Virtual Machine File System and typically uses block devices supplied through FC or iSCSI. An NFS datastore instead consumes an exported filesystem. Protocol and filesystem layers matter when tracing storage connectivity.",
-      "id": "vmware-007"
+      "id": "vmware-007",
+      "focus": "fundamentals"
     },
     {
       "topic": "Storage paths",
@@ -106,7 +113,8 @@
       ],
       "answerIndex": 0,
       "explanation": "Map the actual protocol path before troubleshooting. Access controls, sessions, LUN presentation, host discovery, and multipathing are separate links in the chain.",
-      "id": "vmware-008"
+      "id": "vmware-008",
+      "focus": "scenarios"
     },
     {
       "topic": "Virtual disks",
@@ -119,7 +127,8 @@
       ],
       "answerIndex": 0,
       "explanation": "Logical provisioning is not the same as consumed or available physical space. Monitor both the guest and backing datastore, including snapshots and competing workloads.",
-      "id": "vmware-009"
+      "id": "vmware-009",
+      "focus": "fundamentals"
     },
     {
       "topic": "Snapshots and backup",
@@ -132,7 +141,8 @@
       ],
       "answerIndex": 2,
       "explanation": "A snapshot provides a dependent point-in-time rollback mechanism. Use an appropriate backup workflow with recoverable copies and restore validation rather than retaining snapshots as the backup strategy.",
-      "id": "vmware-010"
+      "id": "vmware-010",
+      "focus": "fundamentals"
     },
     {
       "topic": "Snapshot lifecycle",
@@ -145,7 +155,8 @@
       ],
       "answerIndex": 1,
       "explanation": "Deletion/consolidation merges required disk changes through supported workflows. Manual file removal can break the disk chain and destroy access to VM data.",
-      "id": "vmware-011"
+      "id": "vmware-011",
+      "focus": "fundamentals"
     },
     {
       "topic": "Snapshot rollback",
@@ -158,7 +169,8 @@
       ],
       "answerIndex": 1,
       "explanation": "Rollback has data-consistency and service consequences. Confirm the intended recovery point, dependencies, approvals, and application-specific recovery requirements first.",
-      "id": "vmware-012"
+      "id": "vmware-012",
+      "focus": "fundamentals"
     },
     {
       "topic": "Provisioning",
@@ -171,7 +183,8 @@
       ],
       "answerIndex": 1,
       "explanation": "Provisioning also requires identity customization, network settings, access controls, patching, and backup enrollment. A copied VM is not automatically production-ready.",
-      "id": "vmware-013"
+      "id": "vmware-013",
+      "focus": "fundamentals"
     },
     {
       "topic": "Availability",
@@ -184,7 +197,8 @@
       ],
       "answerIndex": 0,
       "explanation": "High Availability (HA) recovery includes failure detection, placement, VM restart, and application startup. Eligibility, capacity, storage access, and policy affect the outcome; HA is not a zero-downtime guarantee.",
-      "id": "vmware-014"
+      "id": "vmware-014",
+      "focus": "fundamentals"
     },
     {
       "topic": "Migration",
@@ -197,7 +211,8 @@
       ],
       "answerIndex": 2,
       "explanation": "vMotion is primarily a planned live-migration capability. It relies on a functioning source and suitable destination connectivity, compatibility, and resources.",
-      "id": "vmware-015"
+      "id": "vmware-015",
+      "focus": "fundamentals"
     },
     {
       "topic": "Migration",
@@ -210,7 +225,8 @@
       ],
       "answerIndex": 0,
       "explanation": "Storage migration and compute migration address different layers. Review compatibility, free capacity, workload impact, and the chosen migration operation’s requirements.",
-      "id": "vmware-016"
+      "id": "vmware-016",
+      "focus": "fundamentals"
     },
     {
       "topic": "Cluster scheduling",
@@ -223,7 +239,8 @@
       ],
       "answerIndex": 1,
       "explanation": "DRS stands for Distributed Resource Scheduler. Distinguish its placement and balancing role from HA recovery and from vMotion as the migration mechanism.",
-      "id": "vmware-017"
+      "id": "vmware-017",
+      "focus": "fundamentals"
     },
     {
       "topic": "Failover capacity",
@@ -236,7 +253,8 @@
       ],
       "answerIndex": 3,
       "explanation": "Failover readiness requires usable spare resources, not only current utilization. Review the policy and reservations rather than disable protection merely to clear a warning.",
-      "id": "vmware-018"
+      "id": "vmware-018",
+      "focus": "scenarios"
     },
     {
       "topic": "Management availability",
@@ -249,7 +267,8 @@
       ],
       "answerIndex": 2,
       "explanation": "The data plane is not identical to the centralized management plane. An existing HA configuration can still provide host-level protection, but management-dependent operations and recovery details need separate assessment.",
-      "id": "vmware-019"
+      "id": "vmware-019",
+      "focus": "fundamentals"
     },
     {
       "topic": "vMotion readiness",
@@ -262,7 +281,8 @@
       ],
       "answerIndex": 3,
       "explanation": "Exact requirements depend on the migration type and versions. Use the compatibility check and current supported procedure rather than relying on one remembered prerequisite.",
-      "id": "vmware-020"
+      "id": "vmware-020",
+      "focus": "scenarios"
     },
     {
       "topic": "CPU compatibility",
@@ -275,7 +295,8 @@
       ],
       "answerIndex": 0,
       "explanation": "Enhanced vMotion Compatibility addresses CPU feature exposure. It does not make arbitrary hardware combinations or every migration scenario compatible.",
-      "id": "vmware-021"
+      "id": "vmware-021",
+      "focus": "fundamentals"
     },
     {
       "topic": "Host maintenance",
@@ -288,7 +309,8 @@
       ],
       "answerIndex": 0,
       "explanation": "Maintenance mode is part of a controlled workflow, not proof of readiness. Consider placement constraints, local storage, dependent services, and whether surviving hosts can support the workload.",
-      "id": "vmware-022"
+      "id": "vmware-022",
+      "focus": "scenarios"
     },
     {
       "topic": "Resource controls",
@@ -301,7 +323,8 @@
       ],
       "answerIndex": 0,
       "explanation": "Resource controls affect scheduling and entitlement in different ways. Poorly chosen reservations or limits can affect admission, utilization, and performance.",
-      "id": "vmware-023"
+      "id": "vmware-023",
+      "focus": "fundamentals"
     },
     {
       "topic": "Memory troubleshooting",
@@ -314,7 +337,8 @@
       ],
       "answerIndex": 2,
       "explanation": "A configured limit can constrain the VM independently of overall host free memory. Correlate VM settings, guest demand, and reclamation metrics before adding resources or migrating.",
-      "id": "vmware-024"
+      "id": "vmware-024",
+      "focus": "scenarios"
     },
     {
       "topic": "CPU troubleshooting",
@@ -329,7 +353,8 @@
       "explanation": "Low average CPU utilization does not rule out scheduling contention. Interpret the metric’s scope and interval rather than apply an unexplained universal threshold.",
       "code": "Illustrative observation:\nGuest CPU utilization is moderate.\nCPU ready time rises during the slowdown.",
       "language": "text",
-      "id": "vmware-025"
+      "id": "vmware-025",
+      "focus": "fundamentals"
     },
     {
       "topic": "Memory troubleshooting",
@@ -342,7 +367,8 @@
       ],
       "answerIndex": 1,
       "explanation": "They are different reclamation mechanisms with different implications. Inspect host pressure, VM limits, guest behavior, and actual swap activity before choosing a remedy.",
-      "id": "vmware-026"
+      "id": "vmware-026",
+      "focus": "fundamentals"
     },
     {
       "topic": "Sizing",
@@ -355,7 +381,8 @@
       ],
       "answerIndex": 2,
       "explanation": "Right-size from measured demand and workload behavior. More virtual hardware is not a substitute for identifying CPU scheduling, memory, storage, network, or application bottlenecks.",
-      "id": "vmware-027"
+      "id": "vmware-027",
+      "focus": "fundamentals"
     },
     {
       "topic": "HA failure detection",
@@ -368,7 +395,8 @@
       ],
       "answerIndex": 3,
       "explanation": "Management heartbeats and datastore heartbeating can help interpret failures. Recovery behavior also depends on isolation response, storage conditions, and configuration.",
-      "id": "vmware-028"
+      "id": "vmware-028",
+      "focus": "fundamentals"
     },
     {
       "topic": "Networking fundamentals",
@@ -381,7 +409,8 @@
       ],
       "answerIndex": 3,
       "explanation": "Distinguish vmk interfaces used by host services from guest vNICs and physical uplinks such as vmnic adapters. Each belongs to a different part of the network path.",
-      "id": "vmware-029"
+      "id": "vmware-029",
+      "focus": "fundamentals"
     },
     {
       "topic": "Virtual switching",
@@ -394,7 +423,8 @@
       ],
       "answerIndex": 1,
       "explanation": "Centralized configuration simplifies consistency, but physical connectivity and correct host participation still matter. The virtual switch does not replace the physical network fabric.",
-      "id": "vmware-030"
+      "id": "vmware-030",
+      "focus": "fundamentals"
     },
     {
       "topic": "VLAN troubleshooting",
@@ -407,7 +437,8 @@
       ],
       "answerIndex": 1,
       "explanation": "A port-group setting is only one part of connectivity. Check guest settings, virtual port placement, uplinks, physical switch VLAN allowance, and the gateway path.",
-      "id": "vmware-031"
+      "id": "vmware-031",
+      "focus": "scenarios"
     },
     {
       "topic": "Network and storage redundancy",
@@ -420,7 +451,8 @@
       ],
       "answerIndex": 0,
       "explanation": "A supported design must align VMkernel interfaces, network topology, initiator sessions, and storage path policies. Do not assume one redundancy feature covers every failure mode.",
-      "id": "vmware-032"
+      "id": "vmware-032",
+      "focus": "fundamentals"
     },
     {
       "topic": "Distributed switching",
@@ -433,7 +465,8 @@
       ],
       "answerIndex": 0,
       "explanation": "Existing forwarding and management/configuration operations are different. VM reconnection or recovery can depend on port binding and configuration, so avoid treating vCenter independence as universal.",
-      "id": "vmware-033"
+      "id": "vmware-033",
+      "focus": "fundamentals"
     },
     {
       "topic": "VMkernel troubleshooting",
@@ -448,7 +481,8 @@
       "explanation": "Testing the relevant host interface is more useful than only pinging from a workstation. A successful ping still does not prove MTU, storage authorization, or every service requirement.",
       "code": "vmkping -I vmk1 192.0.2.20",
       "language": "ESXi shell",
-      "id": "vmware-034"
+      "id": "vmware-034",
+      "focus": "scenarios"
     },
     {
       "topic": "IP storage networking",
@@ -461,7 +495,8 @@
       ],
       "answerIndex": 1,
       "explanation": "Check the relevant interfaces and physical path using supported tests. Jumbo frames are a design choice, not a universal prerequisite for all storage connectivity.",
-      "id": "vmware-035"
+      "id": "vmware-035",
+      "focus": "fundamentals"
     },
     {
       "topic": "Storage inspection",
@@ -476,7 +511,8 @@
       "explanation": "Use path information to correlate a failed datastore with host, adapter, fabric, and array evidence. A path listing is not a command to format or repair storage.",
       "code": "esxcli storage core path list",
       "language": "ESXi shell",
-      "id": "vmware-036"
+      "id": "vmware-036",
+      "focus": "scenarios"
     },
     {
       "topic": "Datastore inspection",
@@ -491,7 +527,8 @@
       "explanation": "Host-visible filesystem information helps scope datastore accessibility and capacity. Compare it with other hosts and storage evidence before attempting recovery actions.",
       "code": "esxcli storage filesystem list",
       "language": "ESXi shell",
-      "id": "vmware-037"
+      "id": "vmware-037",
+      "focus": "scenarios"
     },
     {
       "topic": "Physical networking",
@@ -506,7 +543,8 @@
       "explanation": "Physical link and adapter health are part of the host’s network path. A link-up indication alone does not establish correct VLANs, MTU, routing, or application reachability.",
       "code": "esxcli network nic list",
       "language": "ESXi shell",
-      "id": "vmware-038"
+      "id": "vmware-038",
+      "focus": "scenarios"
     },
     {
       "topic": "VMkernel inspection",
@@ -521,7 +559,8 @@
       "explanation": "VMkernel interfaces are host networking constructs. Inspect their service association and network path when investigating management, vMotion, or IP-storage connectivity.",
       "code": "esxcli network ip interface list",
       "language": "ESXi shell",
-      "id": "vmware-039"
+      "id": "vmware-039",
+      "focus": "scenarios"
     },
     {
       "topic": "Version awareness",
@@ -536,7 +575,8 @@
       "explanation": "Core concepts endure, but support status, known issues, hardware compatibility, and procedures change. Match guidance to the actual platform and build.",
       "code": "esxcli system version get",
       "language": "ESXi shell",
-      "id": "vmware-040"
+      "id": "vmware-040",
+      "focus": "fundamentals"
     },
     {
       "topic": "Performance inspection",
@@ -551,7 +591,8 @@
       "explanation": "Use host metrics to correlate symptoms and isolate layers, not as an automatic diagnosis. Time alignment and comparisons with healthy workloads make the observations more useful.",
       "code": "esxtop",
       "language": "ESXi shell",
-      "id": "vmware-041"
+      "id": "vmware-041",
+      "focus": "fundamentals"
     },
     {
       "topic": "Datastore capacity",
@@ -564,7 +605,8 @@
       ],
       "answerIndex": 0,
       "explanation": "Snapshot growth can exhaust shared storage and affect several workloads. Coordinate backup and storage teams, preserve disk-chain integrity, and validate applications after mitigation.",
-      "id": "vmware-042"
+      "id": "vmware-042",
+      "focus": "scenarios"
     },
     {
       "topic": "Storage latency",
@@ -579,7 +621,8 @@
       "explanation": "DAVG includes the device-driver-to-storage round trip; KAVG reflects host-kernel latency. Correlate these with array and fabric evidence instead of equating every slow I/O with a disk failure.",
       "code": "Illustrative esxtop latency relationship:\nGAVG ≈ DAVG + KAVG\nDAVG = 4 ms\nKAVG = 2 ms\nGAVG ≈ 6 ms",
       "language": "text",
-      "id": "vmware-043"
+      "id": "vmware-043",
+      "focus": "scenarios"
     },
     {
       "topic": "Storage loss",
@@ -592,7 +635,8 @@
       ],
       "answerIndex": 2,
       "explanation": "All Paths Down and Permanent Device Loss have different detection and recovery implications. Assess the cause and supported HA/storage behavior rather than blindly rebooting or removing devices.",
-      "id": "vmware-044"
+      "id": "vmware-044",
+      "focus": "fundamentals"
     },
     {
       "topic": "Multipathing policy",
@@ -605,7 +649,8 @@
       ],
       "answerIndex": 3,
       "explanation": "Supported multipathing behavior depends on the storage implementation. Verify the exact design instead of applying a remembered Round Robin or preferred-path rule universally.",
-      "id": "vmware-045"
+      "id": "vmware-045",
+      "focus": "fundamentals"
     },
     {
       "topic": "Patching and compatibility",
@@ -618,7 +663,8 @@
       ],
       "answerIndex": 1,
       "explanation": "Use the supported lifecycle procedure and change plan. A successful installation task is not the same as validated service recovery or a tested rollback path.",
-      "id": "vmware-046"
+      "id": "vmware-046",
+      "focus": "fundamentals"
     },
     {
       "topic": "Infrastructure dependencies",
@@ -631,7 +677,8 @@
       ],
       "answerIndex": 3,
       "explanation": "Management availability depends on several infrastructure services. Check the exact failing operation and its dependencies rather than conclude that credentials alone explain every login issue.",
-      "id": "vmware-047"
+      "id": "vmware-047",
+      "focus": "fundamentals"
     },
     {
       "topic": "PowerCLI inspection",
@@ -646,7 +693,8 @@
       "explanation": "Get-VM and Select-Object here are inspection operations. Distinguish a read-only query from commands that change power state, configuration, or storage.",
       "code": "Get-VM -Name app01 | Select-Object Name, PowerState",
       "language": "PowerShell",
-      "id": "vmware-048"
+      "id": "vmware-048",
+      "focus": "scenarios"
     },
     {
       "topic": "PowerCLI inspection",
@@ -661,7 +709,8 @@
       "explanation": "Snapshot inventory is useful for lifecycle and capacity review. It is not evidence that backup jobs produced independent, application-consistent, tested recovery copies.",
       "code": "Get-VM -Name app01 | Get-Snapshot",
       "language": "PowerShell",
-      "id": "vmware-049"
+      "id": "vmware-049",
+      "focus": "scenarios"
     },
     {
       "topic": "Interview scenario",
@@ -674,7 +723,8 @@
       ],
       "answerIndex": 0,
       "explanation": "Infrastructure recovery and service recovery are different. Confirm representative transactions and dependencies, communicate with the service owner, and preserve evidence for the root-cause investigation.",
-      "id": "vmware-050"
+      "id": "vmware-050",
+      "focus": "scenarios"
     },
     {
       "id": "vmware-051",
@@ -687,7 +737,8 @@
         "Disable all shared datastores until the failed host returns"
       ],
       "answerIndex": 1,
-      "explanation": "The HA primary is an elected host-agent role, not a fixed vCenter role. Losing it requires another election. VM recovery still depends on the affected workloads, storage access, eligible hosts and resources; a primary change alone does not require restarting unaffected VMs."
+      "explanation": "The HA primary is an elected host-agent role, not a fixed vCenter role. Losing it requires another election. VM recovery still depends on the affected workloads, storage access, eligible hosts and resources; a primary change alone does not require restarting unaffected VMs.",
+      "focus": "fundamentals"
     },
     {
       "id": "vmware-052",
@@ -702,7 +753,8 @@
       "answerIndex": 3,
       "explanation": "A partition separates groups that can still communicate internally. An isolated host has lost HA peer connectivity and uses isolation detection to assess its situation. Correlate datastore heartbeats and agent evidence; do not declare hosts dead from a broken inter-group network path alone.",
       "code": "Illustrative HA network observations:\nHost A <-> Host B: reachable\nHost C <-> Host D: reachable\nA/B <-> C/D: unreachable\nAll four hosts remain powered on",
-      "language": "text"
+      "language": "text",
+      "focus": "scenarios"
     },
     {
       "id": "vmware-053",
@@ -715,7 +767,8 @@
         "Every VM on that host can safely be powered on simultaneously elsewhere"
       ],
       "answerIndex": 0,
-      "explanation": "Datastore heartbeating gives HA another observation when its normal network path is lost. It helps classify the host state, but it neither validates application transactions nor grants permission to create duplicate running VM instances."
+      "explanation": "Datastore heartbeating gives HA another observation when its normal network path is lost. It helps classify the host state, but it neither validates application transactions nor grants permission to create duplicate running VM instances.",
+      "focus": "scenarios"
     },
     {
       "id": "vmware-054",
@@ -730,7 +783,8 @@
       "answerIndex": 2,
       "explanation": "Isolation response is a configurable action and may have per-VM overrides. A disabled response can leave a VM running even when its network is unusable. Host isolation, host failure and datastore failure are separate conditions with separate recovery considerations.",
       "code": "Illustrative effective VM settings:\nVM: app01\nHA restart priority: Medium\nHost isolation response: Disabled",
-      "language": "text"
+      "language": "text",
+      "focus": "scenarios"
     },
     {
       "id": "vmware-055",
@@ -745,7 +799,8 @@
       "answerIndex": 1,
       "explanation": "FDM is the host-side HA agent. Correlate its timestamps with host health and network changes, including the required HA traffic between hosts. Reading a log provides evidence; it does not by itself fix an HA configuration or network fault.",
       "code": "less /var/run/log/fdm.log",
-      "language": "text"
+      "language": "text",
+      "focus": "scenarios"
     },
     {
       "id": "vmware-056",
@@ -758,7 +813,8 @@
         "Hosting witness metadata and participating in object-quorum decisions"
       ],
       "answerIndex": 3,
-      "explanation": "Witness components contribute to quorum without storing the production data blocks. A witness is therefore neither a backup repository nor a substitute for an accessible data replica."
+      "explanation": "Witness components contribute to quorum without storing the production data blocks. A witness is therefore neither a backup repository nor a substitute for an accessible data replica.",
+      "focus": "fundamentals"
     },
     {
       "id": "vmware-057",
@@ -773,7 +829,8 @@
       "answerIndex": 0,
       "explanation": "Two of the three shown votes exceed half, and A supplies a complete data copy. This is an object-level exercise, not a rule that each host always has one vote. Actual component votes and supported failure behavior depend on layout, version and failure sequence.",
       "code": "Illustrative object layout:\nData component A: complete mirror, 1 vote\nData component B: complete mirror, 1 vote\nWitness: metadata only, 1 vote\nData component B becomes unavailable",
-      "language": "text"
+      "language": "text",
+      "focus": "scenarios"
     },
     {
       "id": "vmware-058",
@@ -786,7 +843,8 @@
         "Healthy HA agents prove every vSAN component is available"
       ],
       "answerIndex": 2,
-      "explanation": "Compute recovery and storage-object availability are different layers. Investigate the affected object, component reachability, failures and resynchronization state. Moving or restarting compute cannot by itself recover inaccessible storage components."
+      "explanation": "Compute recovery and storage-object availability are different layers. Investigate the affected object, component reachability, failures and resynchronization state. Moving or restarting compute cannot by itself recover inaccessible storage components.",
+      "focus": "scenarios"
     },
     {
       "id": "vmware-059",
@@ -799,7 +857,8 @@
         "Every remaining host can be maintained simultaneously because access was checked once"
       ],
       "answerIndex": 1,
-      "explanation": "Ensure accessibility moves only what is needed to keep objects usable; it does not promise full policy compliance. Review the pre-check, capacity and topology. Full data migration has different requirements and may not be possible in every cluster layout."
+      "explanation": "Ensure accessibility moves only what is needed to keep objects usable; it does not promise full policy compliance. Review the pre-check, capacity and topology. Full data migration has different requirements and may not be possible in every cluster layout.",
+      "focus": "scenarios"
     },
     {
       "id": "vmware-060",
@@ -812,7 +871,8 @@
         "No; vSAN does not serve as that kind of HA heartbeat datastore"
       ],
       "answerIndex": 3,
-      "explanation": "vSAN clusters have specific HA network and isolation design considerations. They cannot use the vSAN datastore as a conventional datastore-heartbeat target. If additional shared VMFS/NFS datastores are present, evaluate them separately rather than assuming one design applies to all storage types."
+      "explanation": "vSAN clusters have specific HA network and isolation design considerations. They cannot use the vSAN datastore as a conventional datastore-heartbeat target. If additional shared VMFS/NFS datastores are present, evaluate them separately rather than assuming one design applies to all storage types.",
+      "focus": "fundamentals"
     },
     {
       "id": "vmware-061",
@@ -827,7 +887,8 @@
       "answerIndex": 0,
       "explanation": "An Issue Events response reports the condition without itself changing the VM power state. Check the effective cluster policy, VM overrides, timeout state and alternate-host storage access. Enabling HA does not make every datastore failure trigger an identical recovery action.",
       "code": "Illustrative effective protection settings:\nDatastore condition: All Paths Down\nAPD failure response: Issue Events\nAffected VM still powered on",
-      "language": "text"
+      "language": "text",
+      "focus": "scenarios"
     },
     {
       "id": "vmware-062",
@@ -842,7 +903,8 @@
       "answerIndex": 2,
       "explanation": "The different host outcomes help isolate the fault domain. Correlate the same device identifier across hosts and verify zoning, initiator mapping, masking and paths as appropriate. Do not destroy a working shared filesystem to resolve one host’s visibility issue.",
       "code": "Read-only device-path inspection; replace the placeholder:\nesxcli storage core path list -d <device-id>",
-      "language": "text"
+      "language": "text",
+      "focus": "scenarios"
     },
     {
       "id": "vmware-063",
@@ -855,7 +917,8 @@
         "Whether formatting the datastore removes only the lock and preserves every file"
       ],
       "answerIndex": 1,
-      "explanation": "A lock can protect a disk that another process is using. Confirm the active owner and backup attachments, then follow the supported recovery procedure. Forcing concurrent access or deleting storage files without that evidence risks data integrity."
+      "explanation": "A lock can protect a disk that another process is using. Confirm the active owner and backup attachments, then follow the supported recovery procedure. Forcing concurrent access or deleting storage files without that evidence risks data integrity.",
+      "focus": "scenarios"
     },
     {
       "id": "vmware-064",
@@ -870,7 +933,8 @@
       "answerIndex": 3,
       "explanation": "The 8972-byte ICMP payload plus IPv4 and ICMP headers exercises a 9000-byte IP packet with fragmentation disallowed. Verify endpoints and the physical path; small-packet reachability does not establish jumbo-frame support. This example assumes the interface uses the default TCP/IP stack.",
       "code": "vmkping -I vmk2 192.0.2.22\nvmkping -I vmk2 -d -s 8972 192.0.2.22",
-      "language": "text"
+      "language": "text",
+      "focus": "scenarios"
     },
     {
       "id": "vmware-065",
@@ -885,7 +949,8 @@
       "answerIndex": 0,
       "explanation": "VMkernel service placement and TCP/IP stack selection affect the path being tested. A successful probe from a management interface or another stack does not prove connectivity for the vMotion stack.",
       "code": "vmkping -I vmk2 -S vmotion 192.0.2.22",
-      "language": "text"
+      "language": "text",
+      "focus": "scenarios"
     },
     {
       "id": "vmware-066",
@@ -898,7 +963,8 @@
         "The source host’s boot disk because destination uplinks cannot affect a migrated VM"
       ],
       "answerIndex": 2,
-      "explanation": "The migration network and the guest network are distinct paths. Successful memory transfer and compatibility checks do not validate every physical VLAN or uplink at the destination. Compare the guest-facing path with a known-good host."
+      "explanation": "The migration network and the guest network are distinct paths. Successful memory transfer and compatibility checks do not validate every physical VLAN or uplink at the destination. Compare the guest-facing path with a known-good host.",
+      "focus": "scenarios"
     },
     {
       "id": "vmware-067",
@@ -911,7 +977,8 @@
         "No; iSCSI can never use more than one VMkernel interface in any supported design"
       ],
       "answerIndex": 1,
-      "explanation": "Port binding is a particular software-iSCSI design, not a generic path-repair switch. Broadcom documents common broadcast-domain/subnet, virtual-switch and uplink-mapping requirements. Match the host and array design rather than copying bindings from a different topology."
+      "explanation": "Port binding is a particular software-iSCSI design, not a generic path-repair switch. Broadcom documents common broadcast-domain/subnet, virtual-switch and uplink-mapping requirements. Match the host and array design rather than copying bindings from a different topology.",
+      "focus": "scenarios"
     },
     {
       "id": "vmware-068",
@@ -924,7 +991,8 @@
         "The export path and server authorization for the actual ESXi client address and intended NFS protocol configuration"
       ],
       "answerIndex": 3,
-      "explanation": "An explicit server denial points toward the export and access configuration, not proof that the server is unreachable. Validate the client source address, exported path, permissions and supported NFS settings. Ping establishes neither mount authorization nor read/write permission."
+      "explanation": "An explicit server denial points toward the export and access configuration, not proof that the server is unreachable. Validate the client source address, exported path, permissions and supported NFS settings. Ping establishes neither mount authorization nor read/write permission.",
+      "focus": "scenarios"
     },
     {
       "id": "vmware-069",
@@ -939,7 +1007,8 @@
       "answerIndex": 0,
       "explanation": "A mandatory VM-to-host affinity rule can prevent HA restart when no permitted host is available. Check effective rules, VM overrides, storage access and resources. Free capacity on an ineligible host is not sufficient.",
       "code": "Illustrative VM/Host rule:\nVM group: database_vms\nHost group: licensed_hosts\nRule: Must run on hosts in group",
-      "language": "text"
+      "language": "text",
+      "focus": "scenarios"
     },
     {
       "id": "vmware-070",
@@ -954,7 +1023,8 @@
       "answerIndex": 2,
       "explanation": "Infrastructure milestones such as resource allocation, power-on or guest heartbeats are not equivalent to a ready database service. Review dependency conditions and application retry or health mechanisms, then validate a representative transaction.",
       "code": "Illustrative recovery sequence:\nDatabase VM: Powered On\nDatabase service: still recovering\nApplication VM: started\nApplication connection: refused",
-      "language": "text"
+      "language": "text",
+      "focus": "scenarios"
     }
   ]
 }

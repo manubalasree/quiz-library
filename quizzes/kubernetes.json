@@ -14,7 +14,8 @@
       ],
       "answerIndex": 3,
       "explanation": "The ReplicaSet reconciles the actual Pod count with the desired count. The replacement Pod has a new UID.",
-      "exampleId": "kubernetes-001-example"
+      "exampleId": "kubernetes-001-example",
+      "focus": "fundamentals"
     },
     {
       "id": "kubernetes-002",
@@ -28,7 +29,8 @@
       ],
       "answerIndex": 1,
       "explanation": "ClusterIP is the default Service type. It provides a virtual IP for reaching a Service from within the cluster.",
-      "exampleId": "kubernetes-002-example"
+      "exampleId": "kubernetes-002-example",
+      "focus": "fundamentals"
     },
     {
       "id": "kubernetes-003",
@@ -42,7 +44,8 @@
       ],
       "answerIndex": 0,
       "explanation": "CrashLoopBackOff means the container keeps failing and Kubernetes backs off between restart attempts. Check its logs and termination details to find the underlying cause.",
-      "exampleId": "kubernetes-003-example"
+      "exampleId": "kubernetes-003-example",
+      "focus": "scenarios"
     },
     {
       "id": "kubernetes-004",
@@ -56,7 +59,8 @@
       ],
       "answerIndex": 1,
       "explanation": "Use kubectl logs <pod> --previous to inspect the previous terminated container instance, if available. Add -c <container> for the relevant container in a multi-container Pod.",
-      "exampleId": "kubernetes-004-example"
+      "exampleId": "kubernetes-004-example",
+      "focus": "fundamentals"
     },
     {
       "id": "kubernetes-005",
@@ -70,7 +74,8 @@
       ],
       "answerIndex": 2,
       "explanation": "Readiness controls whether the Pod is ready to receive traffic. A failed readiness probe does not itself restart a container; liveness probes can trigger restarts.",
-      "exampleId": "kubernetes-005-example"
+      "exampleId": "kubernetes-005-example",
+      "focus": "scenarios"
     },
     {
       "id": "kubernetes-006",
@@ -84,7 +89,8 @@
       ],
       "answerIndex": 1,
       "explanation": "The scheduler uses resource requests when placing Pods. Without a suitable node, the Pod remains Pending. Check kubectl describe pod for scheduling events.",
-      "exampleId": "kubernetes-006-example"
+      "exampleId": "kubernetes-006-example",
+      "focus": "scenarios"
     },
     {
       "id": "kubernetes-007",
@@ -98,7 +104,8 @@
       ],
       "answerIndex": 3,
       "explanation": "StatefulSets provide stable Pod identities and can associate each Pod with its own persistent volume claim. DaemonSets handle per-node workloads; Jobs handle run-to-completion tasks.",
-      "exampleId": "kubernetes-007-example"
+      "exampleId": "kubernetes-007-example",
+      "focus": "fundamentals"
     },
     {
       "id": "kubernetes-008",
@@ -112,7 +119,8 @@
       ],
       "answerIndex": 3,
       "explanation": "A selector-based Service matches Pods by labels in its namespace. Also inspect EndpointSlices, Pod readiness, targetPort, and network policies when troubleshooting traffic.",
-      "exampleId": "kubernetes-008-example"
+      "exampleId": "kubernetes-008-example",
+      "focus": "scenarios"
     },
     {
       "id": "kubernetes-009",
@@ -126,7 +134,8 @@
       ],
       "answerIndex": 0,
       "explanation": "A RoleBinding limits its grant to its namespace, even when referencing a reusable ClusterRole. Cluster-wide grants require a ClusterRoleBinding.",
-      "exampleId": "kubernetes-009-example"
+      "exampleId": "kubernetes-009-example",
+      "focus": "fundamentals"
     },
     {
       "id": "kubernetes-010",
@@ -140,7 +149,8 @@
       ],
       "answerIndex": 3,
       "explanation": "Base64 is encoding, not encryption. Configure encryption at rest and restrict access with RBAC. Managed Kubernetes providers may configure encryption for you.",
-      "exampleId": "kubernetes-010-example"
+      "exampleId": "kubernetes-010-example",
+      "focus": "fundamentals"
     },
     {
       "topic": "Health checks",
@@ -154,7 +164,8 @@
       "answerIndex": 3,
       "explanation": "Startup probes give slow applications time to initialize. Once startup succeeds, normal readiness and liveness checks take over.",
       "id": "kubernetes-011",
-      "exampleId": "kubernetes-011-example"
+      "exampleId": "kubernetes-011-example",
+      "focus": "fundamentals"
     },
     {
       "topic": "Health checks",
@@ -170,7 +181,8 @@
       "code": "livenessProbe:\n  httpGet:\n    path: /healthz\n    port: 8080\n  periodSeconds: 10\n  failureThreshold: 3",
       "language": "yaml",
       "id": "kubernetes-012",
-      "exampleId": "kubernetes-012-example"
+      "exampleId": "kubernetes-012-example",
+      "focus": "scenarios"
     },
     {
       "topic": "Resources",
@@ -186,7 +198,8 @@
       "code": "resources:\n  requests:\n    cpu: \"250m\"",
       "language": "yaml",
       "id": "kubernetes-013",
-      "exampleId": "kubernetes-013-example"
+      "exampleId": "kubernetes-013-example",
+      "focus": "fundamentals"
     },
     {
       "topic": "Resources",
@@ -200,7 +213,8 @@
       "answerIndex": 1,
       "explanation": "Memory limits can result in out-of-memory termination. Inspect usage, application behavior, limits, and termination details before increasing resources.",
       "id": "kubernetes-014",
-      "exampleId": "kubernetes-014-example"
+      "exampleId": "kubernetes-014-example",
+      "focus": "scenarios"
     },
     {
       "topic": "Scheduling",
@@ -214,7 +228,8 @@
       "answerIndex": 1,
       "explanation": "Scheduling considers requested resources and placement constraints. Low instantaneous utilization does not mean unallocated requested capacity is available.",
       "id": "kubernetes-015",
-      "exampleId": "kubernetes-015-example"
+      "exampleId": "kubernetes-015-example",
+      "focus": "scenarios"
     },
     {
       "topic": "Rollouts",
@@ -230,7 +245,8 @@
       "code": "replicas: 4\nstrategy:\n  type: RollingUpdate\n  rollingUpdate:\n    maxSurge: 1\n    maxUnavailable: 0",
       "language": "yaml",
       "id": "kubernetes-016",
-      "exampleId": "kubernetes-016-example"
+      "exampleId": "kubernetes-016-example",
+      "focus": "scenarios"
     },
     {
       "topic": "Troubleshooting",
@@ -244,7 +260,8 @@
       "answerIndex": 1,
       "explanation": "ImagePullBackOff indicates repeated image-pull failures with retry backoff. Events often identify missing tags, authentication failures, or registry connectivity problems.",
       "id": "kubernetes-017",
-      "exampleId": "kubernetes-017-example"
+      "exampleId": "kubernetes-017-example",
+      "focus": "scenarios"
     },
     {
       "topic": "Pod lifecycle",
@@ -258,7 +275,8 @@
       "answerIndex": 2,
       "explanation": "Regular init containers must complete successfully in sequence. Failures block application startup and are retried according to Pod behavior.",
       "id": "kubernetes-018",
-      "exampleId": "kubernetes-018-example"
+      "exampleId": "kubernetes-018-example",
+      "focus": "fundamentals"
     },
     {
       "topic": "Workloads",
@@ -272,7 +290,8 @@
       "answerIndex": 2,
       "explanation": "A DaemonSet manages node-local Pods across eligible nodes. Node selectors, affinity, and tolerations can affect which nodes receive an agent.",
       "id": "kubernetes-019",
-      "exampleId": "kubernetes-019-example"
+      "exampleId": "kubernetes-019-example",
+      "focus": "fundamentals"
     },
     {
       "topic": "Workloads",
@@ -286,7 +305,8 @@
       "answerIndex": 3,
       "explanation": "Jobs track successful completions and can retry failed work. Applications that must run continuously are usually managed by other workload controllers.",
       "id": "kubernetes-020",
-      "exampleId": "kubernetes-020-example"
+      "exampleId": "kubernetes-020-example",
+      "focus": "fundamentals"
     },
     {
       "topic": "Scheduled workloads",
@@ -302,7 +322,8 @@
       "code": "spec:\n  schedule: \"*/5 * * * *\"\n  concurrencyPolicy: Forbid",
       "language": "yaml",
       "id": "kubernetes-021",
-      "exampleId": "kubernetes-021-example"
+      "exampleId": "kubernetes-021-example",
+      "focus": "scenarios"
     },
     {
       "topic": "Networking",
@@ -318,7 +339,8 @@
       "code": "ports:\n  - port: 80\n    targetPort: 8080",
       "language": "yaml",
       "id": "kubernetes-022",
-      "exampleId": "kubernetes-022-example"
+      "exampleId": "kubernetes-022-example",
+      "focus": "fundamentals"
     },
     {
       "topic": "Networking",
@@ -332,7 +354,8 @@
       "answerIndex": 2,
       "explanation": "Ready endpoints depend on matching, ready Pods under normal Service behavior. Check selectors, EndpointSlices, and Pod readiness together.",
       "id": "kubernetes-023",
-      "exampleId": "kubernetes-023-example"
+      "exampleId": "kubernetes-023-example",
+      "focus": "scenarios"
     },
     {
       "topic": "DNS",
@@ -346,7 +369,8 @@
       "answerIndex": 0,
       "explanation": "Cross-namespace lookups include the Service namespace. The cluster DNS suffix can be configured, so cluster.local is an assumption here.",
       "id": "kubernetes-024",
-      "exampleId": "kubernetes-024-example"
+      "exampleId": "kubernetes-024-example",
+      "focus": "fundamentals"
     },
     {
       "topic": "Ingress",
@@ -360,7 +384,8 @@
       "answerIndex": 0,
       "explanation": "An Ingress object declares routing rules; a controller implements them. Creating the API object alone does not deploy the controller.",
       "id": "kubernetes-025",
-      "exampleId": "kubernetes-025-example"
+      "exampleId": "kubernetes-025-example",
+      "focus": "fundamentals"
     },
     {
       "topic": "Network policy",
@@ -374,7 +399,8 @@
       "answerIndex": 1,
       "explanation": "NetworkPolicy allows are additive. Multiple policies selecting a Pod contribute allowed traffic rather than overriding each other.",
       "id": "kubernetes-026",
-      "exampleId": "kubernetes-026-example"
+      "exampleId": "kubernetes-026-example",
+      "focus": "fundamentals"
     },
     {
       "topic": "Network policy",
@@ -388,7 +414,8 @@
       "answerIndex": 2,
       "explanation": "DNS lookups require network access to the cluster DNS implementation. Review UDP and TCP port 53 and the relevant destination selectors.",
       "id": "kubernetes-027",
-      "exampleId": "kubernetes-027-example"
+      "exampleId": "kubernetes-027-example",
+      "focus": "scenarios"
     },
     {
       "topic": "Configuration",
@@ -402,7 +429,8 @@
       "answerIndex": 2,
       "explanation": "Environment variables are set when the container starts. Mounted ConfigMap files have different update behavior from environment variables.",
       "id": "kubernetes-028",
-      "exampleId": "kubernetes-028-example"
+      "exampleId": "kubernetes-028-example",
+      "focus": "fundamentals"
     },
     {
       "topic": "Configuration",
@@ -418,7 +446,8 @@
       "code": "volumeMounts:\n  - name: config\n    mountPath: /app/settings.yaml\n    subPath: settings.yaml",
       "language": "yaml",
       "id": "kubernetes-029",
-      "exampleId": "kubernetes-029-example"
+      "exampleId": "kubernetes-029-example",
+      "focus": "fundamentals"
     },
     {
       "topic": "Storage",
@@ -432,7 +461,8 @@
       "answerIndex": 1,
       "explanation": "Binding and provisioning failures are usually visible in PVC events. StorageClass configuration and matching volume requirements are central checks.",
       "id": "kubernetes-030",
-      "exampleId": "kubernetes-030-example"
+      "exampleId": "kubernetes-030-example",
+      "focus": "scenarios"
     },
     {
       "topic": "Storage",
@@ -446,7 +476,8 @@
       "answerIndex": 1,
       "explanation": "ReadWriteOnce constrains node-level read-write mounting, not necessarily one Pod. ReadWriteOncePod is the distinct single-Pod access mode.",
       "id": "kubernetes-031",
-      "exampleId": "kubernetes-031-example"
+      "exampleId": "kubernetes-031-example",
+      "focus": "fundamentals"
     },
     {
       "topic": "Storage",
@@ -460,7 +491,8 @@
       "answerIndex": 0,
       "explanation": "Retain preserves the storage asset for administrator handling. It does not automatically make previously used storage safe for another claim.",
       "id": "kubernetes-032",
-      "exampleId": "kubernetes-032-example"
+      "exampleId": "kubernetes-032-example",
+      "focus": "fundamentals"
     },
     {
       "topic": "Scheduling",
@@ -474,7 +506,8 @@
       "answerIndex": 3,
       "explanation": "Tolerations permit placement despite matching taints. They do not select nodes or override resource and affinity constraints.",
       "id": "kubernetes-033",
-      "exampleId": "kubernetes-033-example"
+      "exampleId": "kubernetes-033-example",
+      "focus": "fundamentals"
     },
     {
       "topic": "Scheduling",
@@ -490,7 +523,8 @@
       "code": "spec:\n  nodeSelector:\n    disktype: ssd",
       "language": "yaml",
       "id": "kubernetes-034",
-      "exampleId": "kubernetes-034-example"
+      "exampleId": "kubernetes-034-example",
+      "focus": "fundamentals"
     },
     {
       "topic": "Scheduling",
@@ -504,7 +538,8 @@
       "answerIndex": 3,
       "explanation": "Pod anti-affinity can separate Pods based on labels and topology. Required rules can make Pods unschedulable when insufficient topology domains exist.",
       "id": "kubernetes-035",
-      "exampleId": "kubernetes-035-example"
+      "exampleId": "kubernetes-035-example",
+      "focus": "fundamentals"
     },
     {
       "topic": "Node maintenance",
@@ -518,7 +553,8 @@
       "answerIndex": 0,
       "explanation": "Cordon marks a node unschedulable. Drain performs maintenance-oriented eviction and respects relevant constraints such as disruption budgets.",
       "id": "kubernetes-036",
-      "exampleId": "kubernetes-036-example"
+      "exampleId": "kubernetes-036-example",
+      "focus": "fundamentals"
     },
     {
       "topic": "Availability",
@@ -534,7 +570,8 @@
       "code": "apiVersion: policy/v1\nkind: PodDisruptionBudget\nspec:\n  minAvailable: 2\n  selector:\n    matchLabels:\n      app: checkout",
       "language": "yaml",
       "id": "kubernetes-037",
-      "exampleId": "kubernetes-037-example"
+      "exampleId": "kubernetes-037-example",
+      "focus": "scenarios"
     },
     {
       "topic": "Access control",
@@ -548,7 +585,8 @@
       "answerIndex": 3,
       "explanation": "RBAC distinguishes get, list, and watch. Permission to retrieve one named object does not imply permission to list a collection.",
       "id": "kubernetes-038",
-      "exampleId": "kubernetes-038-example"
+      "exampleId": "kubernetes-038-example",
+      "focus": "fundamentals"
     },
     {
       "topic": "Access control",
@@ -562,7 +600,8 @@
       "answerIndex": 3,
       "explanation": "ServiceAccounts are namespaced identities for workloads. Their API permissions are controlled by RBAC grants rather than by the container image author.",
       "id": "kubernetes-039",
-      "exampleId": "kubernetes-039-example"
+      "exampleId": "kubernetes-039-example",
+      "focus": "fundamentals"
     },
     {
       "topic": "Container security",
@@ -578,7 +617,8 @@
       "code": "securityContext:\n  runAsNonRoot: true",
       "language": "yaml",
       "id": "kubernetes-040",
-      "exampleId": "kubernetes-040-example"
+      "exampleId": "kubernetes-040-example",
+      "focus": "fundamentals"
     },
     {
       "topic": "Container security",
@@ -592,7 +632,8 @@
       "answerIndex": 3,
       "explanation": "A read-only root filesystem can be combined with writable volumes at specific paths, such as an emptyDir mounted at /tmp.",
       "id": "kubernetes-041",
-      "exampleId": "kubernetes-041-example"
+      "exampleId": "kubernetes-041-example",
+      "focus": "fundamentals"
     },
     {
       "topic": "Pod termination",
@@ -606,7 +647,8 @@
       "answerIndex": 1,
       "explanation": "Kubernetes gives the container time to terminate gracefully, then can force termination. Applications should handle shutdown signals and stop accepting work appropriately.",
       "id": "kubernetes-042",
-      "exampleId": "kubernetes-042-example"
+      "exampleId": "kubernetes-042-example",
+      "focus": "fundamentals"
     },
     {
       "topic": "Autoscaling",
@@ -620,7 +662,8 @@
       "answerIndex": 1,
       "explanation": "CPU utilization for this HPA metric is usage divided by request. Requests are therefore important inputs to utilization-based scaling.",
       "id": "kubernetes-043",
-      "exampleId": "kubernetes-043-example"
+      "exampleId": "kubernetes-043-example",
+      "focus": "fundamentals"
     },
     {
       "topic": "Namespace resources",
@@ -634,7 +677,8 @@
       "answerIndex": 1,
       "explanation": "ResourceQuota can bound aggregate namespace consumption. LimitRange typically supplies defaults or constrains individual objects within the namespace.",
       "id": "kubernetes-044",
-      "exampleId": "kubernetes-044-example"
+      "exampleId": "kubernetes-044-example",
+      "focus": "scenarios"
     },
     {
       "topic": "Namespace resources",
@@ -648,7 +692,8 @@
       "answerIndex": 0,
       "explanation": "A LimitRange can supply resource defaults and enforce minimums or maximums. Defaults apply during admission rather than retroactively changing running containers.",
       "id": "kubernetes-045",
-      "exampleId": "kubernetes-045-example"
+      "exampleId": "kubernetes-045-example",
+      "focus": "fundamentals"
     },
     {
       "topic": "Debugging",
@@ -662,7 +707,8 @@
       "answerIndex": 0,
       "explanation": "kubectl debug can add an ephemeral container with diagnostic tools. Security policy and permissions still apply.",
       "id": "kubernetes-046",
-      "exampleId": "kubernetes-046-example"
+      "exampleId": "kubernetes-046-example",
+      "focus": "scenarios"
     },
     {
       "topic": "kubectl",
@@ -678,7 +724,8 @@
       "code": "kubectl exec checkout-abc -c api -- printenv",
       "language": "shell",
       "id": "kubernetes-047",
-      "exampleId": "kubernetes-047-example"
+      "exampleId": "kubernetes-047-example",
+      "focus": "fundamentals"
     },
     {
       "topic": "kubectl",
@@ -694,7 +741,8 @@
       "code": "kubectl get pods -l app=web,tier=frontend",
       "language": "shell",
       "id": "kubernetes-048",
-      "exampleId": "kubernetes-048-example"
+      "exampleId": "kubernetes-048-example",
+      "focus": "fundamentals"
     },
     {
       "topic": "Rollouts",
@@ -708,7 +756,8 @@
       "answerIndex": 0,
       "explanation": "Deployment rollback targets retained rollout history for the Pod template. It does not roll back external data or independently changed resources.",
       "id": "kubernetes-049",
-      "exampleId": "kubernetes-049-example"
+      "exampleId": "kubernetes-049-example",
+      "focus": "fundamentals"
     },
     {
       "topic": "Labels and ownership",
@@ -722,7 +771,8 @@
       "answerIndex": 0,
       "explanation": "Controllers use selectors to identify their managed workload sets. Unintended overlap makes ownership and reconciliation behavior unsafe or confusing.",
       "id": "kubernetes-050",
-      "exampleId": "kubernetes-050-example"
+      "exampleId": "kubernetes-050-example",
+      "focus": "fundamentals"
     },
     {
       "id": "kubernetes-051",
@@ -738,7 +788,8 @@
       "explanation": "CPU quantities without the m suffix are measured in whole CPUs. Quoting the YAML value does not change its unit: \"1000\" means 1,000 CPUs, whereas \"1000m\" means one CPU.",
       "exampleId": "kubernetes-051-example",
       "code": "resources:\n  requests:\n    cpu: \"1000\"\n    memory: 32Mi",
-      "language": "yaml"
+      "language": "yaml",
+      "focus": "fundamentals"
     },
     {
       "id": "kubernetes-052",
@@ -752,7 +803,8 @@
       ],
       "answerIndex": 1,
       "explanation": "An admission rejection can prevent object creation entirely. Inspect the quota response and namespace policies before investigating scheduler placement or container behavior.",
-      "exampleId": "kubernetes-052-example"
+      "exampleId": "kubernetes-052-example",
+      "focus": "scenarios"
     },
     {
       "id": "kubernetes-053",
@@ -766,7 +818,8 @@
       ],
       "answerIndex": 2,
       "explanation": "Pod existence is not successful placement. The scheduling condition and event identify why the scheduler has not assigned a node; current utilization and missing logs are not conclusive by themselves.",
-      "exampleId": "kubernetes-053-example"
+      "exampleId": "kubernetes-053-example",
+      "focus": "scenarios"
     },
     {
       "id": "kubernetes-054",
@@ -780,7 +833,8 @@
       ],
       "answerIndex": 3,
       "explanation": "A Pod is scheduled as one unit onto one node. Spare capacity on several nodes does not form a combined placement budget for one Pod.",
-      "exampleId": "kubernetes-054-example"
+      "exampleId": "kubernetes-054-example",
+      "focus": "scenarios"
     },
     {
       "id": "kubernetes-055",
@@ -794,7 +848,8 @@
       ],
       "answerIndex": 0,
       "explanation": "The lab Pod is created directly, without a Deployment or other workload controller. Delete-and-recreate is an explicit lab step; controller-managed Pods have different replacement behavior.",
-      "exampleId": "kubernetes-055-example"
+      "exampleId": "kubernetes-055-example",
+      "focus": "fundamentals"
     },
     {
       "id": "kubernetes-056",
@@ -808,7 +863,8 @@
       ],
       "answerIndex": 1,
       "explanation": "Apply confirms that the API accepted the object. Successful scheduling and container readiness require separate verification, and another issue can surface after the original CPU problem is corrected.",
-      "exampleId": "kubernetes-056-example"
+      "exampleId": "kubernetes-056-example",
+      "focus": "scenarios"
     },
     {
       "id": "kubernetes-057",
@@ -824,7 +880,8 @@
       "explanation": "Without a placement constraint, a multi-node cluster might schedule the Pod on an untainted node. The selector makes the intended taint failure observable on the chosen hostname domain.",
       "exampleId": "kubernetes-057-example",
       "code": "nodeSelector:\n  kubernetes.io/hostname: selected-hostname",
-      "language": "yaml"
+      "language": "yaml",
+      "focus": "scenarios"
     },
     {
       "id": "kubernetes-058",
@@ -838,7 +895,8 @@
       ],
       "answerIndex": 3,
       "explanation": "With Equal and an explicit effect, the key, value, and effect must match the taint. A matching toleration removes that particular scheduling barrier while leaving other constraints in effect.",
-      "exampleId": "kubernetes-058-example"
+      "exampleId": "kubernetes-058-example",
+      "focus": "fundamentals"
     },
     {
       "id": "kubernetes-059",
@@ -852,7 +910,8 @@
       ],
       "answerIndex": 0,
       "explanation": "NoSchedule affects scheduling eligibility for new placements. It does not by itself evict Pods already on that node; NoExecute has different effects.",
-      "exampleId": "kubernetes-059-example"
+      "exampleId": "kubernetes-059-example",
+      "focus": "scenarios"
     },
     {
       "id": "kubernetes-060",
@@ -866,7 +925,8 @@
       ],
       "answerIndex": 1,
       "explanation": "NoExecute can evict Pods that do not tolerate the taint. A matching toleration can allow continued execution; tolerationSeconds can bound the tolerated duration.",
-      "exampleId": "kubernetes-060-example"
+      "exampleId": "kubernetes-060-example",
+      "focus": "scenarios"
     },
     {
       "id": "kubernetes-061",
@@ -880,7 +940,8 @@
       ],
       "answerIndex": 2,
       "explanation": "The Deployment’s Pod template defines settings for newly created Pods. Patching an individual current Pod does not update that template for future replacements.",
-      "exampleId": "kubernetes-061-example"
+      "exampleId": "kubernetes-061-example",
+      "focus": "scenarios"
     },
     {
       "id": "kubernetes-062",
@@ -894,7 +955,8 @@
       ],
       "answerIndex": 3,
       "explanation": "Namespace deletion removes namespaced resources, not changes to a cluster-scoped Node. Remove the specific lab taint separately, including when ending the lab early.",
-      "exampleId": "kubernetes-062-example"
+      "exampleId": "kubernetes-062-example",
+      "focus": "scenarios"
     },
     {
       "id": "kubernetes-063",
@@ -908,7 +970,8 @@
       ],
       "answerIndex": 0,
       "explanation": "A known-good baseline establishes that the original image, scheduling, probes, and basic cluster setup work. A failed baseline must be diagnosed before treating later symptoms as the intended missing-tag experiment.",
-      "exampleId": "kubernetes-063-example"
+      "exampleId": "kubernetes-063-example",
+      "focus": "scenarios"
     },
     {
       "id": "kubernetes-064",
@@ -924,7 +987,8 @@
       "explanation": "With zero allowed unavailability, the controller does not need to remove the healthy old replicas to progress this stalled rollout. The surge allows an additional new Pod, but does not guarantee it can start.",
       "exampleId": "kubernetes-064-example",
       "code": "replicas: 2\nstrategy:\n  type: RollingUpdate\n  rollingUpdate:\n    maxSurge: 1\n    maxUnavailable: 0",
-      "language": "yaml"
+      "language": "yaml",
+      "focus": "scenarios"
     },
     {
       "id": "kubernetes-065",
@@ -938,7 +1002,8 @@
       ],
       "answerIndex": 2,
       "explanation": "ImagePullBackOff describes retries after pull failures, not their root cause. A missing manifest/tag, invalid credentials, rate limiting, and network failures require different investigations.",
-      "exampleId": "kubernetes-065-example"
+      "exampleId": "kubernetes-065-example",
+      "focus": "scenarios"
     },
     {
       "id": "kubernetes-066",
@@ -952,7 +1017,8 @@
       ],
       "answerIndex": 3,
       "explanation": "The failure is before application execution. Pod status and events identify the waiting reason and registry response; logs from an old replica do not establish what happened in the new one.",
-      "exampleId": "kubernetes-066-example"
+      "exampleId": "kubernetes-066-example",
+      "focus": "scenarios"
     },
     {
       "id": "kubernetes-067",
@@ -968,7 +1034,8 @@
       "explanation": "progressDeadlineSeconds provides a controller progress deadline and a failure signal. A rollback or other repair must be initiated separately; automation outside the Deployment controller may choose to act on that signal.",
       "exampleId": "kubernetes-067-example",
       "code": "spec:\n  progressDeadlineSeconds: 120",
-      "language": "yaml"
+      "language": "yaml",
+      "focus": "scenarios"
     },
     {
       "id": "kubernetes-068",
@@ -982,7 +1049,8 @@
       ],
       "answerIndex": 1,
       "explanation": "The kubectl waiting timeout and Deployment progress deadline are separate controls. A client timeout does not itself change the Deployment specification or prove ProgressDeadlineExceeded.",
-      "exampleId": "kubernetes-068-example"
+      "exampleId": "kubernetes-068-example",
+      "focus": "scenarios"
     },
     {
       "id": "kubernetes-069",
@@ -996,7 +1064,8 @@
       ],
       "answerIndex": 2,
       "explanation": "Surge permits an extra Pod count, not additional node capacity. With insufficient requested capacity the new Pod can remain Pending without a node, so the image-pull failure stage has not yet been reached.",
-      "exampleId": "kubernetes-069-example"
+      "exampleId": "kubernetes-069-example",
+      "focus": "scenarios"
     },
     {
       "id": "kubernetes-070",
@@ -1010,7 +1079,8 @@
       ],
       "answerIndex": 3,
       "explanation": "Availability is not revision identity. Compare desired, updated, ready and available counts, the new ReplicaSet, and rollout conditions before declaring the new revision successful.",
-      "exampleId": "kubernetes-070-example"
+      "exampleId": "kubernetes-070-example",
+      "focus": "scenarios"
     },
     {
       "id": "kubernetes-071",
@@ -1024,7 +1094,8 @@
       ],
       "answerIndex": 0,
       "explanation": "A Service routes to selected endpoints; it is not a revision-success check. Old ready replicas can continue handling traffic while new Pods are not ready. A port-forward connection also is not an exhaustive test of all replicas.",
-      "exampleId": "kubernetes-071-example"
+      "exampleId": "kubernetes-071-example",
+      "focus": "scenarios"
     },
     {
       "id": "kubernetes-072",
@@ -1038,7 +1109,8 @@
       ],
       "answerIndex": 1,
       "explanation": "A write accepted by the API is not proof of recovery. Verify updated workload state and readiness, then check selected endpoints; deleting symptoms or retaining old availability does not establish that the intended version is running.",
-      "exampleId": "kubernetes-072-example"
+      "exampleId": "kubernetes-072-example",
+      "focus": "scenarios"
     },
     {
       "id": "kubernetes-073",
@@ -1054,7 +1126,8 @@
       "explanation": "set image uses container-name=image pairs. web selects the Pod-template container to update; rollout-lab is the Deployment and interview-lab is the namespace.",
       "exampleId": "kubernetes-073-example",
       "code": "kubectl set image deployment/rollout-lab web=nginx:stable-alpine -n interview-lab",
-      "language": "shell"
+      "language": "shell",
+      "focus": "scenarios"
     },
     {
       "id": "kubernetes-074",
@@ -1068,7 +1141,8 @@
       ],
       "answerIndex": 3,
       "explanation": "A separate namespace does not bypass node placement constraints. Establish an appropriate disposable workload target and permissions before introducing the lab’s own scoped taint.",
-      "exampleId": "kubernetes-074-example"
+      "exampleId": "kubernetes-074-example",
+      "focus": "scenarios"
     },
     {
       "id": "kubernetes-075",
@@ -1082,7 +1156,8 @@
       ],
       "answerIndex": 0,
       "explanation": "Follow Deployment to ReplicaSet to Pod. If Pod creation is rejected, ReplicaSet Events can expose quota, admission, or ServiceAccount errors before the scheduler has any Pod to place.",
-      "exampleId": "kubernetes-075-example"
+      "exampleId": "kubernetes-075-example",
+      "focus": "scenarios"
     },
     {
       "id": "kubernetes-076",
@@ -1096,7 +1171,8 @@
       ],
       "answerIndex": 1,
       "explanation": "Pending includes time after scheduling while containers are being prepared. Node assignment and the scheduling condition distinguish placement from subsequent image, mount, or initialization work.",
-      "exampleId": "kubernetes-076-example"
+      "exampleId": "kubernetes-076-example",
+      "focus": "scenarios"
     },
     {
       "id": "kubernetes-077",
@@ -1110,7 +1186,8 @@
       ],
       "answerIndex": 2,
       "explanation": "An EBS volume must attach to an EC2 instance in the same Availability Zone. Volume topology constraints apply to any workload using that volume; spare compute in another AZ is not enough.",
-      "exampleId": "kubernetes-077-example"
+      "exampleId": "kubernetes-077-example",
+      "focus": "scenarios"
     },
     {
       "id": "kubernetes-078",
@@ -1124,7 +1201,8 @@
       ],
       "answerIndex": 3,
       "explanation": "Trace the claim referenced by the Pod to its actual bound PV, then compare all required affinity terms against nodes. CSI drivers can use driver-specific topology keys, so inspect those keys instead of assuming every PV uses the standard zone label.",
-      "exampleId": "kubernetes-078-example"
+      "exampleId": "kubernetes-078-example",
+      "focus": "scenarios"
     },
     {
       "id": "kubernetes-079",
@@ -1138,7 +1216,8 @@
       ],
       "answerIndex": 0,
       "explanation": "Delayed binding allows supported provisioners and binding workflows to account for the consuming Pod’s placement requirements. It does not relocate an existing disk or make incompatible constraints satisfiable.",
-      "exampleId": "kubernetes-079-example"
+      "exampleId": "kubernetes-079-example",
+      "focus": "scenarios"
     },
     {
       "id": "kubernetes-080",
@@ -1154,7 +1233,8 @@
       "explanation": "CPU requests participate in placement and resource allocation; CPU limits bound consumption through throttling. This differs from memory-limit breaches that can result in OOM termination.",
       "exampleId": "kubernetes-080-example",
       "code": "resources:\n  requests: {cpu: 100m}\n  limits: {cpu: 500m}",
-      "language": "yaml"
+      "language": "yaml",
+      "focus": "scenarios"
     },
     {
       "id": "kubernetes-081",
@@ -1168,7 +1248,8 @@
       ],
       "answerIndex": 2,
       "explanation": "A CPU request is not a cap. A container without a CPU limit may use spare CPU above its request; underestimated requests can permit overpacking, and simultaneous demand does not create extra physical CPU.",
-      "exampleId": "kubernetes-081-example"
+      "exampleId": "kubernetes-081-example",
+      "focus": "scenarios"
     },
     {
       "id": "kubernetes-082",
@@ -1182,7 +1263,8 @@
       ],
       "answerIndex": 3,
       "explanation": "nodeName preassigns the Pod and bypasses the normal scheduler. Kubelet admission and runtime constraints still matter, but scheduler-based placement checks are not obtained by directly assigning a node.",
-      "exampleId": "kubernetes-082-example"
+      "exampleId": "kubernetes-082-example",
+      "focus": "scenarios"
     },
     {
       "id": "kubernetes-083",
@@ -1196,7 +1278,8 @@
       ],
       "answerIndex": 0,
       "explanation": "Required placement restricts replacement Pods as well as the initial ones. Failure detection, eviction, and creation of a distinct replacement are separate lifecycle steps; the replacement may remain unscheduled.",
-      "exampleId": "kubernetes-083-example"
+      "exampleId": "kubernetes-083-example",
+      "focus": "scenarios"
     },
     {
       "id": "kubernetes-084",
@@ -1210,7 +1293,8 @@
       ],
       "answerIndex": 1,
       "explanation": "An “only” requirement needs a hard placement constraint. Preferred affinity can be outweighed or fall back to other candidates; a nodeSelector or required node affinity makes matching mandatory.",
-      "exampleId": "kubernetes-084-example"
+      "exampleId": "kubernetes-084-example",
+      "focus": "scenarios"
     },
     {
       "id": "kubernetes-085",
@@ -1224,7 +1308,8 @@
       ],
       "answerIndex": 2,
       "explanation": "Node placement and persistent storage provisioning are separate requirements. A label can select SSD-equipped nodes, while an appropriate storage provisioner, claim, and mount provide the application’s persistent data storage.",
-      "exampleId": "kubernetes-085-example"
+      "exampleId": "kubernetes-085-example",
+      "focus": "scenarios"
     },
     {
       "id": "kubernetes-086",
@@ -1238,7 +1323,8 @@
       ],
       "answerIndex": 3,
       "explanation": "Taints and labels are scheduling controls, not complete security isolation. Restrict who may change nodes or request privileged placement, and combine controls appropriate to the threat model; deliberately shared clusters are possible trade-offs.",
-      "exampleId": "kubernetes-086-example"
+      "exampleId": "kubernetes-086-example",
+      "focus": "scenarios"
     },
     {
       "id": "kubernetes-087",
@@ -1252,7 +1338,8 @@
       ],
       "answerIndex": 0,
       "explanation": "Repository protections govern release workflow. They do not automatically enforce Kubernetes RBAC, network policy, namespace quotas, or admission controls. Shared-cluster runtime isolation must be designed separately.",
-      "exampleId": "kubernetes-087-example"
+      "exampleId": "kubernetes-087-example",
+      "focus": "scenarios"
     },
     {
       "id": "kubernetes-088",
@@ -1266,7 +1353,8 @@
       ],
       "answerIndex": 1,
       "explanation": "This implements the stated preference with separate runtime boundaries, controlled artifact promotion, and narrowly scoped identities such as OIDC-backed roles. It is an architectural choice, not a claim that all shared-cluster designs are invalid.",
-      "exampleId": "kubernetes-088-example"
+      "exampleId": "kubernetes-088-example",
+      "focus": "scenarios"
     },
     {
       "id": "kubernetes-089",
@@ -1280,7 +1368,8 @@
       ],
       "answerIndex": 2,
       "explanation": "Determine why the taint exists and whether the workload belongs there. Reserved capacity should not be consumed by bypassing its placement policy just to clear Pending; general workloads may need other eligible capacity.",
-      "exampleId": "kubernetes-089-example"
+      "exampleId": "kubernetes-089-example",
+      "focus": "scenarios"
     },
     {
       "id": "kubernetes-090",
@@ -1294,7 +1383,8 @@
       ],
       "answerIndex": 3,
       "explanation": "Some taints reflect real node conditions. Bypassing them can place work on an unhealthy node; inspect conditions and the reason for the taint, then repair the condition or use appropriate capacity.",
-      "exampleId": "kubernetes-090-example"
+      "exampleId": "kubernetes-090-example",
+      "focus": "scenarios"
     },
     {
       "id": "kubernetes-091",
@@ -1308,7 +1398,8 @@
       ],
       "answerIndex": 0,
       "explanation": "The taint repels Pods without a matching toleration; required placement keeps monitoring Pods on the intended nodes. Restrict who may request that toleration, and assess system workloads with broad tolerations separately.",
-      "exampleId": "kubernetes-091-example"
+      "exampleId": "kubernetes-091-example",
+      "focus": "scenarios"
     },
     {
       "id": "kubernetes-092",
@@ -1322,7 +1413,8 @@
       ],
       "answerIndex": 1,
       "explanation": "NoSchedule does not move existing Pods. Migration requires deliberate eviction or recreation with correct placement and sufficient capacity, respecting disruption and storage constraints; targeted eviction may be preferable to a full drain.",
-      "exampleId": "kubernetes-092-example"
+      "exampleId": "kubernetes-092-example",
+      "focus": "scenarios"
     },
     {
       "id": "kubernetes-093",
@@ -1336,7 +1428,8 @@
       ],
       "answerIndex": 2,
       "explanation": "Drain handles eligible workload eviction and cordons the node. It does not remove DaemonSet-managed Pods with --ignore-daemonsets, and mirror Pods representing static Pods are not removed through the normal drain path.",
-      "exampleId": "kubernetes-093-example"
+      "exampleId": "kubernetes-093-example",
+      "focus": "scenarios"
     },
     {
       "id": "kubernetes-094",
@@ -1350,7 +1443,8 @@
       ],
       "answerIndex": 3,
       "explanation": "A hostname label represents the node-level topology domain; the zone key represents an AZ-level domain that can contain several nodes. The constraint’s selector must match the application Pods.",
-      "exampleId": "kubernetes-094-example"
+      "exampleId": "kubernetes-094-example",
+      "focus": "scenarios"
     },
     {
       "id": "kubernetes-095",
@@ -1366,7 +1460,8 @@
       "explanation": "Spread constrains imbalance across eligible topology domains; it is not a universal one-Pod-per-node rule. With the stated assumptions, two replicas on one domain and one on each other domain have skew one.",
       "exampleId": "kubernetes-095-example",
       "code": "replicas: 4\n# Three eligible hostname domains; no other matching Pods or constraints.\ntopologySpreadConstraints:\n  - maxSkew: 1\n    topologyKey: kubernetes.io/hostname\n    whenUnsatisfiable: DoNotSchedule",
-      "language": "yaml"
+      "language": "yaml",
+      "focus": "scenarios"
     },
     {
       "id": "kubernetes-096",
@@ -1380,7 +1475,8 @@
       ],
       "answerIndex": 1,
       "explanation": "ScheduleAnyway lets the scheduler consider placements even when they do not satisfy the configured skew bound, while preferring a better spread. It does not override unrelated hard constraints.",
-      "exampleId": "kubernetes-096-example"
+      "exampleId": "kubernetes-096-example",
+      "focus": "scenarios"
     },
     {
       "id": "kubernetes-097",
@@ -1394,7 +1490,8 @@
       ],
       "answerIndex": 2,
       "explanation": "The scheduler places new Pods rather than moving running ones. A Deployment Pod-template edit normally starts a rollout, and new replacements are evaluated with the rules; plan disruption, capacity, and verification rather than assuming immediate rebalance.",
-      "exampleId": "kubernetes-097-example"
+      "exampleId": "kubernetes-097-example",
+      "focus": "scenarios"
     },
     {
       "id": "kubernetes-098",
@@ -1408,7 +1505,8 @@
       ],
       "answerIndex": 3,
       "explanation": "Zone and hostname are different topology levels. Multiple spread constraints can be applied together, and eligible placements must satisfy all hard constraints; resources and volume topology must also fit.",
-      "exampleId": "kubernetes-098-example"
+      "exampleId": "kubernetes-098-example",
+      "focus": "scenarios"
     }
   ],
   "snippetsUrl": "../assets/snippets/library.json"

@@ -1,0 +1,9 @@
+---
+- name: Loops reference
+  hosts: all
+  gather_facts: false
+  tasks:
+    - ansible.builtin.debug:
+        var: item
+      loop: [1, 2, 3, 4]
+      when: item > 2

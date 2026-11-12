@@ -1,0 +1,17 @@
+---
+- name: Handlers reference
+  hosts: all
+  gather_facts: false
+  tasks:
+    - ansible.builtin.debug:
+        msg: Example configuration changed
+      changed_when: true
+      notify: Restart app
+    - ansible.builtin.meta: flush_handlers
+    - ansible.builtin.debug:
+        msg: The notified handler has already run
+  handlers:
+    - name: Restart app
+      ansible.builtin.service:
+        name: app
+        state: restarted

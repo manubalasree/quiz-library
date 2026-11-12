@@ -1,0 +1,9 @@
+---
+- name: Collections reference
+  hosts: all
+  gather_facts: false
+  tasks:
+    - ansible.builtin.copy:
+        content: "Hello\n"
+        dest: /tmp/practice-message.txt
+        mode: "0644"

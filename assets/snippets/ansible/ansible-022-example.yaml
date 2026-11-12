@@ -1,0 +1,11 @@
+---
+- name: Conditionals reference
+  hosts: all
+  gather_facts: false
+  vars:
+    maintenance: false
+    emergency: true
+  tasks:
+    - ansible.builtin.debug:
+        msg: Maintenance or emergency is active
+      when: (maintenance | bool) or (emergency | bool)

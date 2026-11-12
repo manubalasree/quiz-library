@@ -1,0 +1,8 @@
+---
+- name: Host variables reference
+  hosts: all
+  gather_facts: false
+  tasks:
+    - ansible.builtin.debug:
+        msg: "{{ hostvars['db1']['service_port'] }}"
+    # Inventory must define db1 and service_port; no SSH is triggered.

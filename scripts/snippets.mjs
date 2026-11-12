@@ -3,6 +3,7 @@ import {resolve,dirname} from 'node:path';
 import {tmpdir} from 'node:os';
 import {fileURLToPath} from 'node:url';
 import {spawnSync} from 'node:child_process';
+import {qaAnsible} from './ansible-qa.mjs';
 import {loadLibrary,bundle} from './snippet-validation.mjs';
 const repo=fileURLToPath(new URL('../',import.meta.url));
 const mode=process.argv[2]||'--check';
@@ -14,9 +15,11 @@ if(mode==='--qa'){
   const temp=await mkdtemp(resolve(tmpdir(),'quiz-snippet-qa-'));
   const env={PATH:process.env.PATH,HOME:process.env.HOME,TMPDIR:temp,CHECKPOINT_DISABLE:'1',TF_IN_AUTOMATION:'1',TF_INPUT:'0',TF_CLI_CONFIG_FILE:resolve(temp,'terraform.rc'),TF_PLUGIN_CACHE_DIR:resolve(temp,'provider-cache')};
   await writeFile(env.TF_CLI_CONFIG_FILE,'');await mkdir(env.TF_PLUGIN_CACHE_DIR);
+  env.ANSIBLE_CONFIG=resolve(temp,'ansible.cfg');env.ANSIBLE_LOCAL_TEMP=resolve(temp,'ansible-local');env.ANSIBLE_REMOTE_TEMP=resolve(temp,'ansible-remote');env.ANSIBLE_ASYNC_DIR=resolve(temp,'ansible-async');
+  await writeFile(env.ANSIBLE_CONFIG,'[defaults]\nretry_files_enabled = False\n');
   const run=(bin,args,options={})=>{const r=spawnSync(bin,args,{encoding:'utf8',timeout:180000,maxBuffer:4*1024*1024,env,...options});if(r.error||r.status!==0)throw new Error(`${bin} ${args.join(' ')}\n${r.error||r.stdout+'\n'+r.stderr}`);return r.stdout;};
   try{
-    const manifests=snippets.filter(s=>s.language==='yaml').map(s=>resolve(repo,'assets/snippets',s.file));
+    const manifests=snippets.filter(s=>s.topic==='kubernetes'&&s.language==='yaml').map(s=>resolve(repo,'assets/snippets',s.file));
     console.log(run(process.env.KUBECONFORM_BIN||'kubeconform',['-strict','-summary','-kubernetes-version','1.34.0','-cache',temp,...manifests]).trim());
     let configs=0,shells=0,behavior=0;
     for(const s of snippets){
@@ -40,7 +43,8 @@ if(mode==='--qa'){
       }
       configs++;console.log(`Validated ${s.id}`);
     }
-    console.log(`QA passed: ${manifests.length} manifest assets, ${configs} Terraform configurations, ${shells} shell examples, ${behavior} Terraform behavior checks. No examples were applied; shell examples were not executed.`);
+    const ansible=await qaAnsible({repo,temp,run});
+    console.log(`QA passed: ${manifests.length} manifest assets, ${configs} Terraform configurations, ${shells} shell examples, ${behavior} Terraform behavior checks, ${ansible.playbooks} Ansible syntax checks, ${ansible.behavior} Ansible behavior checks. No examples were applied; shell examples were not executed.`);
   }finally{await rm(temp,{recursive:true,force:true});}
 }
 console.log(`${snippets.length} snippet assets and all quiz references are valid (${mode.slice(2)}).`);

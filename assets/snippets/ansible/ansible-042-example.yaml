@@ -1,0 +1,10 @@
+---
+- name: Tags reference
+  hosts: all
+  gather_facts: false
+  tasks:
+    - ansible.builtin.include_tasks:
+        file: tasks/dynamic.yml
+        apply:
+          tags: [deploy]
+      tags: [deploy]

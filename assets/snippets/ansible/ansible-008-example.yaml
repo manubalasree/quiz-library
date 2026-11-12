@@ -1,0 +1,9 @@
+---
+- name: Idempotency reference
+  hosts: all
+  gather_facts: false
+  tasks:
+    - ansible.builtin.file:
+        path: /tmp/practice-cache
+        state: directory
+        mode: "0750"

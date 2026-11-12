@@ -7,8 +7,13 @@
     "validate": "node scripts/validate.mjs && node scripts/snippets.mjs --check",
     "snippets:build": "node scripts/snippets.mjs --build",
     "snippets:check": "node scripts/snippets.mjs --check",
-    "snippets:qa": "node scripts/snippets.mjs --qa"
+    "snippets:qa": "node scripts/snippets.mjs --qa",
+    "snippets:ansible": "node scripts/ansible-qa.mjs"
   },
-  "engines": {"node": ">=22"},
-  "devDependencies": {"yaml": "2.9.1"}
+  "engines": {
+    "node": ">=22"
+  },
+  "devDependencies": {
+    "yaml": "2.9.1"
+  }
 }

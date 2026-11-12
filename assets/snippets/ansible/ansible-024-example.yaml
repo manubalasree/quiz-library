@@ -1,0 +1,12 @@
+---
+- name: Registered results reference
+  hosts: all
+  gather_facts: false
+  tasks:
+    - ansible.builtin.command:
+        argv: [/usr/bin/printf, "%s", "{{ item }}"]
+      loop: [api, worker]
+      register: checks
+      changed_when: false
+    - ansible.builtin.debug:
+        msg: "{{ checks.results | map(attribute='stdout') | list }}"

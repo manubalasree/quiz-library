@@ -1,0 +1,11 @@
+---
+- name: Retries reference
+  hosts: all
+  gather_facts: false
+  tasks:
+    - ansible.builtin.command: /opt/app/healthcheck
+      register: health
+      until: health.rc == 0
+      retries: 5
+      delay: 2
+      changed_when: false

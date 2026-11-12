@@ -1,0 +1,6 @@
+---
+- name: Connectivity reference
+  hosts: all
+  gather_facts: false
+  tasks:
+    - ansible.builtin.ping:

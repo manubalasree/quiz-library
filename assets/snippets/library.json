@@ -1480,6 +1480,506 @@
       "description": "Requires accurate zone and hostname labels on candidate nodes. These rules bound skew over eligible domains; they do not guarantee a particular number of AZs exist or relocate existing zonal volumes.",
       "source": "https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/",
       "code": "apiVersion: apps/v1\nkind: Deployment\nmetadata: {name: layered-spread-demo}\nspec:\n  replicas: 3\n  selector:\n    matchLabels: {app: layered-spread-demo}\n  template:\n    metadata:\n      labels: {app: layered-spread-demo}\n    spec:\n      topologySpreadConstraints:\n        - maxSkew: 1\n          topologyKey: topology.kubernetes.io/zone\n          whenUnsatisfiable: DoNotSchedule\n          labelSelector:\n            matchLabels: {app: layered-spread-demo}\n        - maxSkew: 1\n          topologyKey: kubernetes.io/hostname\n          whenUnsatisfiable: DoNotSchedule\n          labelSelector:\n            matchLabels: {app: layered-spread-demo}\n      containers:\n        - name: app\n          image: nginx:1.28\n"
+    },
+    {
+      "id": "ansible-001-example",
+      "topic": "ansible",
+      "title": "Inventory — ansible-001",
+      "language": "shell",
+      "file": "ansible/ansible-001-example.sh",
+      "description": "Inventory group headings assign the following hosts to that group until another heading begins.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/intro_inventory.html",
+      "code": "#!/usr/bin/env bash\nset -euo pipefail\ncat > inventory.ini <<'INI'\n[web]\napp1\napp2\n[database]\ndb1\nINI\nansible-inventory -i inventory.ini --graph web\n# web contains app1 and app2, not db1.\n"
+    },
+    {
+      "id": "ansible-002-example",
+      "topic": "ansible",
+      "title": "Inventory — ansible-002",
+      "language": "shell",
+      "file": "ansible/ansible-002-example.sh",
+      "description": "all includes every inventory host. ungrouped contains hosts that belong to no other group apart from all.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/intro_inventory.html",
+      "code": "#!/usr/bin/env bash\nset -euo pipefail\ncat > inventory.ini <<'INI'\n[web]\napp1\n[database]\ndb1\nINI\nansible-inventory -i inventory.ini --graph all\n# all contains every inventory host, including both groups.\n"
+    },
+    {
+      "id": "ansible-003-example",
+      "topic": "ansible",
+      "title": "Host patterns — ansible-003",
+      "language": "shell",
+      "file": "ansible/ansible-003-example.sh",
+      "description": "The & intersection operator limits the selection to hosts in both groups. Quoting prevents the shell from interpreting special characters.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/intro_patterns.html",
+      "code": "#!/usr/bin/env bash\nset -euo pipefail\ncat > inventory.ini <<'INI'\n[web]\napp1\napp2\n[production]\napp2\ndb1\nINI\nansible 'web:&production' -i inventory.ini --list-hosts\n# Only app2 is selected. --list-hosts does not connect.\n"
+    },
+    {
+      "id": "ansible-004-example",
+      "topic": "ansible",
+      "title": "Connectivity — ansible-004",
+      "language": "yaml",
+      "file": "ansible/ansible-004-example.yaml",
+      "description": "The Ansible ping module is not network ICMP ping. It exercises the Ansible connection and remote module execution path.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/collections/ansible/builtin/ping_module.html",
+      "code": "---\n- name: Connectivity reference\n  hosts: all\n  gather_facts: false\n  tasks:\n    - ansible.builtin.ping:\n"
+    },
+    {
+      "id": "ansible-005-example",
+      "topic": "ansible",
+      "title": "Facts — ansible-005",
+      "language": "yaml",
+      "file": "ansible/ansible-005-example.yaml",
+      "description": "setup gathers facts such as platform and interfaces. These facts can be referenced through ansible_facts during playbook execution.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/collections/ansible/builtin/setup_module.html",
+      "code": "---\n- name: Facts reference\n  hosts: all\n  gather_facts: false\n  tasks:\n    - ansible.builtin.setup:\n        gather_subset: [min]\n    - ansible.builtin.debug:\n        var: ansible_facts[\"distribution\"]\n"
+    },
+    {
+      "id": "ansible-006-example",
+      "topic": "ansible",
+      "title": "Facts — ansible-006",
+      "language": "yaml",
+      "file": "ansible/ansible-006-example.yaml",
+      "description": "Disabling automatic fact gathering can save time, but facts must come from another deliberate source before tasks rely on them. This reference gathers the minimum facts explicitly before reading them.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_vars_facts.html",
+      "code": "---\n- name: Facts reference\n  hosts: all\n  gather_facts: false\n  tasks:\n    - ansible.builtin.setup:\n        gather_subset: [min]\n    - ansible.builtin.debug:\n        var: ansible_facts[\"os_family\"]\n"
+    },
+    {
+      "id": "ansible-007-example",
+      "topic": "ansible",
+      "title": "Privilege escalation — ansible-007",
+      "language": "yaml",
+      "file": "ansible/ansible-007-example.yaml",
+      "description": "become requests privilege escalation. Its success depends on the remote account’s configured authorization and any required credentials.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_privilege_escalation.html",
+      "code": "---\n- name: Privilege escalation reference\n  hosts: all\n  gather_facts: false\n  tasks:\n    - ansible.builtin.package:\n        name: nginx\n        state: present\n      become: true\n"
+    },
+    {
+      "id": "ansible-008-example",
+      "topic": "ansible",
+      "title": "Idempotency — ansible-008",
+      "language": "yaml",
+      "file": "ansible/ansible-008-example.yaml",
+      "description": "Idempotency concerns repeated effects, not simply whether a command runs. Desired-state modules often inspect existing state before changing it.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_intro.html",
+      "code": "---\n- name: Idempotency reference\n  hosts: all\n  gather_facts: false\n  tasks:\n    - ansible.builtin.file:\n        path: /tmp/practice-cache\n        state: directory\n        mode: \"0750\"\n"
+    },
+    {
+      "id": "ansible-009-example",
+      "topic": "ansible",
+      "title": "Commands — ansible-009",
+      "language": "yaml",
+      "file": "ansible/ansible-009-example.yaml",
+      "description": "command avoids shell interpretation, reducing quoting and injection risks. Use shell only when shell features are actually required.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_intro.html",
+      "code": "---\n- name: Commands reference\n  hosts: all\n  gather_facts: false\n  tasks:\n    - ansible.builtin.command:\n        argv: [/usr/bin/printf, \"%s\\n\", \"hello world\"]\n      changed_when: false\n"
+    },
+    {
+      "id": "ansible-010-example",
+      "topic": "ansible",
+      "title": "Commands — ansible-010",
+      "language": "yaml",
+      "file": "ansible/ansible-010-example.yaml",
+      "description": "command passes arguments without shell parsing. Use a suitable module or an explicitly justified shell task for pipelines. Here the pipe is passed as a literal argument; stdout is hello|wc-c, not a byte count.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_intro.html",
+      "code": "---\n- name: Commands reference\n  hosts: all\n  gather_facts: false\n  tasks:\n    - ansible.builtin.command:\n        argv: [/usr/bin/printf, \"%s\", hello, \"|\", wc, \"-c\"]\n      register: result\n      changed_when: false\n    - ansible.builtin.debug:\n        var: result.stdout\n"
+    },
+    {
+      "id": "ansible-011-example",
+      "topic": "ansible",
+      "title": "Commands — ansible-011",
+      "language": "yaml",
+      "file": "ansible/ansible-011-example.yaml",
+      "description": "creates is a guard checked before execution. The command or another task must actually create the marker when initialization succeeds. The illustrative /opt/app/init must exist and create the marker on success.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_intro.html",
+      "code": "---\n- name: Commands reference\n  hosts: all\n  gather_facts: false\n  tasks:\n    - ansible.builtin.command: /opt/app/init\n      args:\n        creates: /opt/app/.initialized\n"
+    },
+    {
+      "id": "ansible-012-example",
+      "topic": "ansible",
+      "title": "Handlers — ansible-012",
+      "language": "yaml",
+      "file": "ansible/ansible-012-example.yaml",
+      "description": "Notifications are driven by changed status. A successful but unchanged task does not normally notify handlers. The app service is illustrative; syntax QA never restarts a service.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_handlers.html",
+      "code": "---\n- name: Handlers reference\n  hosts: all\n  gather_facts: false\n  vars:\n    http_port: 8080\n  tasks:\n    - ansible.builtin.template:\n        src: templates/app.conf.j2\n        dest: /tmp/practice-app.conf\n        mode: \"0640\"\n      notify: Restart app\n  handlers:\n    - name: Restart app\n      ansible.builtin.service:\n        name: app\n        state: restarted\n"
+    },
+    {
+      "id": "ansible-013-example",
+      "topic": "ansible",
+      "title": "Handlers — ansible-013",
+      "language": "yaml",
+      "file": "ansible/ansible-013-example.yaml",
+      "description": "Ansible deduplicates handler notifications within a handler execution phase. Handlers run in their defined order rather than notification order. The app service is illustrative; syntax QA never restarts a service.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_handlers.html",
+      "code": "---\n- name: Handlers reference\n  hosts: all\n  gather_facts: false\n  tasks:\n    - ansible.builtin.debug:\n        msg: \"Changed task {{ item }}\"\n      loop: [one, two, three]\n      changed_when: true\n      notify: Restart app\n  handlers:\n    - name: Restart app\n      ansible.builtin.service:\n        name: app\n        state: restarted\n"
+    },
+    {
+      "id": "ansible-014-example",
+      "topic": "ansible",
+      "title": "Handlers — ansible-014",
+      "language": "yaml",
+      "file": "ansible/ansible-014-example.yaml",
+      "description": "flush_handlers creates an earlier handler execution point. Later changed tasks may notify the same handlers again. The app service is illustrative; syntax QA never restarts a service.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_handlers.html",
+      "code": "---\n- name: Handlers reference\n  hosts: all\n  gather_facts: false\n  tasks:\n    - ansible.builtin.debug:\n        msg: Example configuration changed\n      changed_when: true\n      notify: Restart app\n    - ansible.builtin.meta: flush_handlers\n    - ansible.builtin.debug:\n        msg: The notified handler has already run\n  handlers:\n    - name: Restart app\n      ansible.builtin.service:\n        name: app\n        state: restarted\n"
+    },
+    {
+      "id": "ansible-015-example",
+      "topic": "ansible",
+      "title": "Files — ansible-015",
+      "language": "yaml",
+      "file": "ansible/ansible-015-example.yaml",
+      "description": "template renders Jinja on the controller before transferring content. copy is appropriate for content that does not require template rendering. The companion app.conf.j2 fixture contains port={{ http_port }}.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_templating.html",
+      "code": "---\n- name: Files reference\n  hosts: all\n  gather_facts: false\n  vars:\n    http_port: 8080\n  tasks:\n    - ansible.builtin.template:\n        src: templates/app.conf.j2\n        dest: /tmp/practice-app.conf\n        mode: \"0640\"\n"
+    },
+    {
+      "id": "ansible-016-example",
+      "topic": "ansible",
+      "title": "Permissions — ansible-016",
+      "language": "yaml",
+      "file": "ansible/ansible-016-example.yaml",
+      "description": "Quoting permission modes avoids YAML numeric-interpretation surprises. The file module then applies the intended octal mode.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_intro.html",
+      "code": "---\n- name: Permissions reference\n  hosts: all\n  gather_facts: false\n  tasks:\n    - ansible.builtin.file:\n        path: /tmp/practice-app.conf\n        state: touch\n        mode: \"0640\"\n        access_time: preserve\n        modification_time: preserve\n"
+    },
+    {
+      "id": "ansible-017-example",
+      "topic": "ansible",
+      "title": "YAML and Jinja — ansible-017",
+      "language": "yaml",
+      "file": "ansible/ansible-017-example.yaml",
+      "description": "YAML parses the document before Ansible renders expressions. Quoting avoids confusion with YAML mapping syntax.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_variables.html",
+      "code": "---\n- name: YAML and Jinja reference\n  hosts: all\n  gather_facts: false\n  vars:\n    config_directory: /tmp\n  tasks:\n    - ansible.builtin.copy:\n        content: \"mode=practice\\n\"\n        dest: \"{{ config_directory }}/app.conf\"\n        mode: \"0640\"\n"
+    },
+    {
+      "id": "ansible-018-example",
+      "topic": "ansible",
+      "title": "Variables — ansible-018",
+      "language": "yaml",
+      "file": "ansible/ansible-018-example.yaml",
+      "description": "Extra variables have very high variable precedence. Use them deliberately because they can override values from many other variable sources. Run with -e service_port=9090 to override the play value of 8080 as well.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_variables.html",
+      "code": "---\n- name: Variables reference\n  hosts: all\n  gather_facts: false\n  vars:\n    service_port: 8080\n  tasks:\n    - ansible.builtin.debug:\n        var: service_port\n"
+    },
+    {
+      "id": "ansible-019-example",
+      "topic": "ansible",
+      "title": "Jinja filters — ansible-019",
+      "language": "yaml",
+      "file": "ansible/ansible-019-example.yaml",
+      "description": "The default filter supplies a fallback for undefined values. Treating empty or false values as missing requires the filter’s optional boolean behavior.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_filters.html",
+      "code": "---\n- name: Jinja filters reference\n  hosts: all\n  gather_facts: false\n  tasks:\n    - ansible.builtin.debug:\n        msg: \"{{ optional_port | default(8080) }}\"\n"
+    },
+    {
+      "id": "ansible-020-example",
+      "topic": "ansible",
+      "title": "Conditionals — ansible-020",
+      "language": "yaml",
+      "file": "ansible/ansible-020-example.yaml",
+      "description": "Explicit conversion avoids treating a nonempty string as an intended boolean value. Modern conditionals should evaluate to booleans.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_conditionals.html",
+      "code": "---\n- name: Conditionals reference\n  hosts: all\n  gather_facts: false\n  vars:\n    enabled: \"false\"\n  tasks:\n    - ansible.builtin.debug:\n        msg: Feature enabled\n      when: enabled | bool\n"
+    },
+    {
+      "id": "ansible-021-example",
+      "topic": "ansible",
+      "title": "Conditionals — ansible-021",
+      "language": "yaml",
+      "file": "ansible/ansible-021-example.yaml",
+      "description": "A list of when conditions is combined with logical AND. The condition is evaluated for each host executing the task.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_conditionals.html",
+      "code": "---\n- name: Conditionals reference\n  hosts: all\n  gather_facts: false\n  vars:\n    ansible_facts:\n      os_family: Debian\n    deploy_enabled: true\n  tasks:\n    - ansible.builtin.debug:\n        msg: Deploy on Debian only when enabled\n      when:\n        - ansible_facts[\"os_family\"] == \"Debian\"\n        - deploy_enabled | bool\n"
+    },
+    {
+      "id": "ansible-022-example",
+      "topic": "ansible",
+      "title": "Conditionals — ansible-022",
+      "language": "yaml",
+      "file": "ansible/ansible-022-example.yaml",
+      "description": "An explicit or expression expresses alternative conditions. A YAML list of separate conditions would instead use AND.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_conditionals.html",
+      "code": "---\n- name: Conditionals reference\n  hosts: all\n  gather_facts: false\n  vars:\n    maintenance: false\n    emergency: true\n  tasks:\n    - ansible.builtin.debug:\n        msg: Maintenance or emergency is active\n      when: (maintenance | bool) or (emergency | bool)\n"
+    },
+    {
+      "id": "ansible-023-example",
+      "topic": "ansible",
+      "title": "Loops — ansible-023",
+      "language": "yaml",
+      "file": "ansible/ansible-023-example.yaml",
+      "description": "A condition on a looping task is evaluated separately for each item.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_loops.html",
+      "code": "---\n- name: Loops reference\n  hosts: all\n  gather_facts: false\n  tasks:\n    - ansible.builtin.debug:\n        var: item\n      loop: [1, 2, 3, 4]\n      when: item > 2\n"
+    },
+    {
+      "id": "ansible-024-example",
+      "topic": "ansible",
+      "title": "Registered results — ansible-024",
+      "language": "yaml",
+      "file": "ansible/ansible-024-example.yaml",
+      "description": "A registered looping task returns an aggregate result with a results list. Individual module result fields live inside those entries.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_loops.html",
+      "code": "---\n- name: Registered results reference\n  hosts: all\n  gather_facts: false\n  tasks:\n    - ansible.builtin.command:\n        argv: [/usr/bin/printf, \"%s\", \"{{ item }}\"]\n      loop: [api, worker]\n      register: checks\n      changed_when: false\n    - ansible.builtin.debug:\n        msg: \"{{ checks.results | map(attribute='stdout') | list }}\"\n"
+    },
+    {
+      "id": "ansible-025-example",
+      "topic": "ansible",
+      "title": "Changed status — ansible-025",
+      "language": "yaml",
+      "file": "ansible/ansible-025-example.yaml",
+      "description": "changed_when controls change reporting. It does not alter execution, erase failures, or make a command idempotent by itself.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_error_handling.html",
+      "code": "---\n- name: Changed status reference\n  hosts: all\n  gather_facts: false\n  tasks:\n    - ansible.builtin.command: /usr/bin/uname -r\n      register: kernel_version\n      changed_when: false\n    - ansible.builtin.debug:\n        var: kernel_version.stdout\n"
+    },
+    {
+      "id": "ansible-026-example",
+      "topic": "ansible",
+      "title": "Failure conditions — ansible-026",
+      "language": "yaml",
+      "file": "ansible/ansible-026-example.yaml",
+      "description": "A failed_when list combines expressions with AND. Use one expression with or if either condition should independently indicate failure.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_error_handling.html",
+      "code": "---\n- name: Failure conditions reference\n  hosts: all\n  gather_facts: false\n  tasks:\n    - ansible.builtin.command: /opt/app/healthcheck\n      register: result\n      failed_when:\n        - result.rc != 0\n        - '\"FATAL\" in result.stderr'\n      changed_when: false\n"
+    },
+    {
+      "id": "ansible-027-example",
+      "topic": "ansible",
+      "title": "Retries — ansible-027",
+      "language": "yaml",
+      "file": "ansible/ansible-027-example.yaml",
+      "description": "until defines the success condition for retrying this task. retries and delay control the retry budget and waiting period.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_loops.html",
+      "code": "---\n- name: Retries reference\n  hosts: all\n  gather_facts: false\n  tasks:\n    - ansible.builtin.command: /opt/app/healthcheck\n      register: health\n      until: health.rc == 0\n      retries: 5\n      delay: 2\n      changed_when: false\n"
+    },
+    {
+      "id": "ansible-028-example",
+      "topic": "ansible",
+      "title": "Error handling — ansible-028",
+      "language": "yaml",
+      "file": "ansible/ansible-028-example.yaml",
+      "description": "ignore_errors applies to ordinary task failure results, not every possible failure mode. Ansible has separate unreachable-host handling.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_error_handling.html",
+      "code": "---\n- name: Error handling reference\n  hosts: all\n  gather_facts: false\n  tasks:\n    - ansible.builtin.command: /opt/app/healthcheck\n      ignore_errors: true\n      changed_when: false\n    # ignore_errors does not repair an unreachable SSH target.\n"
+    },
+    {
+      "id": "ansible-029-example",
+      "topic": "ansible",
+      "title": "Blocks — ansible-029",
+      "language": "yaml",
+      "file": "ansible/ansible-029-example.yaml",
+      "description": "rescue handles normal block task failures. Invalid task definitions and unreachable hosts are not ordinary rescuable failed results.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_blocks.html",
+      "code": "---\n- name: Blocks reference\n  hosts: all\n  gather_facts: false\n  tasks:\n    - block:\n        - ansible.builtin.command: /bin/false\n          changed_when: false\n      rescue:\n        - ansible.builtin.debug:\n            msg: A normal task failure was rescued\n"
+    },
+    {
+      "id": "ansible-030-example",
+      "topic": "ansible",
+      "title": "Blocks — ansible-030",
+      "language": "yaml",
+      "file": "ansible/ansible-030-example.yaml",
+      "description": "always is used for actions such as cleanup after block execution. It does not overcome all fatal execution or connectivity problems.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_blocks.html",
+      "code": "---\n- name: Blocks reference\n  hosts: all\n  gather_facts: false\n  tasks:\n    - block:\n        - ansible.builtin.command: /bin/false\n          changed_when: false\n      rescue:\n        - ansible.builtin.debug:\n            msg: Recover from a failed task\n      always:\n        - ansible.builtin.debug:\n            msg: Cleanup runs after block and rescue\n"
+    },
+    {
+      "id": "ansible-031-example",
+      "topic": "ansible",
+      "title": "Check mode — ansible-031",
+      "language": "yaml",
+      "file": "ansible/ansible-031-example.yaml",
+      "description": "Check mode depends on module support and task behavior. Unsupported tasks may be skipped, and registered-result-dependent flows may not simulate fully.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_checkmode.html",
+      "code": "---\n- name: Check mode reference\n  hosts: all\n  gather_facts: false\n  tasks:\n    - ansible.builtin.copy:\n        content: \"mode=practice\\n\"\n        dest: /tmp/practice-check.conf\n        mode: \"0640\"\n    # ansible-playbook -i localhost, example.yml --check\n    # Support varies by module; this is not an application test.\n"
+    },
+    {
+      "id": "ansible-032-example",
+      "topic": "ansible",
+      "title": "Diff mode — ansible-032",
+      "language": "yaml",
+      "file": "ansible/ansible-032-example.yaml",
+      "description": "Diff output can reveal file contents. Use appropriate output controls such as diff: false for sensitive tasks.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_checkmode.html",
+      "code": "---\n- name: Diff mode reference\n  hosts: all\n  gather_facts: false\n  vars:\n    demo_token: example-only-not-a-secret\n  tasks:\n    - ansible.builtin.copy:\n        content: \"token={{ demo_token }}\\n\"\n        dest: /tmp/practice-secret.conf\n        mode: \"0600\"\n      diff: false\n      no_log: true\n"
+    },
+    {
+      "id": "ansible-033-example",
+      "topic": "ansible",
+      "title": "Vault — ansible-033",
+      "language": "shell",
+      "file": "ansible/ansible-033-example.sh",
+      "description": "Vault protects stored content. Once decrypted for use, secrets still need careful handling in tasks, logs, and application configuration.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/vault_guide/index.html",
+      "code": "#!/usr/bin/env bash\nset -euo pipefail\n# Use your own sample file; keep real secrets outside the repository.\nansible-vault encrypt example-vars.yml\n# A password prompt protects the file at rest.\nansible-playbook -i inventory.ini site.yml --ask-vault-pass\n# Decrypted values still need no_log and careful output handling.\n"
+    },
+    {
+      "id": "ansible-034-example",
+      "topic": "ansible",
+      "title": "Secret handling — ansible-034",
+      "language": "yaml",
+      "file": "ansible/ansible-034-example.yaml",
+      "description": "no_log suppresses normal task-result logging. Do not expose the same secret through a separate debug task or assume it solves every logging path.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/vault_guide/index.html",
+      "code": "---\n- name: Secret handling reference\n  hosts: all\n  gather_facts: false\n  vars:\n    demo_token: example-only-not-a-secret\n  tasks:\n    - ansible.builtin.debug:\n        msg: \"{{ demo_token }}\"\n      no_log: true\n    # Do not print the same value in a later unprotected task.\n"
+    },
+    {
+      "id": "ansible-035-example",
+      "topic": "ansible",
+      "title": "Delegation — ansible-035",
+      "language": "yaml",
+      "file": "ansible/ansible-035-example.yaml",
+      "description": "Delegation changes where the action runs. inventory_hostname still identifies the original host context, though other connection variables can come from the delegated host.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_delegation.html",
+      "code": "---\n- name: Delegation reference\n  hosts: all\n  gather_facts: false\n  tasks:\n    - ansible.builtin.command: /usr/bin/hostname\n      delegate_to: localhost\n      register: delegated_result\n      changed_when: false\n    - ansible.builtin.debug:\n        msg: \"Original={{ inventory_hostname }}; delegated stdout={{ delegated_result.stdout }}\"\n"
+    },
+    {
+      "id": "ansible-036-example",
+      "topic": "ansible",
+      "title": "Execution control — ansible-036",
+      "language": "yaml",
+      "file": "ansible/ansible-036-example.yaml",
+      "description": "run_once normally applies to the current host batch. If an operation truly must run once for the entire play, design its condition accordingly.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_strategies.html",
+      "code": "---\n- name: Execution control reference\n  hosts: all\n  gather_facts: false\n  serial: 2\n  tasks:\n    - ansible.builtin.debug:\n        msg: \"Run once in batch {{ ansible_play_batch }}\"\n      run_once: true\n"
+    },
+    {
+      "id": "ansible-037-example",
+      "topic": "ansible",
+      "title": "Rolling changes — ansible-037",
+      "language": "yaml",
+      "file": "ansible/ansible-037-example.yaml",
+      "description": "serial bounds the batch of hosts progressing through the play. It is useful for rolling maintenance and controlled deployments.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_strategies.html",
+      "code": "---\n- name: Rolling changes reference\n  hosts: all\n  gather_facts: false\n  serial: 2\n  tasks:\n    - ansible.builtin.debug:\n        msg: \"Current rolling batch: {{ ansible_play_batch }}\"\n"
+    },
+    {
+      "id": "ansible-038-example",
+      "topic": "ansible",
+      "title": "Concurrency — ansible-038",
+      "language": "yaml",
+      "file": "ansible/ansible-038-example.yaml",
+      "description": "throttle can constrain task concurrency below the broader worker or batch limits. It does not set a permanent host count.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_strategies.html",
+      "code": "---\n- name: Concurrency reference\n  hosts: all\n  gather_facts: false\n  tasks:\n    - ansible.builtin.command: /opt/app/maintenance-check\n      throttle: 1\n      changed_when: false\n"
+    },
+    {
+      "id": "ansible-039-example",
+      "topic": "ansible",
+      "title": "Strategies — ansible-039",
+      "language": "yaml",
+      "file": "ansible/ansible-039-example.yaml",
+      "description": "free lets hosts progress independently within applicable limits. Cross-host synchronization assumptions that fit linear execution may no longer hold.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_strategies.html",
+      "code": "---\n- name: Strategies reference\n  hosts: all\n  gather_facts: false\n  strategy: free\n  tasks:\n    - ansible.builtin.debug:\n        msg: Hosts can progress without a per-task barrier\n"
+    },
+    {
+      "id": "ansible-040-example",
+      "topic": "ansible",
+      "title": "Controller workers — ansible-040",
+      "language": "shell",
+      "file": "ansible/ansible-040-example.sh",
+      "description": "forks affects parallel host work. serial, throttle, strategy, and target responsiveness can further limit effective concurrency.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_strategies.html",
+      "code": "#!/usr/bin/env bash\nset -euo pipefail\n# Limit parallel host workers for this invocation.\nansible-playbook -i inventory.ini site.yml --forks 10\n# serial, throttle, and strategy can further limit concurrency.\n"
+    },
+    {
+      "id": "ansible-041-example",
+      "topic": "ansible",
+      "title": "Task reuse — ansible-041",
+      "language": "yaml",
+      "file": "ansible/ansible-041-example.yaml",
+      "description": "Static imports are expanded earlier; dynamic includes are processed during execution. This affects conditionals, loops, and tag handling.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_reuse.html",
+      "code": "---\n- name: Task reuse reference\n  hosts: all\n  gather_facts: false\n  tasks:\n    - ansible.builtin.import_tasks: tasks/static.yml\n    - ansible.builtin.include_tasks: tasks/dynamic.yml\n"
+    },
+    {
+      "id": "ansible-042-example",
+      "topic": "ansible",
+      "title": "Tags — ansible-042",
+      "language": "yaml",
+      "file": "ansible/ansible-042-example.yaml",
+      "description": "Dynamic includes need deliberate tag propagation, such as apply tags or tagging the included tasks. Tagging the include alone is not blanket inheritance.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_tags.html",
+      "code": "---\n- name: Tags reference\n  hosts: all\n  gather_facts: false\n  tasks:\n    - ansible.builtin.include_tasks:\n        file: tasks/dynamic.yml\n        apply:\n          tags: [deploy]\n      tags: [deploy]\n"
+    },
+    {
+      "id": "ansible-043-example",
+      "topic": "ansible",
+      "title": "Roles — ansible-043",
+      "language": "yaml",
+      "file": "ansible/ansible-043-example.yaml",
+      "description": "Role defaults have low variable precedence and are designed for customization. Role vars have higher precedence and are harder for callers to override. The companion role defines service_port in defaults/main.yml and prints its effective value.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_reuse_roles.html",
+      "code": "---\n- name: Roles reference\n  hosts: all\n  gather_facts: false\n  tasks:\n    - ansible.builtin.include_role:\n        name: practice\n    # Role defaults/main.yml defines service_port: 8080.\n    # Override it in play vars, inventory, or extra vars.\n"
+    },
+    {
+      "id": "ansible-044-example",
+      "topic": "ansible",
+      "title": "Handlers — ansible-044",
+      "language": "yaml",
+      "file": "ansible/ansible-044-example.yaml",
+      "description": "listen topics decouple notifications from individual handler names. Multiple handlers can listen to the same topic. The app service is illustrative; syntax QA never restarts a service.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_handlers.html",
+      "code": "---\n- name: Handlers reference\n  hosts: all\n  gather_facts: false\n  tasks:\n    - ansible.builtin.debug:\n        msg: Configuration changed\n      changed_when: true\n      notify: app configuration changed\n  handlers:\n    - name: Restart application service\n      listen: app configuration changed\n      ansible.builtin.service:\n        name: app\n        state: restarted\n"
+    },
+    {
+      "id": "ansible-045-example",
+      "topic": "ansible",
+      "title": "Collections — ansible-045",
+      "language": "yaml",
+      "file": "ansible/ansible-045-example.yaml",
+      "description": "Fully qualified collection names clarify module resolution and reduce collisions with similarly named modules from other collections.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_handlers.html",
+      "code": "---\n- name: Collections reference\n  hosts: all\n  gather_facts: false\n  tasks:\n    - ansible.builtin.copy:\n        content: \"Hello\\n\"\n        dest: /tmp/practice-message.txt\n        mode: \"0644\"\n"
+    },
+    {
+      "id": "ansible-046-example",
+      "topic": "ansible",
+      "title": "Host variables — ansible-046",
+      "language": "yaml",
+      "file": "ansible/ansible-046-example.yaml",
+      "description": "hostvars exposes inventory-host variable contexts. Reading gathered facts from another host still requires those facts to be available.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_vars_facts.html",
+      "code": "---\n- name: Host variables reference\n  hosts: all\n  gather_facts: false\n  tasks:\n    - ansible.builtin.debug:\n        msg: \"{{ hostvars['db1']['service_port'] }}\"\n    # Inventory must define db1 and service_port; no SSH is triggered.\n"
+    },
+    {
+      "id": "ansible-047-example",
+      "topic": "ansible",
+      "title": "Task environment — ansible-047",
+      "language": "yaml",
+      "file": "ansible/ansible-047-example.yaml",
+      "description": "The environment keyword supplies environment variables for task execution. It does not permanently modify the controller or target account’s login configuration.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_environment.html",
+      "code": "---\n- name: Task environment reference\n  hosts: all\n  gather_facts: false\n  tasks:\n    - ansible.builtin.command: /usr/bin/printenv APP_MODE\n      environment:\n        APP_MODE: staging\n      register: mode\n      changed_when: false\n    - ansible.builtin.debug:\n        var: mode.stdout\n"
+    },
+    {
+      "id": "ansible-048-example",
+      "topic": "ansible",
+      "title": "Asynchronous work — ansible-048",
+      "language": "yaml",
+      "file": "ansible/ansible-048-example.yaml",
+      "description": "poll zero is fire-and-forget behavior for the launching task. Use the returned job information to inspect or wait for completion separately.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_async.html",
+      "code": "---\n- name: Asynchronous work reference\n  hosts: all\n  gather_facts: false\n  tasks:\n    - ansible.builtin.command: /opt/app/long-job\n      async: 600\n      poll: 0\n      register: job\n    # Starting the job does not prove it completed successfully.\n"
+    },
+    {
+      "id": "ansible-049-example",
+      "topic": "ansible",
+      "title": "Asynchronous work — ansible-049",
+      "language": "yaml",
+      "file": "ansible/ansible-049-example.yaml",
+      "description": "async_status uses the async job ID to retrieve status. A polling loop with until can wait for its finished result.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_async.html",
+      "code": "---\n- name: Asynchronous work reference\n  hosts: all\n  gather_facts: false\n  tasks:\n    - ansible.builtin.command: /opt/app/long-job\n      async: 600\n      poll: 0\n      register: job\n    - ansible.builtin.async_status:\n        jid: \"{{ job.ansible_job_id }}\"\n      register: job_status\n      until: job_status.finished\n      retries: 60\n      delay: 10\n"
+    },
+    {
+      "id": "ansible-050-example",
+      "topic": "ansible",
+      "title": "Validation — ansible-050",
+      "language": "yaml",
+      "file": "ansible/ansible-050-example.yaml",
+      "description": "assert checks preconditions and produces a failure if its expression is false. Validation is distinct from actually provisioning the desired resource.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/collections/ansible/builtin/assert_module.html",
+      "code": "---\n- name: Validation reference\n  hosts: all\n  gather_facts: false\n  vars:\n    replicas: 3\n  tasks:\n    - ansible.builtin.assert:\n        that:\n          - replicas | int > 0\n        fail_msg: replicas must be positive\n"
     }
   ]
 }

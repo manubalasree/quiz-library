@@ -1,0 +1,14 @@
+---
+- name: Blocks reference
+  hosts: all
+  gather_facts: false
+  tasks:
+    - block:
+        - ansible.builtin.command: /bin/false
+          changed_when: false
+      rescue:
+        - ansible.builtin.debug:
+            msg: Recover from a failed task
+      always:
+        - ansible.builtin.debug:
+            msg: Cleanup runs after block and rescue

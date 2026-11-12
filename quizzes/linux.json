@@ -148,7 +148,7 @@
       "code": "command 2>/dev/null",
       "language": "shell",
       "id": "linux-010",
-      "focus": "scenarios"
+      "focus": "fundamentals"
     },
     {
       "topic": "Permissions",
@@ -290,7 +290,7 @@
       "code": "find /data -type f -print0 | xargs -0 -r sha256sum",
       "language": "shell",
       "id": "linux-020",
-      "focus": "scenarios"
+      "focus": "fundamentals"
     },
     {
       "topic": "Text tools",
@@ -320,7 +320,7 @@
       "code": "sort names.txt | uniq -c",
       "language": "shell",
       "id": "linux-022",
-      "focus": "scenarios"
+      "focus": "fundamentals"
     },
     {
       "topic": "Text tools",
@@ -352,7 +352,7 @@
       "code": "sed 's/old/new/g' config.txt",
       "language": "shell",
       "id": "linux-024",
-      "focus": "scenarios"
+      "focus": "fundamentals"
     },
     {
       "topic": "Archives",
@@ -410,7 +410,7 @@
       "code": "journalctl -u app.service -b",
       "language": "shell",
       "id": "linux-028",
-      "focus": "scenarios"
+      "focus": "fundamentals"
     },
     {
       "topic": "Processes",
@@ -614,7 +614,7 @@
       "code": "ss -ltn",
       "language": "shell",
       "id": "linux-042",
-      "focus": "scenarios"
+      "focus": "fundamentals"
     },
     {
       "topic": "Networking",
@@ -728,7 +728,7 @@
       "code": "n=10\n[ \"$n\" -eq 10 ] && printf \"match\\n\"",
       "language": "shell",
       "id": "linux-050",
-      "focus": "scenarios"
+      "focus": "fundamentals"
     }
   ]
 }

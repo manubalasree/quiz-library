@@ -1,0 +1,7 @@
+---
+- name: Task reuse reference
+  hosts: all
+  gather_facts: false
+  tasks:
+    - ansible.builtin.import_tasks: tasks/static.yml
+    - ansible.builtin.include_tasks: tasks/dynamic.yml

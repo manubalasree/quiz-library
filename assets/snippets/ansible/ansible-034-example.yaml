@@ -1,0 +1,11 @@
+---
+- name: Secret handling reference
+  hosts: all
+  gather_facts: false
+  vars:
+    demo_token: example-only-not-a-secret
+  tasks:
+    - ansible.builtin.debug:
+        msg: "{{ demo_token }}"
+      no_log: true
+    # Do not print the same value in a later unprotected task.

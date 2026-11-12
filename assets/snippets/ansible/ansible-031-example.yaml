@@ -1,0 +1,11 @@
+---
+- name: Check mode reference
+  hosts: all
+  gather_facts: false
+  tasks:
+    - ansible.builtin.copy:
+        content: "mode=practice\n"
+        dest: /tmp/practice-check.conf
+        mode: "0640"
+    # ansible-playbook -i localhost, example.yml --check
+    # Support varies by module; this is not an application test.

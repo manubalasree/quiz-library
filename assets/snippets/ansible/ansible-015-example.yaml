@@ -1,0 +1,11 @@
+---
+- name: Files reference
+  hosts: all
+  gather_facts: false
+  vars:
+    http_port: 8080
+  tasks:
+    - ansible.builtin.template:
+        src: templates/app.conf.j2
+        dest: /tmp/practice-app.conf
+        mode: "0640"

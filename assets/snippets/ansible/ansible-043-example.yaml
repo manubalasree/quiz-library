@@ -1,0 +1,9 @@
+---
+- name: Roles reference
+  hosts: all
+  gather_facts: false
+  tasks:
+    - ansible.builtin.include_role:
+        name: practice
+    # Role defaults/main.yml defines service_port: 8080.
+    # Override it in play vars, inventory, or extra vars.

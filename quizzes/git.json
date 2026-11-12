@@ -116,7 +116,7 @@
       "code": "git restore -- settings.ini",
       "language": "shell",
       "id": "git-008",
-      "focus": "scenarios"
+      "focus": "fundamentals"
     },
     {
       "topic": "Reset",
@@ -244,7 +244,7 @@
       "answerIndex": 3,
       "explanation": "--abort attempts to restore the pre-merge state. Keeping unrelated uncommitted edits out of an operation makes recovery more predictable.",
       "id": "git-017",
-      "focus": "fundamentals"
+      "focus": "scenarios"
     },
     {
       "topic": "Conflict markers",
@@ -302,7 +302,7 @@
       "answerIndex": 3,
       "explanation": "Ignore rules mainly affect untracked paths. Removing tracking also does not erase historical secrets; exposed credentials require separate remediation.",
       "id": "git-021",
-      "focus": "fundamentals"
+      "focus": "scenarios"
     },
     {
       "topic": "Ignore rules",
@@ -318,7 +318,7 @@
       "code": "git rm --cached local.env",
       "language": "shell",
       "id": "git-022",
-      "focus": "scenarios"
+      "focus": "fundamentals"
     },
     {
       "topic": "Pulling",
@@ -406,7 +406,7 @@
       "answerIndex": 0,
       "explanation": "A merge has multiple parents. The mainline selection defines the baseline for interpreting and reversing its changes.",
       "id": "git-028",
-      "focus": "scenarios"
+      "focus": "fundamentals"
     },
     {
       "topic": "Tags",
@@ -464,7 +464,7 @@
       "answerIndex": 2,
       "explanation": "Three-dot diff is useful for the changes introduced on feature since its common ancestor with main. It differs from three-dot log traversal.",
       "id": "git-032",
-      "focus": "scenarios"
+      "focus": "fundamentals"
     },
     {
       "topic": "Ancestry",
@@ -550,7 +550,7 @@
       "code": "git clean -nd",
       "language": "shell",
       "id": "git-038",
-      "focus": "scenarios"
+      "focus": "fundamentals"
     },
     {
       "topic": "Pushing",
@@ -608,7 +608,7 @@
       "code": "git reset HEAD -- config.yml",
       "language": "shell",
       "id": "git-042",
-      "focus": "scenarios"
+      "focus": "fundamentals"
     },
     {
       "topic": "Restore source",
@@ -624,7 +624,7 @@
       "code": "git restore --source=v1.0 -- app.py",
       "language": "shell",
       "id": "git-043",
-      "focus": "scenarios"
+      "focus": "fundamentals"
     },
     {
       "topic": "Large repositories",

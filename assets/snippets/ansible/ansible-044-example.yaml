@@ -1,0 +1,15 @@
+---
+- name: Handlers reference
+  hosts: all
+  gather_facts: false
+  tasks:
+    - ansible.builtin.debug:
+        msg: Configuration changed
+      changed_when: true
+      notify: app configuration changed
+  handlers:
+    - name: Restart application service
+      listen: app configuration changed
+      ansible.builtin.service:
+        name: app
+        state: restarted

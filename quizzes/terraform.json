@@ -77,7 +77,7 @@
       "language": "shell",
       "id": "terraform-005",
       "exampleId": "terraform-005-example",
-      "focus": "scenarios"
+      "focus": "fundamentals"
     },
     {
       "topic": "State",
@@ -282,7 +282,7 @@
       "language": "hcl",
       "id": "terraform-018",
       "exampleId": "terraform-018-example",
-      "focus": "scenarios"
+      "focus": "fundamentals"
     },
     {
       "topic": "Count",
@@ -380,7 +380,7 @@
       "language": "hcl",
       "id": "terraform-024",
       "exampleId": "terraform-024-example",
-      "focus": "scenarios"
+      "focus": "fundamentals"
     },
     {
       "topic": "Dependencies",
@@ -491,7 +491,7 @@
       "language": "hcl",
       "id": "terraform-031",
       "exampleId": "terraform-031-example",
-      "focus": "scenarios"
+      "focus": "fundamentals"
     },
     {
       "topic": "State operations",

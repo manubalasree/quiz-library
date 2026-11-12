@@ -1,0 +1,8 @@
+---
+- name: Strategies reference
+  hosts: all
+  gather_facts: false
+  strategy: free
+  tasks:
+    - ansible.builtin.debug:
+        msg: Hosts can progress without a per-task barrier

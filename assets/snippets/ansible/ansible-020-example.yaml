@@ -1,0 +1,10 @@
+---
+- name: Conditionals reference
+  hosts: all
+  gather_facts: false
+  vars:
+    enabled: "false"
+  tasks:
+    - ansible.builtin.debug:
+        msg: Feature enabled
+      when: enabled | bool

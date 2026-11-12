@@ -1,0 +1,9 @@
+---
+- name: Error handling reference
+  hosts: all
+  gather_facts: false
+  tasks:
+    - ansible.builtin.command: /opt/app/healthcheck
+      ignore_errors: true
+      changed_when: false
+    # ignore_errors does not repair an unreachable SSH target.

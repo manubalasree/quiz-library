@@ -1,0 +1,8 @@
+---
+- name: Concurrency reference
+  hosts: all
+  gather_facts: false
+  tasks:
+    - ansible.builtin.command: /opt/app/maintenance-check
+      throttle: 1
+      changed_when: false

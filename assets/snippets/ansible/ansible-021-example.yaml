@@ -1,0 +1,14 @@
+---
+- name: Conditionals reference
+  hosts: all
+  gather_facts: false
+  vars:
+    ansible_facts:
+      os_family: Debian
+    deploy_enabled: true
+  tasks:
+    - ansible.builtin.debug:
+        msg: Deploy on Debian only when enabled
+      when:
+        - ansible_facts["os_family"] == "Debian"
+        - deploy_enabled | bool

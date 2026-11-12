@@ -1,0 +1,8 @@
+---
+- name: Commands reference
+  hosts: all
+  gather_facts: false
+  tasks:
+    - ansible.builtin.command:
+        argv: [/usr/bin/printf, "%s\n", "hello world"]
+      changed_when: false

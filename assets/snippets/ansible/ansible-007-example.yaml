@@ -1,0 +1,9 @@
+---
+- name: Privilege escalation reference
+  hosts: all
+  gather_facts: false
+  tasks:
+    - ansible.builtin.package:
+        name: nginx
+        state: present
+      become: true

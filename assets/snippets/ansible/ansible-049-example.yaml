@@ -1,0 +1,15 @@
+---
+- name: Asynchronous work reference
+  hosts: all
+  gather_facts: false
+  tasks:
+    - ansible.builtin.command: /opt/app/long-job
+      async: 600
+      poll: 0
+      register: job
+    - ansible.builtin.async_status:
+        jid: "{{ job.ansible_job_id }}"
+      register: job_status
+      until: job_status.finished
+      retries: 60
+      delay: 10

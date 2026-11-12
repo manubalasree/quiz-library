@@ -1,0 +1,11 @@
+---
+- name: Commands reference
+  hosts: all
+  gather_facts: false
+  tasks:
+    - ansible.builtin.command:
+        argv: [/usr/bin/printf, "%s", hello, "|", wc, "-c"]
+      register: result
+      changed_when: false
+    - ansible.builtin.debug:
+        var: result.stdout

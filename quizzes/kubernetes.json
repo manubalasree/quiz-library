@@ -75,7 +75,7 @@
       "answerIndex": 2,
       "explanation": "Readiness controls whether the Pod is ready to receive traffic. A failed readiness probe does not itself restart a container; liveness probes can trigger restarts.",
       "exampleId": "kubernetes-005-example",
-      "focus": "scenarios"
+      "focus": "fundamentals"
     },
     {
       "id": "kubernetes-006",
@@ -276,7 +276,7 @@
       "explanation": "Regular init containers must complete successfully in sequence. Failures block application startup and are retried according to Pod behavior.",
       "id": "kubernetes-018",
       "exampleId": "kubernetes-018-example",
-      "focus": "fundamentals"
+      "focus": "scenarios"
     },
     {
       "topic": "Workloads",
@@ -340,7 +340,7 @@
       "language": "yaml",
       "id": "kubernetes-022",
       "exampleId": "kubernetes-022-example",
-      "focus": "fundamentals"
+      "focus": "scenarios"
     },
     {
       "topic": "Networking",
@@ -400,7 +400,7 @@
       "explanation": "NetworkPolicy allows are additive. Multiple policies selecting a Pod contribute allowed traffic rather than overriding each other.",
       "id": "kubernetes-026",
       "exampleId": "kubernetes-026-example",
-      "focus": "fundamentals"
+      "focus": "scenarios"
     },
     {
       "topic": "Network policy",
@@ -586,7 +586,7 @@
       "explanation": "RBAC distinguishes get, list, and watch. Permission to retrieve one named object does not imply permission to list a collection.",
       "id": "kubernetes-038",
       "exampleId": "kubernetes-038-example",
-      "focus": "fundamentals"
+      "focus": "scenarios"
     },
     {
       "topic": "Access control",
@@ -633,7 +633,7 @@
       "explanation": "A read-only root filesystem can be combined with writable volumes at specific paths, such as an emptyDir mounted at /tmp.",
       "id": "kubernetes-041",
       "exampleId": "kubernetes-041-example",
-      "focus": "fundamentals"
+      "focus": "scenarios"
     },
     {
       "topic": "Pod termination",
@@ -663,7 +663,7 @@
       "explanation": "CPU utilization for this HPA metric is usage divided by request. Requests are therefore important inputs to utilization-based scaling.",
       "id": "kubernetes-043",
       "exampleId": "kubernetes-043-example",
-      "focus": "fundamentals"
+      "focus": "scenarios"
     },
     {
       "topic": "Namespace resources",
@@ -757,7 +757,7 @@
       "explanation": "Deployment rollback targets retained rollout history for the Pod template. It does not roll back external data or independently changed resources.",
       "id": "kubernetes-049",
       "exampleId": "kubernetes-049-example",
-      "focus": "fundamentals"
+      "focus": "scenarios"
     },
     {
       "topic": "Labels and ownership",
@@ -849,7 +849,7 @@
       "answerIndex": 0,
       "explanation": "The lab Pod is created directly, without a Deployment or other workload controller. Delete-and-recreate is an explicit lab step; controller-managed Pods have different replacement behavior.",
       "exampleId": "kubernetes-055-example",
-      "focus": "fundamentals"
+      "focus": "scenarios"
     },
     {
       "id": "kubernetes-056",
@@ -881,7 +881,7 @@
       "exampleId": "kubernetes-057-example",
       "code": "nodeSelector:\n  kubernetes.io/hostname: selected-hostname",
       "language": "yaml",
-      "focus": "scenarios"
+      "focus": "fundamentals"
     },
     {
       "id": "kubernetes-058",
@@ -926,7 +926,7 @@
       "answerIndex": 1,
       "explanation": "NoExecute can evict Pods that do not tolerate the taint. A matching toleration can allow continued execution; tolerationSeconds can bound the tolerated duration.",
       "exampleId": "kubernetes-060-example",
-      "focus": "scenarios"
+      "focus": "fundamentals"
     },
     {
       "id": "kubernetes-061",
@@ -941,7 +941,7 @@
       "answerIndex": 2,
       "explanation": "The Deployment’s Pod template defines settings for newly created Pods. Patching an individual current Pod does not update that template for future replacements.",
       "exampleId": "kubernetes-061-example",
-      "focus": "scenarios"
+      "focus": "fundamentals"
     },
     {
       "id": "kubernetes-062",
@@ -956,7 +956,7 @@
       "answerIndex": 3,
       "explanation": "Namespace deletion removes namespaced resources, not changes to a cluster-scoped Node. Remove the specific lab taint separately, including when ending the lab early.",
       "exampleId": "kubernetes-062-example",
-      "focus": "scenarios"
+      "focus": "fundamentals"
     },
     {
       "id": "kubernetes-063",
@@ -1127,7 +1127,7 @@
       "exampleId": "kubernetes-073-example",
       "code": "kubectl set image deployment/rollout-lab web=nginx:stable-alpine -n interview-lab",
       "language": "shell",
-      "focus": "scenarios"
+      "focus": "fundamentals"
     },
     {
       "id": "kubernetes-074",
@@ -1217,7 +1217,7 @@
       "answerIndex": 0,
       "explanation": "Delayed binding allows supported provisioners and binding workflows to account for the consuming Pod’s placement requirements. It does not relocate an existing disk or make incompatible constraints satisfiable.",
       "exampleId": "kubernetes-079-example",
-      "focus": "scenarios"
+      "focus": "fundamentals"
     },
     {
       "id": "kubernetes-080",
@@ -1234,7 +1234,7 @@
       "exampleId": "kubernetes-080-example",
       "code": "resources:\n  requests: {cpu: 100m}\n  limits: {cpu: 500m}",
       "language": "yaml",
-      "focus": "scenarios"
+      "focus": "fundamentals"
     },
     {
       "id": "kubernetes-081",
@@ -1249,7 +1249,7 @@
       "answerIndex": 2,
       "explanation": "A CPU request is not a cap. A container without a CPU limit may use spare CPU above its request; underestimated requests can permit overpacking, and simultaneous demand does not create extra physical CPU.",
       "exampleId": "kubernetes-081-example",
-      "focus": "scenarios"
+      "focus": "fundamentals"
     },
     {
       "id": "kubernetes-082",
@@ -1264,7 +1264,7 @@
       "answerIndex": 3,
       "explanation": "nodeName preassigns the Pod and bypasses the normal scheduler. Kubelet admission and runtime constraints still matter, but scheduler-based placement checks are not obtained by directly assigning a node.",
       "exampleId": "kubernetes-082-example",
-      "focus": "scenarios"
+      "focus": "fundamentals"
     },
     {
       "id": "kubernetes-083",
@@ -1294,7 +1294,7 @@
       "answerIndex": 1,
       "explanation": "An “only” requirement needs a hard placement constraint. Preferred affinity can be outweighed or fall back to other candidates; a nodeSelector or required node affinity makes matching mandatory.",
       "exampleId": "kubernetes-084-example",
-      "focus": "scenarios"
+      "focus": "fundamentals"
     },
     {
       "id": "kubernetes-085",
@@ -1309,7 +1309,7 @@
       "answerIndex": 2,
       "explanation": "Node placement and persistent storage provisioning are separate requirements. A label can select SSD-equipped nodes, while an appropriate storage provisioner, claim, and mount provide the application’s persistent data storage.",
       "exampleId": "kubernetes-085-example",
-      "focus": "scenarios"
+      "focus": "fundamentals"
     },
     {
       "id": "kubernetes-086",
@@ -1429,7 +1429,7 @@
       "answerIndex": 2,
       "explanation": "Drain handles eligible workload eviction and cordons the node. It does not remove DaemonSet-managed Pods with --ignore-daemonsets, and mirror Pods representing static Pods are not removed through the normal drain path.",
       "exampleId": "kubernetes-093-example",
-      "focus": "scenarios"
+      "focus": "fundamentals"
     },
     {
       "id": "kubernetes-094",
@@ -1444,7 +1444,7 @@
       "answerIndex": 3,
       "explanation": "A hostname label represents the node-level topology domain; the zone key represents an AZ-level domain that can contain several nodes. The constraint’s selector must match the application Pods.",
       "exampleId": "kubernetes-094-example",
-      "focus": "scenarios"
+      "focus": "fundamentals"
     },
     {
       "id": "kubernetes-095",
@@ -1476,7 +1476,7 @@
       "answerIndex": 1,
       "explanation": "ScheduleAnyway lets the scheduler consider placements even when they do not satisfy the configured skew bound, while preferring a better spread. It does not override unrelated hard constraints.",
       "exampleId": "kubernetes-096-example",
-      "focus": "scenarios"
+      "focus": "fundamentals"
     },
     {
       "id": "kubernetes-097",
@@ -1506,7 +1506,7 @@
       "answerIndex": 3,
       "explanation": "Zone and hostname are different topology levels. Multiple spread constraints can be applied together, and eligible placements must satisfy all hard constraints; resources and volume topology must also fit.",
       "exampleId": "kubernetes-098-example",
-      "focus": "scenarios"
+      "focus": "fundamentals"
     }
   ],
   "snippetsUrl": "../assets/snippets/library.json"

@@ -34,5 +34,13 @@ jobs:
           sha256sum --check --ignore-missing CHECKSUMS
           tar -xzf kubeconform-linux-amd64.tar.gz kubeconform
           echo "$RUNNER_TEMP/snippet-tools" >> "$GITHUB_PATH"
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.13"
+      - name: Install pinned Ansible syntax and behavior validator
+        run: |
+          python3 -m venv "$RUNNER_TEMP/ansible-qa"
+          "$RUNNER_TEMP/ansible-qa/bin/python" -m pip install ansible-core==2.22.0
+          echo "$RUNNER_TEMP/ansible-qa/bin" >> "$GITHUB_PATH"
       - run: npm ci --ignore-scripts
       - run: npm run snippets:qa

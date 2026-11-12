@@ -1,0 +1,11 @@
+---
+- name: YAML and Jinja reference
+  hosts: all
+  gather_facts: false
+  vars:
+    config_directory: /tmp
+  tasks:
+    - ansible.builtin.copy:
+        content: "mode=practice\n"
+        dest: "{{ config_directory }}/app.conf"
+        mode: "0640"

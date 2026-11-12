@@ -122,3 +122,7 @@ The VMware bank teaches durable host/guest, compute, networking, storage, and re
 - 68: [NFS mount requests denied by the server](https://knowledge.broadcom.com/external/article/310920/nfs-datastore-fails-to-mount-with-error.html).
 - 69: [HA and mandatory VM-to-host affinity rules](https://knowledge.broadcom.com/external/article/427723/how-vsphere-ha-respects-affinity-rules-w.html).
 - 70: [Restart dependencies and conditions](https://www.vmware.com/docs/vmw-metro-storage-clustering-best-practices-vvols). A power-on or guest-heartbeat milestone is not an application transaction test.
+
+## Ansible reference-asset expansion — 12 November 2026
+
+50 original answer-reference examples now accompany the Ansible bank. Metadata links each asset to the applicable official guide or module reference. Conditionals, handler phases/deduplication, delegation context, async polling, and role defaults were checked against the [official playbook guide](https://docs.ansible.com/projects/ansible/latest/playbook_guide/index.html). Syntax and safe local behavior QA use [ansible-core 2.22.0](https://pypi.org/project/ansible-core/2.22.0/). See the [snippet QA guide](assets/snippets/README.md) for precise validation scope.

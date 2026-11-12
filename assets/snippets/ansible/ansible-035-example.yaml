@@ -1,0 +1,11 @@
+---
+- name: Delegation reference
+  hosts: all
+  gather_facts: false
+  tasks:
+    - ansible.builtin.command: /usr/bin/hostname
+      delegate_to: localhost
+      register: delegated_result
+      changed_when: false
+    - ansible.builtin.debug:
+        msg: "Original={{ inventory_hostname }}; delegated stdout={{ delegated_result.stdout }}"

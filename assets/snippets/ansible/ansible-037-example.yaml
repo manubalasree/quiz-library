@@ -1,0 +1,8 @@
+---
+- name: Rolling changes reference
+  hosts: all
+  gather_facts: false
+  serial: 2
+  tasks:
+    - ansible.builtin.debug:
+        msg: "Current rolling batch: {{ ansible_play_batch }}"

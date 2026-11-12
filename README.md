@@ -55,7 +55,7 @@ This repository is public so browsers can load it without credentials. It contai
 
 ## Current coverage
 
-Kubernetes contains 98 questions; NetApp ONTAP and VMware vSphere each contain 70; Linux, Git, Ansible, and Terraform each contain 50 (438 total). The banks mix fundamentals, troubleshooting, and code-reading exercises. Answer positions are balanced across A–D. Explanations describe why the selected answer is correct and call out relevant limitations.
+The active catalog contains Kubernetes (98) plus Linux, Git, Ansible, and Terraform (50 each), for 298 questions. NetApp and VMware are retired from the catalog; historical question files and learner records are retained. The banks mix fundamentals, troubleshooting, and code-reading exercises. Answer positions are balanced across A–D. Explanations describe why the selected answer is correct and call out relevant limitations.
 
 For a snippet question, add optional `code` and `language` fields alongside `question`:
 
@@ -71,13 +71,13 @@ These are additional question fields, not a complete question object. Code strin
 The library check enforces at least 50 questions and 10 snippets per bank, unique prompts, balanced answer positions, and the JSON schema contract. See [SOURCES.md](SOURCES.md) for official references used during editorial review and further reading.
 
 
-NetApp and VMware are organized as fundamentals-to-troubleshooting refreshes. See [the storage and virtualization study path](STORAGE-VIRTUALIZATION-STUDY.md) for the learning sequence and key distinctions to rehearse aloud.
+The former storage and virtualization study path remains as an archived learning reference; those subjects are no longer part of the active catalog.
 
 ## Answer-reference assets
 
-Kubernetes and Terraform now have one linked answer example per question (148 total). Source YAML, HCL, and shell files live under [`assets/snippets`](assets/snippets/README.md), with a separately runnable QA suite and a generated JSON bundle for the app. The examples show after answering; existing question code remains the exercise shown before answering.
+Kubernetes, Terraform, and Ansible have one linked answer example per question (198 total). Source YAML, HCL, and shell files live under [`assets/snippets`](assets/snippets/README.md), with a separately runnable QA suite and a generated JSON bundle for the app. The examples show after answering; existing question code remains the exercise shown before answering.
 
-After editing an example: `npm run snippets:build`, `npm test`, `npm run validate`, and `npm run snippets:qa`. See the asset README for required validators and the scope of each check.
+After editing an example: `npm run snippets:build`, `npm test`, `npm run validate`, and `npm run snippets:qa`. For the Ansible-only syntax and local behavior suite, run `npm run snippets:ansible`. See the asset README for required validators and the scope of each check.
 
 Kubernetes questions 051–074 adapt the standalone interview lab into scenario MCQs on admission/scheduling, taints, failed image rollouts, evidence-based recovery, and scoped cleanup. See [INTERVIEW-LAB-QUESTIONS.md](INTERVIEW-LAB-QUESTIONS.md).
 
@@ -86,3 +86,5 @@ Interview questions 1–9 and their discussion corrections are reconciled with e
 ## Practice focus metadata
 
 Every maintained question has `"focus": "fundamentals"` or `"focus": "scenarios"`. Fundamentals covers concepts, terminology, commands, and basic configuration principles; Scenarios covers applied diagnosis, code/output interpretation, and operational decisions. This is an editorial learning focus, not a difficulty grade or FSRS recall rating. Mixed is an app preference that includes all questions; it is not a stored question tag. Existing prompts, IDs, answers, explanations, and example links are retained. The validator requires explicit focus metadata in this repository. Legacy/external libraries without these tags remain usable in the app’s Mixed mode.
+
+The [12 November focus audit](PRACTICE-FOCUS-REVIEW.md) records the rubric, per-topic category counts, and all reclassifications. Both filters are populated for every active topic. A code block by itself does not make a question a scenario.

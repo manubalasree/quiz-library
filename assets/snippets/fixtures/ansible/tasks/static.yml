@@ -1,0 +1,3 @@
+- ansible.builtin.debug:
+    msg: Statically imported task
+  register: static_result

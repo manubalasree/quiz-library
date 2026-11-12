@@ -1,0 +1,11 @@
+---
+- name: Blocks reference
+  hosts: all
+  gather_facts: false
+  tasks:
+    - block:
+        - ansible.builtin.command: /bin/false
+          changed_when: false
+      rescue:
+        - ansible.builtin.debug:
+            msg: A normal task failure was rescued

@@ -1,0 +1,11 @@
+---
+- name: Permissions reference
+  hosts: all
+  gather_facts: false
+  tasks:
+    - ansible.builtin.file:
+        path: /tmp/practice-app.conf
+        state: touch
+        mode: "0640"
+        access_time: preserve
+        modification_time: preserve

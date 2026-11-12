@@ -1651,6 +1651,811 @@
           "0.spec.template.spec.topologySpreadConstraints.1.topologyKey": "kubernetes.io/hostname"
         }
       }
+    },
+    {
+      "id": "ansible-001-example",
+      "topic": "ansible",
+      "title": "Inventory \u2014 ansible-001",
+      "language": "shell",
+      "file": "ansible/ansible-001-example.sh",
+      "description": "Inventory group headings assign the following hosts to that group until another heading begins.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/intro_inventory.html",
+      "qa": {}
+    },
+    {
+      "id": "ansible-002-example",
+      "topic": "ansible",
+      "title": "Inventory \u2014 ansible-002",
+      "language": "shell",
+      "file": "ansible/ansible-002-example.sh",
+      "description": "all includes every inventory host. ungrouped contains hosts that belong to no other group apart from all.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/intro_inventory.html",
+      "qa": {}
+    },
+    {
+      "id": "ansible-003-example",
+      "topic": "ansible",
+      "title": "Host patterns \u2014 ansible-003",
+      "language": "shell",
+      "file": "ansible/ansible-003-example.sh",
+      "description": "The & intersection operator limits the selection to hosts in both groups. Quoting prevents the shell from interpreting special characters.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/intro_patterns.html",
+      "qa": {}
+    },
+    {
+      "id": "ansible-004-example",
+      "topic": "ansible",
+      "title": "Connectivity \u2014 ansible-004",
+      "language": "yaml",
+      "file": "ansible/ansible-004-example.yaml",
+      "description": "The Ansible ping module is not network ICMP ping. It exercises the Ansible connection and remote module execution path.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/collections/ansible/builtin/ping_module.html",
+      "qa": {
+        "ansiblePlaybook": true
+      }
+    },
+    {
+      "id": "ansible-005-example",
+      "topic": "ansible",
+      "title": "Facts \u2014 ansible-005",
+      "language": "yaml",
+      "file": "ansible/ansible-005-example.yaml",
+      "description": "setup gathers facts such as platform and interfaces. These facts can be referenced through ansible_facts during playbook execution.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/collections/ansible/builtin/setup_module.html",
+      "qa": {
+        "ansiblePlaybook": true
+      }
+    },
+    {
+      "id": "ansible-006-example",
+      "topic": "ansible",
+      "title": "Facts \u2014 ansible-006",
+      "language": "yaml",
+      "file": "ansible/ansible-006-example.yaml",
+      "description": "Disabling automatic fact gathering can save time, but facts must come from another deliberate source before tasks rely on them. This reference gathers the minimum facts explicitly before reading them.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_vars_facts.html",
+      "qa": {
+        "ansiblePlaybook": true
+      }
+    },
+    {
+      "id": "ansible-007-example",
+      "topic": "ansible",
+      "title": "Privilege escalation \u2014 ansible-007",
+      "language": "yaml",
+      "file": "ansible/ansible-007-example.yaml",
+      "description": "become requests privilege escalation. Its success depends on the remote account\u2019s configured authorization and any required credentials.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_privilege_escalation.html",
+      "qa": {
+        "ansiblePlaybook": true,
+        "checks": [
+          {
+            "path": [
+              "0",
+              "tasks",
+              "0",
+              "become"
+            ],
+            "equals": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "ansible-008-example",
+      "topic": "ansible",
+      "title": "Idempotency \u2014 ansible-008",
+      "language": "yaml",
+      "file": "ansible/ansible-008-example.yaml",
+      "description": "Idempotency concerns repeated effects, not simply whether a command runs. Desired-state modules often inspect existing state before changing it.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_intro.html",
+      "qa": {
+        "ansiblePlaybook": true
+      }
+    },
+    {
+      "id": "ansible-009-example",
+      "topic": "ansible",
+      "title": "Commands \u2014 ansible-009",
+      "language": "yaml",
+      "file": "ansible/ansible-009-example.yaml",
+      "description": "command avoids shell interpretation, reducing quoting and injection risks. Use shell only when shell features are actually required.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_intro.html",
+      "qa": {
+        "ansiblePlaybook": true
+      }
+    },
+    {
+      "id": "ansible-010-example",
+      "topic": "ansible",
+      "title": "Commands \u2014 ansible-010",
+      "language": "yaml",
+      "file": "ansible/ansible-010-example.yaml",
+      "description": "command passes arguments without shell parsing. Use a suitable module or an explicitly justified shell task for pipelines. Here the pipe is passed as a literal argument; stdout is hello|wc-c, not a byte count.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_intro.html",
+      "qa": {
+        "ansiblePlaybook": true
+      }
+    },
+    {
+      "id": "ansible-011-example",
+      "topic": "ansible",
+      "title": "Commands \u2014 ansible-011",
+      "language": "yaml",
+      "file": "ansible/ansible-011-example.yaml",
+      "description": "creates is a guard checked before execution. The command or another task must actually create the marker when initialization succeeds. The illustrative /opt/app/init must exist and create the marker on success.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_intro.html",
+      "qa": {
+        "ansiblePlaybook": true,
+        "checks": [
+          {
+            "path": [
+              "0",
+              "tasks",
+              "0",
+              "args",
+              "creates"
+            ],
+            "equals": "/opt/app/.initialized"
+          }
+        ]
+      }
+    },
+    {
+      "id": "ansible-012-example",
+      "topic": "ansible",
+      "title": "Handlers \u2014 ansible-012",
+      "language": "yaml",
+      "file": "ansible/ansible-012-example.yaml",
+      "description": "Notifications are driven by changed status. A successful but unchanged task does not normally notify handlers. The app service is illustrative; syntax QA never restarts a service.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_handlers.html",
+      "qa": {
+        "ansiblePlaybook": true
+      }
+    },
+    {
+      "id": "ansible-013-example",
+      "topic": "ansible",
+      "title": "Handlers \u2014 ansible-013",
+      "language": "yaml",
+      "file": "ansible/ansible-013-example.yaml",
+      "description": "Ansible deduplicates handler notifications within a handler execution phase. Handlers run in their defined order rather than notification order. The app service is illustrative; syntax QA never restarts a service.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_handlers.html",
+      "qa": {
+        "ansiblePlaybook": true
+      }
+    },
+    {
+      "id": "ansible-014-example",
+      "topic": "ansible",
+      "title": "Handlers \u2014 ansible-014",
+      "language": "yaml",
+      "file": "ansible/ansible-014-example.yaml",
+      "description": "flush_handlers creates an earlier handler execution point. Later changed tasks may notify the same handlers again. The app service is illustrative; syntax QA never restarts a service.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_handlers.html",
+      "qa": {
+        "ansiblePlaybook": true,
+        "checks": [
+          {
+            "path": [
+              "0",
+              "tasks",
+              "1",
+              "ansible.builtin.meta"
+            ],
+            "equals": "flush_handlers"
+          }
+        ]
+      }
+    },
+    {
+      "id": "ansible-015-example",
+      "topic": "ansible",
+      "title": "Files \u2014 ansible-015",
+      "language": "yaml",
+      "file": "ansible/ansible-015-example.yaml",
+      "description": "template renders Jinja on the controller before transferring content. copy is appropriate for content that does not require template rendering. The companion app.conf.j2 fixture contains port={{ http_port }}.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_templating.html",
+      "qa": {
+        "ansiblePlaybook": true
+      }
+    },
+    {
+      "id": "ansible-016-example",
+      "topic": "ansible",
+      "title": "Permissions \u2014 ansible-016",
+      "language": "yaml",
+      "file": "ansible/ansible-016-example.yaml",
+      "description": "Quoting permission modes avoids YAML numeric-interpretation surprises. The file module then applies the intended octal mode.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_intro.html",
+      "qa": {
+        "ansiblePlaybook": true,
+        "checks": [
+          {
+            "path": [
+              "0",
+              "tasks",
+              "0",
+              "ansible.builtin.file",
+              "mode"
+            ],
+            "equals": "0640"
+          }
+        ]
+      }
+    },
+    {
+      "id": "ansible-017-example",
+      "topic": "ansible",
+      "title": "YAML and Jinja \u2014 ansible-017",
+      "language": "yaml",
+      "file": "ansible/ansible-017-example.yaml",
+      "description": "YAML parses the document before Ansible renders expressions. Quoting avoids confusion with YAML mapping syntax.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_variables.html",
+      "qa": {
+        "ansiblePlaybook": true
+      }
+    },
+    {
+      "id": "ansible-018-example",
+      "topic": "ansible",
+      "title": "Variables \u2014 ansible-018",
+      "language": "yaml",
+      "file": "ansible/ansible-018-example.yaml",
+      "description": "Extra variables have very high variable precedence. Use them deliberately because they can override values from many other variable sources. Run with -e service_port=9090 to override the play value of 8080 as well.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_variables.html",
+      "qa": {
+        "ansiblePlaybook": true
+      }
+    },
+    {
+      "id": "ansible-019-example",
+      "topic": "ansible",
+      "title": "Jinja filters \u2014 ansible-019",
+      "language": "yaml",
+      "file": "ansible/ansible-019-example.yaml",
+      "description": "The default filter supplies a fallback for undefined values. Treating empty or false values as missing requires the filter\u2019s optional boolean behavior.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_filters.html",
+      "qa": {
+        "ansiblePlaybook": true
+      }
+    },
+    {
+      "id": "ansible-020-example",
+      "topic": "ansible",
+      "title": "Conditionals \u2014 ansible-020",
+      "language": "yaml",
+      "file": "ansible/ansible-020-example.yaml",
+      "description": "Explicit conversion avoids treating a nonempty string as an intended boolean value. Modern conditionals should evaluate to booleans.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_conditionals.html",
+      "qa": {
+        "ansiblePlaybook": true,
+        "checks": [
+          {
+            "path": [
+              "0",
+              "tasks",
+              "0",
+              "when"
+            ],
+            "equals": "enabled | bool"
+          }
+        ]
+      }
+    },
+    {
+      "id": "ansible-021-example",
+      "topic": "ansible",
+      "title": "Conditionals \u2014 ansible-021",
+      "language": "yaml",
+      "file": "ansible/ansible-021-example.yaml",
+      "description": "A list of when conditions is combined with logical AND. The condition is evaluated for each host executing the task.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_conditionals.html",
+      "qa": {
+        "ansiblePlaybook": true
+      }
+    },
+    {
+      "id": "ansible-022-example",
+      "topic": "ansible",
+      "title": "Conditionals \u2014 ansible-022",
+      "language": "yaml",
+      "file": "ansible/ansible-022-example.yaml",
+      "description": "An explicit or expression expresses alternative conditions. A YAML list of separate conditions would instead use AND.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_conditionals.html",
+      "qa": {
+        "ansiblePlaybook": true
+      }
+    },
+    {
+      "id": "ansible-023-example",
+      "topic": "ansible",
+      "title": "Loops \u2014 ansible-023",
+      "language": "yaml",
+      "file": "ansible/ansible-023-example.yaml",
+      "description": "A condition on a looping task is evaluated separately for each item.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_loops.html",
+      "qa": {
+        "ansiblePlaybook": true,
+        "checks": [
+          {
+            "path": [
+              "0",
+              "tasks",
+              "0",
+              "when"
+            ],
+            "equals": "item > 2"
+          }
+        ]
+      }
+    },
+    {
+      "id": "ansible-024-example",
+      "topic": "ansible",
+      "title": "Registered results \u2014 ansible-024",
+      "language": "yaml",
+      "file": "ansible/ansible-024-example.yaml",
+      "description": "A registered looping task returns an aggregate result with a results list. Individual module result fields live inside those entries.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_loops.html",
+      "qa": {
+        "ansiblePlaybook": true
+      }
+    },
+    {
+      "id": "ansible-025-example",
+      "topic": "ansible",
+      "title": "Changed status \u2014 ansible-025",
+      "language": "yaml",
+      "file": "ansible/ansible-025-example.yaml",
+      "description": "changed_when controls change reporting. It does not alter execution, erase failures, or make a command idempotent by itself.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_error_handling.html",
+      "qa": {
+        "ansiblePlaybook": true,
+        "checks": [
+          {
+            "path": [
+              "0",
+              "tasks",
+              "0",
+              "changed_when"
+            ],
+            "equals": false
+          }
+        ]
+      }
+    },
+    {
+      "id": "ansible-026-example",
+      "topic": "ansible",
+      "title": "Failure conditions \u2014 ansible-026",
+      "language": "yaml",
+      "file": "ansible/ansible-026-example.yaml",
+      "description": "A failed_when list combines expressions with AND. Use one expression with or if either condition should independently indicate failure.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_error_handling.html",
+      "qa": {
+        "ansiblePlaybook": true,
+        "checks": [
+          {
+            "path": [
+              "0",
+              "tasks",
+              "0",
+              "failed_when",
+              "0"
+            ],
+            "equals": "result.rc != 0"
+          }
+        ]
+      }
+    },
+    {
+      "id": "ansible-027-example",
+      "topic": "ansible",
+      "title": "Retries \u2014 ansible-027",
+      "language": "yaml",
+      "file": "ansible/ansible-027-example.yaml",
+      "description": "until defines the success condition for retrying this task. retries and delay control the retry budget and waiting period.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_loops.html",
+      "qa": {
+        "ansiblePlaybook": true,
+        "checks": [
+          {
+            "path": [
+              "0",
+              "tasks",
+              "0",
+              "until"
+            ],
+            "equals": "health.rc == 0"
+          }
+        ]
+      }
+    },
+    {
+      "id": "ansible-028-example",
+      "topic": "ansible",
+      "title": "Error handling \u2014 ansible-028",
+      "language": "yaml",
+      "file": "ansible/ansible-028-example.yaml",
+      "description": "ignore_errors applies to ordinary task failure results, not every possible failure mode. Ansible has separate unreachable-host handling.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_error_handling.html",
+      "qa": {
+        "ansiblePlaybook": true
+      }
+    },
+    {
+      "id": "ansible-029-example",
+      "topic": "ansible",
+      "title": "Blocks \u2014 ansible-029",
+      "language": "yaml",
+      "file": "ansible/ansible-029-example.yaml",
+      "description": "rescue handles normal block task failures. Invalid task definitions and unreachable hosts are not ordinary rescuable failed results.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_blocks.html",
+      "qa": {
+        "ansiblePlaybook": true
+      }
+    },
+    {
+      "id": "ansible-030-example",
+      "topic": "ansible",
+      "title": "Blocks \u2014 ansible-030",
+      "language": "yaml",
+      "file": "ansible/ansible-030-example.yaml",
+      "description": "always is used for actions such as cleanup after block execution. It does not overcome all fatal execution or connectivity problems.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_blocks.html",
+      "qa": {
+        "ansiblePlaybook": true
+      }
+    },
+    {
+      "id": "ansible-031-example",
+      "topic": "ansible",
+      "title": "Check mode \u2014 ansible-031",
+      "language": "yaml",
+      "file": "ansible/ansible-031-example.yaml",
+      "description": "Check mode depends on module support and task behavior. Unsupported tasks may be skipped, and registered-result-dependent flows may not simulate fully.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_checkmode.html",
+      "qa": {
+        "ansiblePlaybook": true
+      }
+    },
+    {
+      "id": "ansible-032-example",
+      "topic": "ansible",
+      "title": "Diff mode \u2014 ansible-032",
+      "language": "yaml",
+      "file": "ansible/ansible-032-example.yaml",
+      "description": "Diff output can reveal file contents. Use appropriate output controls such as diff: false for sensitive tasks.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_checkmode.html",
+      "qa": {
+        "ansiblePlaybook": true,
+        "checks": [
+          {
+            "path": [
+              "0",
+              "tasks",
+              "0",
+              "diff"
+            ],
+            "equals": false
+          },
+          {
+            "path": [
+              "0",
+              "tasks",
+              "0",
+              "no_log"
+            ],
+            "equals": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "ansible-033-example",
+      "topic": "ansible",
+      "title": "Vault \u2014 ansible-033",
+      "language": "shell",
+      "file": "ansible/ansible-033-example.sh",
+      "description": "Vault protects stored content. Once decrypted for use, secrets still need careful handling in tasks, logs, and application configuration.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/vault_guide/index.html",
+      "qa": {}
+    },
+    {
+      "id": "ansible-034-example",
+      "topic": "ansible",
+      "title": "Secret handling \u2014 ansible-034",
+      "language": "yaml",
+      "file": "ansible/ansible-034-example.yaml",
+      "description": "no_log suppresses normal task-result logging. Do not expose the same secret through a separate debug task or assume it solves every logging path.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/vault_guide/index.html",
+      "qa": {
+        "ansiblePlaybook": true,
+        "checks": [
+          {
+            "path": [
+              "0",
+              "tasks",
+              "0",
+              "no_log"
+            ],
+            "equals": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "ansible-035-example",
+      "topic": "ansible",
+      "title": "Delegation \u2014 ansible-035",
+      "language": "yaml",
+      "file": "ansible/ansible-035-example.yaml",
+      "description": "Delegation changes where the action runs. inventory_hostname still identifies the original host context, though other connection variables can come from the delegated host.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_delegation.html",
+      "qa": {
+        "ansiblePlaybook": true
+      }
+    },
+    {
+      "id": "ansible-036-example",
+      "topic": "ansible",
+      "title": "Execution control \u2014 ansible-036",
+      "language": "yaml",
+      "file": "ansible/ansible-036-example.yaml",
+      "description": "run_once normally applies to the current host batch. If an operation truly must run once for the entire play, design its condition accordingly.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_strategies.html",
+      "qa": {
+        "ansiblePlaybook": true,
+        "checks": [
+          {
+            "path": [
+              "0",
+              "serial"
+            ],
+            "equals": 2
+          },
+          {
+            "path": [
+              "0",
+              "tasks",
+              "0",
+              "run_once"
+            ],
+            "equals": true
+          }
+        ]
+      }
+    },
+    {
+      "id": "ansible-037-example",
+      "topic": "ansible",
+      "title": "Rolling changes \u2014 ansible-037",
+      "language": "yaml",
+      "file": "ansible/ansible-037-example.yaml",
+      "description": "serial bounds the batch of hosts progressing through the play. It is useful for rolling maintenance and controlled deployments.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_strategies.html",
+      "qa": {
+        "ansiblePlaybook": true
+      }
+    },
+    {
+      "id": "ansible-038-example",
+      "topic": "ansible",
+      "title": "Concurrency \u2014 ansible-038",
+      "language": "yaml",
+      "file": "ansible/ansible-038-example.yaml",
+      "description": "throttle can constrain task concurrency below the broader worker or batch limits. It does not set a permanent host count.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_strategies.html",
+      "qa": {
+        "ansiblePlaybook": true,
+        "checks": [
+          {
+            "path": [
+              "0",
+              "tasks",
+              "0",
+              "throttle"
+            ],
+            "equals": 1
+          }
+        ]
+      }
+    },
+    {
+      "id": "ansible-039-example",
+      "topic": "ansible",
+      "title": "Strategies \u2014 ansible-039",
+      "language": "yaml",
+      "file": "ansible/ansible-039-example.yaml",
+      "description": "free lets hosts progress independently within applicable limits. Cross-host synchronization assumptions that fit linear execution may no longer hold.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_strategies.html",
+      "qa": {
+        "ansiblePlaybook": true,
+        "checks": [
+          {
+            "path": [
+              "0",
+              "strategy"
+            ],
+            "equals": "free"
+          }
+        ]
+      }
+    },
+    {
+      "id": "ansible-040-example",
+      "topic": "ansible",
+      "title": "Controller workers \u2014 ansible-040",
+      "language": "shell",
+      "file": "ansible/ansible-040-example.sh",
+      "description": "forks affects parallel host work. serial, throttle, strategy, and target responsiveness can further limit effective concurrency.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_strategies.html",
+      "qa": {}
+    },
+    {
+      "id": "ansible-041-example",
+      "topic": "ansible",
+      "title": "Task reuse \u2014 ansible-041",
+      "language": "yaml",
+      "file": "ansible/ansible-041-example.yaml",
+      "description": "Static imports are expanded earlier; dynamic includes are processed during execution. This affects conditionals, loops, and tag handling.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_reuse.html",
+      "qa": {
+        "ansiblePlaybook": true
+      }
+    },
+    {
+      "id": "ansible-042-example",
+      "topic": "ansible",
+      "title": "Tags \u2014 ansible-042",
+      "language": "yaml",
+      "file": "ansible/ansible-042-example.yaml",
+      "description": "Dynamic includes need deliberate tag propagation, such as apply tags or tagging the included tasks. Tagging the include alone is not blanket inheritance.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_tags.html",
+      "qa": {
+        "ansiblePlaybook": true
+      }
+    },
+    {
+      "id": "ansible-043-example",
+      "topic": "ansible",
+      "title": "Roles \u2014 ansible-043",
+      "language": "yaml",
+      "file": "ansible/ansible-043-example.yaml",
+      "description": "Role defaults have low variable precedence and are designed for customization. Role vars have higher precedence and are harder for callers to override. The companion role defines service_port in defaults/main.yml and prints its effective value.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_reuse_roles.html",
+      "qa": {
+        "ansiblePlaybook": true
+      }
+    },
+    {
+      "id": "ansible-044-example",
+      "topic": "ansible",
+      "title": "Handlers \u2014 ansible-044",
+      "language": "yaml",
+      "file": "ansible/ansible-044-example.yaml",
+      "description": "listen topics decouple notifications from individual handler names. Multiple handlers can listen to the same topic. The app service is illustrative; syntax QA never restarts a service.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_handlers.html",
+      "qa": {
+        "ansiblePlaybook": true
+      }
+    },
+    {
+      "id": "ansible-045-example",
+      "topic": "ansible",
+      "title": "Collections \u2014 ansible-045",
+      "language": "yaml",
+      "file": "ansible/ansible-045-example.yaml",
+      "description": "Fully qualified collection names clarify module resolution and reduce collisions with similarly named modules from other collections.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_handlers.html",
+      "qa": {
+        "ansiblePlaybook": true
+      }
+    },
+    {
+      "id": "ansible-046-example",
+      "topic": "ansible",
+      "title": "Host variables \u2014 ansible-046",
+      "language": "yaml",
+      "file": "ansible/ansible-046-example.yaml",
+      "description": "hostvars exposes inventory-host variable contexts. Reading gathered facts from another host still requires those facts to be available.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_vars_facts.html",
+      "qa": {
+        "ansiblePlaybook": true
+      }
+    },
+    {
+      "id": "ansible-047-example",
+      "topic": "ansible",
+      "title": "Task environment \u2014 ansible-047",
+      "language": "yaml",
+      "file": "ansible/ansible-047-example.yaml",
+      "description": "The environment keyword supplies environment variables for task execution. It does not permanently modify the controller or target account\u2019s login configuration.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_environment.html",
+      "qa": {
+        "ansiblePlaybook": true
+      }
+    },
+    {
+      "id": "ansible-048-example",
+      "topic": "ansible",
+      "title": "Asynchronous work \u2014 ansible-048",
+      "language": "yaml",
+      "file": "ansible/ansible-048-example.yaml",
+      "description": "poll zero is fire-and-forget behavior for the launching task. Use the returned job information to inspect or wait for completion separately.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_async.html",
+      "qa": {
+        "ansiblePlaybook": true,
+        "checks": [
+          {
+            "path": [
+              "0",
+              "tasks",
+              "0",
+              "poll"
+            ],
+            "equals": 0
+          },
+          {
+            "path": [
+              "0",
+              "tasks",
+              "0",
+              "async"
+            ],
+            "equals": 600
+          }
+        ]
+      }
+    },
+    {
+      "id": "ansible-049-example",
+      "topic": "ansible",
+      "title": "Asynchronous work \u2014 ansible-049",
+      "language": "yaml",
+      "file": "ansible/ansible-049-example.yaml",
+      "description": "async_status uses the async job ID to retrieve status. A polling loop with until can wait for its finished result.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_async.html",
+      "qa": {
+        "ansiblePlaybook": true,
+        "checks": [
+          {
+            "path": [
+              "0",
+              "tasks",
+              "1",
+              "until"
+            ],
+            "equals": "job_status.finished"
+          }
+        ]
+      }
+    },
+    {
+      "id": "ansible-050-example",
+      "topic": "ansible",
+      "title": "Validation \u2014 ansible-050",
+      "language": "yaml",
+      "file": "ansible/ansible-050-example.yaml",
+      "description": "assert checks preconditions and produces a failure if its expression is false. Validation is distinct from actually provisioning the desired resource.",
+      "source": "https://docs.ansible.com/projects/ansible/latest/collections/ansible/builtin/assert_module.html",
+      "qa": {
+        "ansiblePlaybook": true,
+        "checks": [
+          {
+            "path": [
+              "0",
+              "tasks",
+              "0",
+              "ansible.builtin.assert",
+              "that",
+              "0"
+            ],
+            "equals": "replicas | int > 0"
+          }
+        ]
+      }
     }
   ]
 }

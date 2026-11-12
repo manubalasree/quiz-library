@@ -1,0 +1,10 @@
+---
+- name: Asynchronous work reference
+  hosts: all
+  gather_facts: false
+  tasks:
+    - ansible.builtin.command: /opt/app/long-job
+      async: 600
+      poll: 0
+      register: job
+    # Starting the job does not prove it completed successfully.

@@ -12,9 +12,9 @@ export function validateMetadata(index) {
   const ids=new Set(),files=new Set();
   for(const item of index.snippets){
     if(!item||!['id','topic','title','file','description','source'].every(k=>typeof item[k]==='string'&&item[k].trim())||ids.has(item.id)||files.has(item.file))throw new Error('Missing or duplicate snippet metadata');
-    if(!['kubernetes','terraform'].includes(item.topic)||!['yaml','hcl','shell'].includes(item.language)||!item.qa||typeof item.qa!=='object')throw new Error(`Invalid snippet ${item.id}`);
+    if(!['kubernetes','terraform','ansible'].includes(item.topic)||!['yaml','hcl','shell'].includes(item.language)||!item.qa||typeof item.qa!=='object')throw new Error(`Invalid snippet ${item.id}`);
     const source=new URL(item.source);
-    if(source.protocol!=='https:'||source.username||source.password||!['kubernetes.io','developer.hashicorp.com','docs.aws.amazon.com'].includes(source.hostname))throw new Error('Use an official HTTPS reference');
+    if(source.protocol!=='https:'||source.username||source.password||!['kubernetes.io','developer.hashicorp.com','docs.aws.amazon.com','docs.ansible.com'].includes(source.hostname))throw new Error('Use an official HTTPS reference');
     if(item.file!==`${item.topic}/${item.id}.${{yaml:'yaml',hcl:'tf',shell:'sh'}[item.language]}`)throw new Error('Snippet filename must match its ID and language');
     ids.add(item.id);files.add(item.file);
   }
@@ -26,7 +26,14 @@ export function validateCode(item,code) {
     const docs=parseAllDocuments(code,{uniqueKeys:true});
     if(!docs.length||docs.some(d=>d.errors.length))throw new Error(`${item.id}: invalid YAML or duplicate keys`);
     const objects=docs.map(d=>d.toJS());
-    for(const obj of objects)if(!obj?.apiVersion||!obj.kind||!obj.metadata?.name)throw new Error(`${item.id}: expected complete Kubernetes objects`);
+    if(item.topic==='ansible'){
+      if(objects.length!==1||!Array.isArray(objects[0])||!objects[0].length||objects[0].some(p=>!p?.hosts||!Array.isArray(p.tasks)||!p.tasks.length))throw new Error(`${item.id}: expected a complete Ansible playbook`);
+      for(const check of item.qa.checks||[]){
+        if(!Array.isArray(check.path)||!check.path.length)throw new Error(`${item.id}: invalid QA path`);
+        const actual=check.path.reduce((value,key)=>value?.[key],objects[0]);
+        if(JSON.stringify(actual)!==JSON.stringify(check.equals))throw new Error(`${item.id}: teaching invariant changed at ${check.path.join('/')}`);
+      }
+    }else for(const obj of objects)if(!obj?.apiVersion||!obj.kind||!obj.metadata?.name)throw new Error(`${item.id}: expected complete Kubernetes objects`);
     for(const [path,expected] of Object.entries(item.qa.assertions||{})){
       const actual=path.split('.').reduce((value,key)=>value?.[key],objects);
       if(JSON.stringify(actual)!==JSON.stringify(expected))throw new Error(`${item.id}: expected ${path} = ${JSON.stringify(expected)}`);
@@ -45,10 +52,10 @@ export async function loadLibrary(repo) {
   const root=resolve(repo,'assets/snippets'),index=validateMetadata(JSON.parse(await readFile(resolve(root,'index.json'),'utf8')));
   const snippets=[];
   for(const item of index.snippets){const code=await readFile(assetPath(root,item.file),'utf8');validateCode(item,code);snippets.push({...item,code});}
-  const quizzes={};for(const topic of ['kubernetes','terraform'])quizzes[topic]=JSON.parse(await readFile(resolve(repo,`quizzes/${topic}.json`),'utf8'));
+  const quizzes={};for(const topic of ['kubernetes','terraform','ansible'])quizzes[topic]=JSON.parse(await readFile(resolve(repo,`quizzes/${topic}.json`),'utf8'));
   validateLinks(quizzes,index);
   const expected=new Set(index.snippets.map(s=>s.file));
-  for(const topic of ['kubernetes','terraform'])for(const file of await readdir(resolve(root,topic)))if(!expected.has(`${topic}/${file}`))throw new Error(`Unregistered asset ${topic}/${file}`);
+  for(const topic of ['kubernetes','terraform','ansible'])for(const file of await readdir(resolve(root,topic)))if(!expected.has(`${topic}/${file}`))throw new Error(`Unregistered asset ${topic}/${file}`);
   return snippets;
 }
 export function bundle(snippets){return JSON.stringify({version:1,snippets:snippets.map(({qa,...s})=>s)},null,2)+'\n';}

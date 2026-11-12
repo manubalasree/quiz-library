@@ -12,8 +12,10 @@ for (const entry of catalog.quizzes) {
   const prompts = new Set();
   const answers = [0, 0, 0, 0];
   let snippets = 0;
+  const focuses={fundamentals:0,scenarios:0};
   for (const q of quiz.questions) {
     if (!['fundamentals','scenarios'].includes(q.focus)) throw new Error(`${entry.title}: missing or invalid focus for ${q.id}`);
+    focuses[q.focus]++;
     const prompt = q.question.trim().toLowerCase().replace(/\s+/g, ' ');
     if (prompts.has(prompt)) throw new Error(`${entry.title}: duplicate question ${q.id}`);
     prompts.add(prompt);
@@ -24,7 +26,8 @@ for (const entry of catalog.quizzes) {
   if (answers.some(n => n < quiz.questions.length * 0.15 || n > quiz.questions.length * 0.35)) {
     throw new Error(`${entry.title}: answer positions are too imbalanced.`);
   }
+  if(Object.values(focuses).some(n=>n===0))throw new Error(`${entry.title}: both practice focus categories need questions.`);
   count += quiz.questions.length;
-  console.log(`${entry.title}: ${quiz.questions.length} valid questions, ${snippets} snippets, answer distribution ${answers.join('/')}`);
+  console.log(`${entry.title}: ${quiz.questions.length} valid questions, ${snippets} exercise snippets, ${focuses.fundamentals} fundamentals / ${focuses.scenarios} scenarios, answer distribution ${answers.join('/')}`);
 }
 console.log(`Validated ${catalog.quizzes.length} quizzes and ${count} questions.`);

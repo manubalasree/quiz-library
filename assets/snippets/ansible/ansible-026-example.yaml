@@ -1,0 +1,11 @@
+---
+- name: Failure conditions reference
+  hosts: all
+  gather_facts: false
+  tasks:
+    - ansible.builtin.command: /opt/app/healthcheck
+      register: result
+      failed_when:
+        - result.rc != 0
+        - '"FATAL" in result.stderr'
+      changed_when: false

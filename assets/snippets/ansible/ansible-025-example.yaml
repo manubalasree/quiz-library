@@ -1,0 +1,10 @@
+---
+- name: Changed status reference
+  hosts: all
+  gather_facts: false
+  tasks:
+    - ansible.builtin.command: /usr/bin/uname -r
+      register: kernel_version
+      changed_when: false
+    - ansible.builtin.debug:
+        var: kernel_version.stdout

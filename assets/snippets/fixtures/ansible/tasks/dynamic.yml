@@ -1,0 +1,3 @@
+- ansible.builtin.debug:
+    msg: Dynamically included task
+  register: dynamic_result

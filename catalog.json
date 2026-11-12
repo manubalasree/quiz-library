@@ -31,18 +31,6 @@
       "title": "Terraform",
       "description": "50 questions on HCL, state, modules, and infrastructure workflows.",
       "url": "quizzes/terraform.json"
-    },
-    {
-      "id": "netapp",
-      "title": "NetApp ONTAP",
-      "description": "70 questions on storage, quorum/epsilon, VLDB, cluster interconnects, LIFs, and recovery.",
-      "url": "quizzes/netapp.json"
-    },
-    {
-      "id": "vmware",
-      "title": "VMware vSphere",
-      "description": "70 questions on vSphere, HA elections, vSAN quorum, storage paths, networking, and recovery.",
-      "url": "quizzes/vmware.json"
     }
   ]
 }

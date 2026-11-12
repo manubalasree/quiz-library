@@ -1,0 +1,15 @@
+---
+- name: Handlers reference
+  hosts: all
+  gather_facts: false
+  tasks:
+    - ansible.builtin.debug:
+        msg: "Changed task {{ item }}"
+      loop: [one, two, three]
+      changed_when: true
+      notify: Restart app
+  handlers:
+    - name: Restart app
+      ansible.builtin.service:
+        name: app
+        state: restarted

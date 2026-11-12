@@ -1,0 +1,13 @@
+---
+- name: Diff mode reference
+  hosts: all
+  gather_facts: false
+  vars:
+    demo_token: example-only-not-a-secret
+  tasks:
+    - ansible.builtin.copy:
+        content: "token={{ demo_token }}\n"
+        dest: /tmp/practice-secret.conf
+        mode: "0600"
+      diff: false
+      no_log: true

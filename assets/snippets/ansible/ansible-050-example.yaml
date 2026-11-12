@@ -1,0 +1,11 @@
+---
+- name: Validation reference
+  hosts: all
+  gather_facts: false
+  vars:
+    replicas: 3
+  tasks:
+    - ansible.builtin.assert:
+        that:
+          - replicas | int > 0
+        fail_msg: replicas must be positive

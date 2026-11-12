@@ -1,0 +1,12 @@
+---
+- name: Task environment reference
+  hosts: all
+  gather_facts: false
+  tasks:
+    - ansible.builtin.command: /usr/bin/printenv APP_MODE
+      environment:
+        APP_MODE: staging
+      register: mode
+      changed_when: false
+    - ansible.builtin.debug:
+        var: mode.stdout

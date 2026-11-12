@@ -1,0 +1,9 @@
+---
+- name: Variables reference
+  hosts: all
+  gather_facts: false
+  vars:
+    service_port: 8080
+  tasks:
+    - ansible.builtin.debug:
+        var: service_port

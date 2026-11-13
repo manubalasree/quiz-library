@@ -1,6 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
-metadata: {name: tolerant-app, namespace: interview-lab}
+metadata: {name: tolerant-app, namespace: virtmicro-lab}
 spec:
   replicas: 1
   selector:
@@ -10,7 +10,7 @@ spec:
       labels: {app: tolerant-app}
     spec:
       tolerations:
-        - key: interview-lab/dedicated
+        - key: virtmicro-lab/dedicated
           operator: Equal
           value: practice
           effect: NoSchedule

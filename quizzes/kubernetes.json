@@ -886,7 +886,7 @@
     {
       "id": "kubernetes-058",
       "topic": "Interview lab · Match the taint precisely",
-      "question": "A node is tainted interview-lab/dedicated=practice:NoSchedule. Which toleration matches it with operator Equal?",
+      "question": "A node is tainted virtmicro-lab/dedicated=practice:NoSchedule. Which toleration matches it with operator Equal?",
       "options": [
         "The same key, value production, and effect NoSchedule",
         "A different key with value practice and effect NoSchedule",
@@ -946,7 +946,7 @@
     {
       "id": "kubernetes-062",
       "topic": "Interview lab · Clean up node-level changes",
-      "question": "You delete namespace interview-lab after the taint exercise. What happens to the taint placed on the node?",
+      "question": "You delete namespace virtmicro-lab after the taint exercise. What happens to the taint placed on the node?",
       "options": [
         "Namespace deletion removes every taint added during that namespace’s lifetime",
         "It is converted automatically from NoSchedule to PreferNoSchedule",
@@ -1123,9 +1123,9 @@
         "The Helm repository containing the image"
       ],
       "answerIndex": 2,
-      "explanation": "set image uses container-name=image pairs. web selects the Pod-template container to update; rollout-lab is the Deployment and interview-lab is the namespace.",
+      "explanation": "set image uses container-name=image pairs. web selects the Pod-template container to update; rollout-lab is the Deployment and virtmicro-lab is the namespace.",
       "exampleId": "kubernetes-073-example",
-      "code": "kubectl set image deployment/rollout-lab web=nginx:stable-alpine -n interview-lab",
+      "code": "kubectl set image deployment/rollout-lab web=nginx:stable-alpine -n virtmicro-lab",
       "language": "shell",
       "focus": "fundamentals"
     },

@@ -1,4 +1,4 @@
-# Kubernetes interview-lab question mapping
+# Kubernetes VirtMicro lab question mapping
 
 Questions `kubernetes-051` through `kubernetes-074` adapt the user-provided standalone `kubernetes-interview-lab.html` into 24 MCQs. Each includes a separate answer-reference asset and an official documentation link. Reference commands are not executed by snippet QA.
 
@@ -12,3 +12,5 @@ Questions `kubernetes-051` through `kubernetes-074` adapt the user-provided stan
 Original question IDs 001–050 and their content are retained. The new answers are balanced across A–D (six each). Existing spaced-repetition card identities remain unchanged. Because the topic bank has grown, a saved round may show **Updated quiz available**; start the updated round to include the new questions.
 
 Primary references: [Resource requests and scheduling](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/), [Assigning Pods to Nodes](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/), [Taints and tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/), [Deployment rollout behavior](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/), and [Service endpoints](https://kubernetes.io/docs/concepts/services-networking/service/).
+
+The example namespace and taint-key prefix were renamed to `virtmicro-lab` on 13 November 2026. Quiz prompts, commands, source reference assets, and the generated bundle use the same name. The original standalone source filename above records provenance.

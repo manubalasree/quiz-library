@@ -1,3 +1,3 @@
-kubectl get pod cpu-pending -n interview-lab
-kubectl get resourcequota,limitrange -n interview-lab
-kubectl describe resourcequota -n interview-lab
+kubectl get pod cpu-pending -n virtmicro-lab
+kubectl get resourcequota,limitrange -n virtmicro-lab
+kubectl describe resourcequota -n virtmicro-lab

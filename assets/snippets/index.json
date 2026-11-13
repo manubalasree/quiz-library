@@ -1113,7 +1113,7 @@
       "title": "CPU units \u2014 lab reference",
       "language": "yaml",
       "file": "kubernetes/kubernetes-051-example.yaml",
-      "description": "This corrected teaching manifest requests 100m, or 0.1 CPU. The lab\u2019s original \"1000\" requests 1,000 CPUs and cannot fit a normal lab node; namespace interview-lab must exist.",
+      "description": "This corrected teaching manifest requests 100m, or 0.1 CPU. The lab\u2019s original \"1000\" requests 1,000 CPUs and cannot fit a normal lab node; namespace virtmicro-lab must exist.",
       "source": "https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/",
       "qa": {
         "assertions": {

@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Pod
-metadata: {name: matching-toleration, namespace: interview-lab}
+metadata: {name: matching-toleration, namespace: virtmicro-lab}
 spec:
   tolerations:
-    - key: interview-lab/dedicated
+    - key: virtmicro-lab/dedicated
       operator: Equal
       value: practice
       effect: NoSchedule

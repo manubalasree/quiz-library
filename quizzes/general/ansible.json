@@ -795,5 +795,5 @@
       "exampleId": "ansible-050-example"
     }
   ],
-  "snippetsUrl": "../assets/snippets/library.json"
+  "snippetsUrl": "../../assets/snippets/library.json"
 }

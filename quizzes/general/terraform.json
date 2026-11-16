@@ -795,5 +795,5 @@
       "focus": "fundamentals"
     }
   ],
-  "snippetsUrl": "../assets/snippets/library.json"
+  "snippetsUrl": "../../assets/snippets/library.json"
 }

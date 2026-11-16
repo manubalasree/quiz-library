@@ -43,7 +43,7 @@ export function validateCode(item,code) {
 export function validateLinks(quizzes,index) {
   const byId=new Map(index.snippets.map(s=>[s.id,s])),used=new Set();
   for(const [topic,quiz] of Object.entries(quizzes)){
-    if(quiz.snippetsUrl!=='../assets/snippets/library.json')throw new Error(`${topic}: missing snippet bundle reference`);
+    if(quiz.snippetsUrl!=='../../assets/snippets/library.json')throw new Error(`${topic}: missing snippet bundle reference`);
     for(const q of quiz.questions){const snippet=byId.get(q.exampleId);if(!snippet||snippet.topic!==topic)throw new Error(`${q.id}: missing or wrong-topic example`);used.add(snippet.id);}
   }
   for(const s of index.snippets)if(!used.has(s.id))throw new Error(`${s.id}: orphaned example`);
@@ -52,7 +52,7 @@ export async function loadLibrary(repo) {
   const root=resolve(repo,'assets/snippets'),index=validateMetadata(JSON.parse(await readFile(resolve(root,'index.json'),'utf8')));
   const snippets=[];
   for(const item of index.snippets){const code=await readFile(assetPath(root,item.file),'utf8');validateCode(item,code);snippets.push({...item,code});}
-  const quizzes={};for(const topic of ['kubernetes','terraform','ansible'])quizzes[topic]=JSON.parse(await readFile(resolve(repo,`quizzes/${topic}.json`),'utf8'));
+  const quizzes={};for(const topic of ['kubernetes','terraform','ansible'])quizzes[topic]=JSON.parse(await readFile(resolve(repo,`quizzes/general/${topic}.json`),'utf8'));
   validateLinks(quizzes,index);
   const expected=new Set(index.snippets.map(s=>s.file));
   for(const topic of ['kubernetes','terraform','ansible'])for(const file of await readdir(resolve(root,topic)))if(!expected.has(`${topic}/${file}`))throw new Error(`Unregistered asset ${topic}/${file}`);

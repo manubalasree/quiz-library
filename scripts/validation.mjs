@@ -13,10 +13,18 @@ export function validateQuiz(data) {
         (q.exampleId !== undefined && (!nonempty(q.exampleId) || !nonempty(data.snippetsUrl))) ||
         (q.code !== undefined && !nonempty(q.code)) ||
         (q.language !== undefined && (!nonempty(q.language) || !nonempty(q.code))) ||
-        !Array.isArray(q.options) || q.options.length !== 4 ||
-        !q.options.every(nonempty) || new Set(q.options).size !== 4 ||
-        !Number.isInteger(q.answerIndex) || q.answerIndex < 0 || q.answerIndex > 3) {
-      throw new Error(`Invalid question at position ${index + 1}. Check its ID, text, four distinct options, and answerIndex (0–3).`);
+        !Array.isArray(q.options) || ![3,4].includes(q.options.length) ||
+        !q.options.every(nonempty) || new Set(q.options).size !== q.options.length ||
+        !Number.isInteger(q.answerIndex) || q.answerIndex < 0 || q.answerIndex >= q.options.length) {
+      throw new Error(`Invalid question at position ${index + 1}. Check its ID, text, three or four distinct options, and a valid answerIndex.`);
+    }
+    if(q.references!==undefined){
+      if(!Array.isArray(q.references)||q.references.length>6)throw new Error(`Invalid references for ${q.id}.`);
+      for(const ref of q.references){
+        if(!ref||!nonempty(ref.title)||ref.title.length>160||typeof ref.url!=='string'||ref.url.length>2048)throw new Error(`Invalid reference for ${q.id}.`);
+        let url;try{url=new URL(ref.url);}catch{throw new Error(`Invalid reference URL for ${q.id}.`);}
+        if(url.protocol!=='https:'||url.username||url.password)throw new Error(`Use a public HTTPS reference for ${q.id}.`);
+      }
     }
     ids.add(q.id);
   }

@@ -4,18 +4,18 @@ The public JSON content repository for [Quiz Practice Lab](https://quiz-practice
 
 ## Update an existing quiz
 
-Edit its file under `quizzes/` and commit to `main`. The app fetches this JSON when a topic is opened. No Vercel deployment is needed. A round already in progress keeps its questions. GitHub raw content may cache updates briefly.
+Edit its file under `quizzes/general/` and commit to `main`. The app fetches this JSON when a topic is opened. No Vercel deployment is needed. A round already in progress keeps its questions. GitHub raw content may cache updates briefly.
 
 ## Add a quiz tile
 
-1. Add a quiz JSON file under `quizzes/` using the format below.
-2. Add an entry to `catalog.json` with a unique `id`, tile `title`, optional `description`, and relative `url`.
+1. Add a quiz JSON file under `quizzes/general/` using the format below.
+2. Add an entry to `catalog/general/catalog.json` with a unique `id`, tile `title`, optional `description`, and relative `url`.
 3. Commit both files to `main`. Reload the app to fetch the updated tile list.
 
 Catalog entry:
 
 ```json
-{"id":"python","title":"Python","description":"Python fundamentals","url":"quizzes/python.json"}
+{"id":"python","title":"Python","description":"Python fundamentals","url":"../../quizzes/general/python.json"}
 ```
 
 Quiz file:
@@ -37,7 +37,7 @@ Quiz file:
 }
 ```
 
-Each question requires a unique ID, nonempty topic/question/explanation, four distinct options, and `answerIndex` 0–3 (A=0, B=1, C=2, D=3). Preserve `version: 1`. Any subject is supported.
+Each question requires a unique ID, nonempty topic/question/explanation, three or four distinct options, and a valid zero-based `answerIndex` (keyboard A/S/D/F selects positions 0/1/2/3). Preserve `version: 1`. Any subject is supported.
 
 ## Validate
 
@@ -47,15 +47,34 @@ node scripts/validate.mjs
 
 Requires Node.js 22+. GitHub Actions also checks every push and pull request. These checks report invalid JSON; protect `main` with required checks if you want to enforce validation before updates become readable by the app.
 
+## Collection layout
+
+```text
+catalog/
+  general/catalog.json
+  tam-prep/README.md          # reserved; personal material is not public
+quizzes/
+  general/                   # active and retired general question banks
+  tam-prep/README.md          # reserved; use local import for personal prep
+assets/snippets/              # shared answer-reference library
+catalog.json                  # compatibility catalog for existing app settings
+```
+
+A catalog resolves each quiz URL relative to **its own location**. For example, `catalog/general/catalog.json` uses `../../quizzes/general/kubernetes.json`. Those question files use `../../assets/snippets/library.json` for shared answer examples. Catalog and quiz collection folder names must match.
+
 ## Catalog URL
 
-https://raw.githubusercontent.com/manubalasree/quiz-library/main/catalog.json
+General collection: https://raw.githubusercontent.com/manubalasree/quiz-library/main/catalog/general/catalog.json
+
+The original https://raw.githubusercontent.com/manubalasree/quiz-library/main/catalog.json remains a checked compatibility catalog pointing at the same general questions. The app keeps that default URL so existing saved library identities and progress remain usable. Old direct `quizzes/<topic>.json` paths have moved to `quizzes/general/<topic>.json`.
+
+The TAM preparation collection is reserved only. This repository does not contain personal TAM questions. Use **Import quiz JSON** in [Quest](https://quest.virtmicro.com/) to practice those from your device.
 
 This repository is public so browsers can load it without credentials. It contains practice questions and explanations only. Do not add secrets or private material.
 
 ## Current coverage
 
-The active catalog contains Kubernetes (98) plus Linux, Git, Ansible, and Terraform (50 each), for 298 questions. NetApp and VMware are retired from the catalog; historical question files and learner records are retained. The banks mix fundamentals, troubleshooting, and code-reading exercises. Answer positions are balanced across A–D. Explanations describe why the selected answer is correct and call out relevant limitations.
+The general catalog contains Kubernetes (98) plus Linux, Git, Ansible, and Terraform (50 each), for 298 questions. NetApp and VMware are retired from the catalog; historical question files and learner records are retained. The banks mix fundamentals, troubleshooting, and code-reading exercises. Answer positions are balanced across A–D. Explanations describe why the selected answer is correct and call out relevant limitations.
 
 For a snippet question, add optional `code` and `language` fields alongside `question`:
 

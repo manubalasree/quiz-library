@@ -6,31 +6,31 @@
       "id": "kubernetes",
       "title": "Kubernetes",
       "description": "98 questions on Kubernetes fundamentals, troubleshooting, EBS topology, isolation, and scheduling scenarios.",
-      "url": "quizzes/kubernetes.json"
+      "url": "quizzes/general/kubernetes.json"
     },
     {
       "id": "linux",
       "title": "Linux",
       "description": "50 questions on shell scripts, permissions, processes, and troubleshooting.",
-      "url": "quizzes/linux.json"
+      "url": "quizzes/general/linux.json"
     },
     {
       "id": "git",
       "title": "Git",
       "description": "50 questions on history, branches, collaboration, and recovery.",
-      "url": "quizzes/git.json"
+      "url": "quizzes/general/git.json"
     },
     {
       "id": "ansible",
       "title": "Ansible",
       "description": "50 questions on playbooks, roles, handlers, and automation scenarios.",
-      "url": "quizzes/ansible.json"
+      "url": "quizzes/general/ansible.json"
     },
     {
       "id": "terraform",
       "title": "Terraform",
       "description": "50 questions on HCL, state, modules, and infrastructure workflows.",
-      "url": "quizzes/terraform.json"
+      "url": "quizzes/general/terraform.json"
     }
   ]
 }

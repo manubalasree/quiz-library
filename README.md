@@ -1,21 +1,21 @@
 # Quiz Library
 
-The public JSON content repository for [Quiz Practice Lab](https://quiz-practice-lab.vercel.app). App code lives separately in [quiz-practice-lab](https://github.com/manubalasree/quiz-practice-lab).
+The public JSON content repository for [Quiz Practice Lab](https://quest.virtmicro.com). App code lives separately in [quiz-practice-lab](https://github.com/manubalasree/quiz-practice-lab).
 
 ## Update an existing quiz
 
-Edit its file under `quizzes/general/` and commit to `main`. The app fetches this JSON when a topic is opened. No Vercel deployment is needed. A round already in progress keeps its questions. GitHub raw content may cache updates briefly.
+For the current Quest default, edit its file under `quizzes/general/v2/` and commit to `main`. The app fetches this JSON when a topic is opened. No Vercel deployment is needed. A round already in progress keeps its questions. GitHub raw content may cache updates briefly.
 
 ## Add a quiz tile
 
-1. Add a quiz JSON file under `quizzes/general/` using the format below.
-2. Add an entry to `catalog/general/catalog.json` with a unique `id`, tile `title`, optional `description`, and relative `url`.
+1. Add a quiz JSON file under `quizzes/general/v2/` with a new permanent UUID `quizId` using the format below.
+2. Add an entry to `catalog/general/catalog-v2.json` with a unique `id`, tile `title`, optional `description`, and relative `url`.
 3. Commit both files to `main`. Reload the app to fetch the updated tile list.
 
 Catalog entry:
 
 ```json
-{"id":"python","title":"Python","description":"Python fundamentals","url":"../../quizzes/general/python.json"}
+{"id":"python","title":"Python","description":"Python fundamentals","url":"../../quizzes/general/v2/python.json"}
 ```
 
 Quiz file:
@@ -23,6 +23,7 @@ Quiz file:
 ```json
 {
   "version": 1,
+  "quizId": "9d1b9968-5698-453e-8c52-ff48b3317153",
   "title": "Python Fundamentals",
   "questions": [
     {
@@ -51,10 +52,12 @@ Requires Node.js 22+. GitHub Actions also checks every push and pull request. Th
 
 ```text
 catalog/
-  general/catalog.json
+  general/catalog.json       # previous default
+  general/catalog-v2.json    # current permanent-ID default
   tam-prep/README.md          # reserved; personal material is not public
 quizzes/
-  general/                   # active and retired general question banks
+  general/v2/                # current permanent-ID question banks
+  general/                   # previous banks and retired content
   tam-prep/README.md          # reserved; use local import for personal prep
 assets/snippets/              # shared answer-reference library
 catalog.json                  # compatibility catalog for existing app settings
@@ -64,9 +67,9 @@ A catalog resolves each quiz URL relative to **its own location**. For example, 
 
 ## Catalog URL
 
-General collection: https://raw.githubusercontent.com/manubalasree/quiz-library/main/catalog/general/catalog.json
+Current General collection: https://raw.githubusercontent.com/manubalasree/quiz-library/main/catalog/general/catalog-v2.json
 
-The original https://raw.githubusercontent.com/manubalasree/quiz-library/main/catalog.json remains a checked compatibility catalog pointing at the same general questions. The app keeps that default URL so existing saved library identities and progress remain usable. Old direct `quizzes/<topic>.json` paths have moved to `quizzes/general/<topic>.json`.
+The original https://raw.githubusercontent.com/manubalasree/quiz-library/main/catalog.json remains a checked compatibility catalog pointing at the same general questions. Quest v2 upgrades former default URLs to `catalog/general/catalog-v2.json`. This intentionally starts fresh progress; prior content files remain available for older clients. Old direct `quizzes/<topic>.json` paths have moved to `quizzes/general/<topic>.json`.
 
 The TAM preparation collection is reserved only. This repository does not contain personal TAM questions. Use **Import quiz JSON** in [Quest](https://quest.virtmicro.com/) to practice those from your device.
 
@@ -107,3 +110,9 @@ Interview questions 1–9 and their discussion corrections are reconciled with e
 Every maintained question has `"focus": "fundamentals"` or `"focus": "scenarios"`. Fundamentals covers concepts, terminology, commands, and basic configuration principles; Scenarios covers applied diagnosis, code/output interpretation, and operational decisions. This is an editorial learning focus, not a difficulty grade or FSRS recall rating. Mixed is an app preference that includes all questions; it is not a stored question tag. Existing prompts, IDs, answers, explanations, and example links are retained. The validator requires explicit focus metadata in this repository. Legacy/external libraries without these tags remain usable in the app’s Mixed mode.
 
 The [12 November focus audit](PRACTICE-FOCUS-REVIEW.md) records the rubric, per-topic category counts, and all reclassifications. Both filters are populated for every active topic. A code block by itself does not make a question a scenario.
+
+## Permanent identity and file versions
+
+The v2 catalog points to new copies of the five maintained banks, with unchanged question IDs/content and a permanent UUID `quizId` in each file. Shared snippet paths account for the extra folder. Keep that quizId when editing or renaming the same quiz; create a new UUID for a genuinely different quiz. Preserve each question's ID for the same learning item.
+
+Quest stores the learner, quizId, normalized whole-file SHA-256, question ID and meaningful question content hash in Neon. Explanation-only edits change the file fingerprint while preserving a question's FSRS schedule. A meaningful question change resets that question on its next rating. Removal of the last source suppresses reviews; reimport within 180 days restores history. The full model is documented in the app repository's `docs/SYSTEM-DESIGN.md`. JSON stays `version: 1`; `v2` identifies the library/progress release.

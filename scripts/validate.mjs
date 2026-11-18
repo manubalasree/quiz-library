@@ -8,7 +8,8 @@ const insideRoot=url=>{const rel=relative(fileURLToPath(root),fileURLToPath(url)
 let count=0,quizzes=0,catalogs=0;
 for(const folder of await readdir(new URL('catalog/',root),{withFileTypes:true})){
   if(!folder.isDirectory())continue;
-  const file=new URL(`catalog/${folder.name}/catalog.json`,root);
+  for(const catalogName of (await readdir(new URL(`catalog/${folder.name}/`,root))).filter(name=>/^catalog(?:-v[0-9]+)?\.json$/.test(name))){
+  const file=new URL(`catalog/${folder.name}/${catalogName}`,root);
   let text;try{text=await readFile(file,'utf8');}catch(error){if(error.code==='ENOENT')continue;throw error;}
   const catalog=validateCatalog(JSON.parse(text));catalogs++;
   for(const entry of catalog.quizzes){
@@ -17,6 +18,8 @@ for(const folder of await readdir(new URL('catalog/',root),{withFileTypes:true})
     const expected=new URL(`quizzes/${folder.name}/`,root);
     if(!fileURLToPath(path).startsWith(fileURLToPath(expected)))throw new Error(`${folder.name}: quiz files must be in the matching quizzes folder.`);
     const quiz=validateQuiz(JSON.parse(await readFile(path,'utf8')));
+    if(catalogName==='catalog-v2.json'&&!/^[a-f0-9]{8}-[a-f0-9]{4}-[1-5][a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/i.test(quiz.quizId||''))throw new Error(`${entry.title}: v2 banks require a permanent quizId.`);
+    if(quiz.snippetsUrl)await readFile(new URL(quiz.snippetsUrl,path),'utf8');
     if(quiz.questions.length<50)throw new Error(`${entry.title}: expected at least 50 questions.`);
     const prompts=new Set(),answers=Array(Math.max(...quiz.questions.map(q=>q.options.length))).fill(0),expectedAnswers=answers.map((_,i)=>quiz.questions.reduce((n,q)=>n+(i<q.options.length?1/q.options.length:0),0));
     let snippets=0;const focuses={fundamentals:0,scenarios:0};
@@ -33,11 +36,12 @@ for(const folder of await readdir(new URL('catalog/',root),{withFileTypes:true})
     count+=quiz.questions.length;quizzes++;
     console.log(`${folder.name}/${entry.id}: ${quiz.questions.length} questions, ${snippets} exercise snippets, ${focuses.fundamentals} fundamentals / ${focuses.scenarios} scenarios`);
   }
-  if(folder.name==='general'){
+  if(folder.name==='general'&&catalogName==='catalog.json'){
     const legacy=validateCatalog(JSON.parse(await readFile(new URL('catalog.json',root),'utf8')));
     const resolved=(data,base)=>data.quizzes.map(q=>({...q,url:new URL(q.url,base).href}));
     assert.deepEqual(resolved(legacy,new URL('catalog.json',root)),resolved(catalog,file),'Root compatibility catalog must match general.');
   }
+}
 }
 if(!catalogs)throw new Error('No collection catalogs found.');
 console.log(`Validated ${catalogs} catalogs, ${quizzes} quizzes and ${count} questions.`);

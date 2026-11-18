@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "title": "Choose your next challenge",
+  "quizzes": [
+    {
+      "id": "kubernetes",
+      "title": "Kubernetes",
+      "description": "98 questions on Kubernetes fundamentals, troubleshooting, EBS topology, isolation, and scheduling scenarios.",
+      "url": "../../quizzes/general/v2/kubernetes.json"
+    },
+    {
+      "id": "linux",
+      "title": "Linux",
+      "description": "50 questions on shell scripts, permissions, processes, and troubleshooting.",
+      "url": "../../quizzes/general/v2/linux.json"
+    },
+    {
+      "id": "git",
+      "title": "Git",
+      "description": "50 questions on history, branches, collaboration, and recovery.",
+      "url": "../../quizzes/general/v2/git.json"
+    },
+    {
+      "id": "ansible",
+      "title": "Ansible",
+      "description": "50 questions on playbooks, roles, handlers, and automation scenarios.",
+      "url": "../../quizzes/general/v2/ansible.json"
+    },
+    {
+      "id": "terraform",
+      "title": "Terraform",
+      "description": "50 questions on HCL, state, modules, and infrastructure workflows.",
+      "url": "../../quizzes/general/v2/terraform.json"
+    }
+  ]
+}
